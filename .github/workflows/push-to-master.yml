@@ -4,13 +4,14 @@ on:
   push:
     branches: [master]
 
+env:
+  NODE_VERSION: "16"
+
 jobs:
   lint-and-type-check:
     name: "Lint and type-check"
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      NODE_VERSION: "16"
 
     steps:
       - uses: actions/checkout@v2
@@ -20,4 +21,3 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run tsc
-  
