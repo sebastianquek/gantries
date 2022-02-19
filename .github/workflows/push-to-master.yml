@@ -6,8 +6,9 @@ on:
 
 jobs:
   lint-and-type-check:
+    name: "Lint and type-check"
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     env:
       NODE_VERSION: "16"
 
