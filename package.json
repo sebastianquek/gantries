@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "See Singapore's ERP rates easily",
   "scripts": {
-    "lint": "npm run eslint . --ext .js,.ts,.tsx",
+    "lint": "eslint . --ext .js,.ts,.tsx",
     "fetch:rates": "npx ts-node scripts/fetch-rates.ts",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
     "tsc": "npx tsc --noEmit"

@@ -1,0 +1,22 @@
+name: Push to master
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  lint-and-type-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NODE_VERSION: "16"
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run tsc
+  
