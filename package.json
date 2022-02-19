@@ -1,0 +1,13 @@
+{
+  "name": "gantries",
+  "version": "0.0.1",
+  "description": "See Singapore's ERP rates easily",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "erp",
+    "electronic road pricing"
+  ],
+  "author": "Sebastian Quek"
+}
