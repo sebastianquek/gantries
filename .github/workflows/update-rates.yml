@@ -25,9 +25,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npm run fetch:rates
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
+          token: ${{ steps.generate-token.outputs.token }}
           add-paths: data
           commit-message: "chore: update rates"
           branch: "chore/update-rates"
@@ -35,5 +41,6 @@ jobs:
           branch-suffix: timestamp
           title: "chore: update rates"
           body: |
-            New ERP rates have been detected.
+            New ERP rates have been detected!
           labels: data-update
+          reviewers: sebastianquek
