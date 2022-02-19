@@ -1,0 +1,29 @@
+name: Update ERP gantry rates
+
+on:
+  workflow_dispatch:
+
+  # schedule:
+    # https://crontab.guru/#0_0,12_*_*_*
+    # Runs every day at midnight and noon
+    # - cron: "0 0,12 * * *"
+
+env:
+  NODE_VERSION: "16"
+
+jobs:
+  fetch-rates:
+    name: "Fetch and process rates"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run fetch:rates
+      
+  
+  
