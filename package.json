@@ -3,11 +3,22 @@
   "version": "0.0.1",
   "description": "See Singapore's ERP rates easily",
   "scripts": {
+    "lint": "npm run eslint . --ext .js,.ts,.tsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "erp",
     "electronic road pricing"
   ],
-  "author": "Sebastian Quek"
+  "author": "Sebastian Quek",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5"
+  }
 }

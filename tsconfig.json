@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true, // Let TS rather than eslint handle unused variables.
+    "noUnusedParameters": true, // Note that TS treats params starting with _ as unused
+    "outDir": ".build",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "rootDir": "./",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2020" // Node.js 14 supports majority of ES2020: https://node.green/#ES2020
+  },
+  "include": ["./src/**/*.ts", "./scripts/**/*.ts"],
+  "exclude": ["node_modules/**/*", ".vscode/**/*", "**/*.js"]
+}
