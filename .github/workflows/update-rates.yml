@@ -10,6 +10,7 @@ on:
 
 env:
   NODE_VERSION: "16"
+  DATAMALL_ACCOUNT_KEY: ${{ secrets.DATAMALL_ACCOUNT_KEY }}
 
 jobs:
   fetch-rates:
