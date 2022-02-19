@@ -5,7 +5,7 @@ on:
     # https://crontab.guru/#0_0,12_*_*_*
     # Runs every day at midnight and noon
     # - cron: "0 0,12 * * *"
-    - cron: "30 * * * *" # temporary
+    - cron: "*/20 * * * *" # temporary
   
   workflow_dispatch:
 
