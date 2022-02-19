@@ -25,6 +25,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npm run fetch:rates
-      
-  
-  
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          add-paths: data
+          commit-message: "chore: update rates"
+          branch: "chore/update-rates"
+          delete-branch: true
+          branch-suffix: timestamp
+          title: "chore: update rates"
+          body: |
+            New ERP rates have been detected.
+          labels: data-update
