@@ -14,8 +14,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2021" // https://node.green/#ES2021
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "jsx": "react-jsx"
   },
-  "include": ["./src/**/*.ts", "./scripts/**/*.ts"],
+  "include": ["./src/**/*", "./scripts/**/*"],
   "exclude": ["node_modules/**/*", ".vscode/**/*", "**/*.js"]
 }

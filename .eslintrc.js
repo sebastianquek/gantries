@@ -13,6 +13,8 @@ module.exports = {
   },
   plugins: ["@typescript-eslint"],
   extends: [
+    "react-app",
+    "react-app/jest",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
