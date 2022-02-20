@@ -1,19 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { Map } from "./Map";
 import reportWebVitals from "./reportWebVitals";
-
-const Map = () => {
-  return (
-    <>
-      <header>
-        <p>Map</p>
-      </header>
-    </>
-  );
-};
 
 ReactDOM.render(
   <React.StrictMode>
