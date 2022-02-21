@@ -14,7 +14,7 @@ const HEADERS = {
   AccountKey: process.env.DATAMALL_ACCOUNT_KEY ?? "",
   Accept: "application/json",
 };
-const OUTPUT_DATA_DIR = join(__dirname, "../data");
+const OUTPUT_DATA_DIR = join(__dirname, "../public/data");
 
 /**
  * Fetch ERP rates from LTA DataMall.
