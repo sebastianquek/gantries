@@ -1,22 +1,20 @@
-import type { GantryLocationData } from "../gantryDataToGeoJSON";
-
 import { gantryDataToGeoJSON } from "../gantryDataToGeoJSON";
 
 describe("gantryDataToGeoJSON", () => {
-  const data: GantryLocationData[] = [
+  const data: Parameters<typeof gantryDataToGeoJSON>[0] = [
     {
-      id: 1,
-      bearing: 1,
-      longitude: 101,
-      latitude: 1,
+      id: "1",
+      bearing: "1",
+      longitude: "101",
+      latitude: "1",
       name: "Gantry 1",
       zone: "Zone 1",
     },
     {
-      id: 2,
-      bearing: 2,
-      longitude: 102,
-      latitude: 2,
+      id: "2",
+      bearing: "2",
+      longitude: "102",
+      latitude: "2",
       name: "Gantry 2",
       zone: "Zone 2",
     },

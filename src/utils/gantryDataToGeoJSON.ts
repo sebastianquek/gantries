@@ -1,13 +1,10 @@
-export type GantryLocationData = {
-  id: number;
-  zone: string;
-  name: string;
-  bearing: number;
-  longitude: number;
-  latitude: number;
+import type { GantryLocation } from "../types";
+
+type RawGantrylocation = {
+  [k in keyof GantryLocation]: string;
 };
 
-export const gantryDataToGeoJSON = (data: GantryLocationData[]) => {
+export const gantryDataToGeoJSON = (data: RawGantrylocation[]) => {
   return {
     type: "geojson",
     data: {
@@ -17,13 +14,13 @@ export const gantryDataToGeoJSON = (data: GantryLocationData[]) => {
           type: "Feature",
           geometry: {
             type: "Point",
-            coordinates: [longitude, latitude],
+            coordinates: [Number(longitude), Number(latitude)],
           },
           properties: {
-            id,
+            id: Number(id),
             name,
             zone,
-            bearing,
+            bearing: Number(bearing),
           },
         })
       ),

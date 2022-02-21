@@ -1,7 +1,7 @@
 import type React from "react";
 
 import mapboxgl from "mapbox-gl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type MapStyle = "SATELLITE_STREETS" | "STREETS";
 export const useMap = ({
@@ -22,7 +22,7 @@ export const useMap = ({
   zoom: number;
   isLoaded: boolean;
   isMoving: boolean;
-  flyTo?: (options: mapboxgl.FlyToOptions) => void;
+  map?: mapboxgl.Map;
 } => {
   const mapboxRef = useRef<mapboxgl.Map>();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -111,16 +111,10 @@ export const useMap = ({
     };
   }, []);
 
-  const flyTo = useCallback((options: mapboxgl.FlyToOptions) => {
-    if (mapboxRef.current) {
-      mapboxRef.current.flyTo(options);
-    }
-  }, []);
-
   return {
     ...cameraState,
     isLoaded,
     isMoving,
-    flyTo,
+    map: mapboxRef.current,
   };
 };
