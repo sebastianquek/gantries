@@ -13,7 +13,7 @@
     "lint": "eslint . --ext .js,.ts,.tsx",
     "start": "react-scripts start",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
-    "test": "react-scripts test",
+    "test:src": "react-scripts test --testPathPattern=src/.*.test.ts",
     "tsc": "npx tsc --noEmit"
   },
   "keywords": [
