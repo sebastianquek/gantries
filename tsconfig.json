@@ -17,7 +17,6 @@
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
     "jsx": "react-jsx"
   },
   "include": ["./src/**/*", "./scripts/**/*"],
