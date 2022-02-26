@@ -465,5 +465,56 @@ describe("generate-layers", () => {
         },
       ]);
     });
+
+    it("should include additional properties correctly", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "08:00",
+              EndTime: "12:00",
+              AdditionalProperty: "hello",
+            },
+            {
+              StartTime: "12:00",
+              EndTime: "14:00",
+              ChargeAmount: 2,
+            },
+            {
+              StartTime: "14:00",
+              EndTime: "15:00",
+              IsOperational: true,
+            },
+          ],
+          ["07:00", "09:00", "13:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "08:00",
+          EndTime: "09:00",
+          AdditionalProperty: "hello",
+        },
+        {
+          StartTime: "09:00",
+          EndTime: "12:00",
+          AdditionalProperty: "hello",
+        },
+        {
+          StartTime: "12:00",
+          EndTime: "13:00",
+          ChargeAmount: 2,
+        },
+        {
+          StartTime: "13:00",
+          EndTime: "14:00",
+          ChargeAmount: 2,
+        },
+        {
+          StartTime: "14:00",
+          EndTime: "15:00",
+          IsOperational: true,
+        },
+      ]);
+    });
   });
 });
