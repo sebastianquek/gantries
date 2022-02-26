@@ -56,6 +56,7 @@ export const padGapsWithZeroRates = (
  * Given an array of rates, replaces the charge amount with a boolean defining
  * if the gantry is operational during the time interval.
  * If multiple consecutive rates are positive, they collapse into 1 time interval.
+ * Does not mutate the rates param.
  *
  * @param rates Sorted by ascending start time
  * @returns Array of whether a gantry is operational for the time intervals
@@ -86,8 +87,9 @@ export const collapseRates = (
 };
 
 /**
- * Splits rates up into multiple time intervals if the start time does not match with
- * one of the specified start times.
+ * Splits rates into multiple time intervals if the start time does not match with
+ * one of the specified splits.
+ * Does not mutate the rates param.
  *
  * @param rates Sorted by ascending start time
  * @param splits Sorted by ascending value
