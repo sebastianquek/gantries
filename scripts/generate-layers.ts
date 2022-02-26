@@ -51,3 +51,36 @@ export const padGapsWithZeroRates = (
 
   return paddedRates;
 };
+
+/**
+ * Given an array of rates, replaces the charge amount with a boolean defining
+ * if the gantry is operational during the time interval.
+ * If multiple consecutive rates are positive, they collapse into 1 time interval.
+ *
+ * @param rates Sorted by ascending start time
+ * @returns Array of whether a gantry is operational for the time intervals
+ */
+export const collapseRates = (
+  rates: Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount">[]
+) => {
+  const collapsedRates: (Pick<Rate, "StartTime" | "EndTime"> & {
+    IsOperational: boolean;
+  })[] = [];
+
+  for (const rate of rates) {
+    const previousRate = collapsedRates[collapsedRates.length - 1];
+    if (
+      !previousRate ||
+      rate.StartTime !== previousRate.EndTime || // Not consecutive, need to add a new entry
+      (rate.ChargeAmount > 0 && !previousRate.IsOperational) || // Current is operational while previous is not
+      (rate.ChargeAmount === 0 && previousRate.IsOperational) // // Current is not operational while previous is
+    ) {
+      const { ChargeAmount, ...rest } = rate;
+      collapsedRates.push({ ...rest, IsOperational: ChargeAmount > 0 });
+    } else {
+      previousRate.EndTime = rate.EndTime;
+    }
+  }
+
+  return collapsedRates;
+};
