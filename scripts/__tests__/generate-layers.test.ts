@@ -1,4 +1,8 @@
-import { collapseRates, padGapsWithZeroRates } from "../generate-layers";
+import {
+  collapseRates,
+  padGapsWithZeroRates,
+  splitRates,
+} from "../generate-layers";
 
 describe("generate-layers", () => {
   describe("padGapsWithZeroRates", () => {
@@ -313,6 +317,151 @@ describe("generate-layers", () => {
           StartTime: "16:00",
           EndTime: "17:00",
           IsOperational: true,
+        },
+      ]);
+    });
+  });
+
+  describe("splitRates", () => {
+    it("should not split rates if splits is empty", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "00:00",
+              EndTime: "10:00",
+            },
+          ],
+          []
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "00:00",
+          EndTime: "10:00",
+        },
+      ]);
+    });
+
+    it("should return empty array if rates are empty", () => {
+      expect(splitRates([], [])).toStrictEqual([]);
+      expect(splitRates([], ["10:00"])).toStrictEqual([]);
+    });
+
+    it("should split a single rate into 2", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "00:00",
+              EndTime: "10:00",
+            },
+          ],
+          ["08:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "00:00",
+          EndTime: "08:00",
+        },
+        {
+          StartTime: "08:00",
+          EndTime: "10:00",
+        },
+      ]);
+    });
+
+    it("should not split rates whose start time is same as a split", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "00:00",
+              EndTime: "10:00",
+            },
+          ],
+          ["00:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "00:00",
+          EndTime: "10:00",
+        },
+      ]);
+    });
+
+    it("should not split rates whose end time is same as a split", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "00:00",
+              EndTime: "10:00",
+            },
+          ],
+          ["10:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "00:00",
+          EndTime: "10:00",
+        },
+      ]);
+    });
+
+    it("should not split rates that are outside of the splits", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "09:00",
+              EndTime: "10:00",
+            },
+            {
+              StartTime: "12:00",
+              EndTime: "13:00",
+            },
+          ],
+          ["08:00", "11:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "09:00",
+          EndTime: "10:00",
+        },
+        {
+          StartTime: "12:00",
+          EndTime: "13:00",
+        },
+      ]);
+    });
+
+    it("should split a single rate multiple times", () => {
+      expect(
+        splitRates(
+          [
+            {
+              StartTime: "08:00",
+              EndTime: "12:00",
+            },
+          ],
+          ["07:00", "09:00", "10:00", "11:00"]
+        )
+      ).toStrictEqual([
+        {
+          StartTime: "08:00",
+          EndTime: "09:00",
+        },
+        {
+          StartTime: "09:00",
+          EndTime: "10:00",
+        },
+        {
+          StartTime: "10:00",
+          EndTime: "11:00",
+        },
+        {
+          StartTime: "11:00",
+          EndTime: "12:00",
         },
       ]);
     });

@@ -84,3 +84,56 @@ export const collapseRates = (
 
   return collapsedRates;
 };
+
+/**
+ * Splits rates up into multiple time intervals if the start time does not match with
+ * one of the specified start times.
+ *
+ * @param rates Sorted by ascending start time
+ * @param splits Sorted by ascending value
+ * @returns
+ */
+export const splitRates = (
+  rates: (Pick<Rate, "StartTime" | "EndTime"> &
+    Record<string, string | number | boolean>)[],
+  splits: string[]
+) => {
+  const processedRates: typeof rates = [];
+  let rateIdx = 0;
+  let splitIdx = 0;
+  let candidateRate: typeof rates[0] | undefined;
+
+  while (rateIdx < rates.length && splitIdx < splits.length) {
+    if (!candidateRate) candidateRate = rates[rateIdx];
+    const split = splits[splitIdx];
+
+    if (candidateRate.EndTime <= split) {
+      // split is after the current interval
+      processedRates.push(candidateRate);
+      candidateRate = undefined;
+      rateIdx += 1;
+    } else if (split <= candidateRate.StartTime) {
+      // split is before the current interval
+      splitIdx += 1;
+    } else {
+      // rate.EndTime > split && split > rate.StartTime
+      processedRates.push({
+        ...candidateRate,
+        EndTime: split,
+      });
+      candidateRate.StartTime = split;
+      splitIdx += 1;
+    }
+  }
+
+  if (candidateRate) {
+    processedRates.push(candidateRate);
+    rateIdx += 1;
+  }
+
+  if (rateIdx < rates.length) {
+    rates.slice(rateIdx, rates.length).forEach((r) => processedRates.push(r));
+  }
+
+  return processedRates;
+};
