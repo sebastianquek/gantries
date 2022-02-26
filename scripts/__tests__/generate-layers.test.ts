@@ -1,5 +1,6 @@
 import {
   collapseRates,
+  getSplits,
   padGapsWithZeroRates,
   splitRates,
 } from "../generate-layers";
@@ -515,6 +516,37 @@ describe("generate-layers", () => {
           IsOperational: true,
         },
       ]);
+    });
+  });
+
+  describe("getSplits", () => {
+    it("should return empty set when there are no rates", () => {
+      expect(getSplits([])).toStrictEqual(new Set());
+    });
+
+    it("should return correct set when there's only 1 rate", () => {
+      expect(
+        getSplits([{ StartTime: "08:00", EndTime: "10:00" }])
+      ).toStrictEqual(new Set(["08:00", "10:00"]));
+    });
+
+    it("should return correct set when there are 2 rates with no overlap", () => {
+      expect(
+        getSplits([
+          { StartTime: "08:00", EndTime: "10:00" },
+          { StartTime: "10:00", EndTime: "11:00" },
+        ])
+      ).toStrictEqual(new Set(["08:00", "10:00", "11:00"]));
+    });
+
+    it("should return correct set when there are 2 rates with overlaps", () => {
+      // Note that overlaps occur because the rates could belong to different zones
+      expect(
+        getSplits([
+          { StartTime: "08:00", EndTime: "10:00", ZoneID: "ABC" },
+          { StartTime: "09:00", EndTime: "11:00", ZoneID: "DEF" },
+        ])
+      ).toStrictEqual(new Set(["08:00", "10:00", "09:00", "11:00"]));
     });
   });
 });

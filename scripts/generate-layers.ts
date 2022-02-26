@@ -139,3 +139,21 @@ export const splitRates = (
 
   return processedRates;
 };
+
+/**
+ * For the given rates, gets all the unique times.
+ *
+ * @param rates
+ * @returns Set of times (splits)
+ */
+export const getSplits = (
+  rates: (Pick<Rate, "StartTime" | "EndTime"> &
+    Record<string, string | number | boolean>)[]
+) => {
+  const splits = new Set();
+  for (const rate of rates) {
+    splits.add(rate.StartTime);
+    splits.add(rate.EndTime);
+  }
+  return splits;
+};
