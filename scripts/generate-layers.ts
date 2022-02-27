@@ -15,7 +15,7 @@ const DAY_END_TIME = "24:00";
  * @param rates Sorted by ascending start time
  * @returns Array of rates that spans the entire day
  */
-export const padGapsWithZeroRates = (
+const padGapsWithZeroRates = (
   rates: Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount">[]
 ) => {
   const paddedRates: typeof rates = [];
@@ -69,7 +69,7 @@ export const padGapsWithZeroRates = (
  * @param rates Sorted by ascending start time
  * @returns Array of whether a gantry is operational for the time intervals
  */
-export const collapseRates = <
+const collapseRates = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount">
 >(
   rates: T[]
@@ -109,7 +109,7 @@ export const collapseRates = <
  * @param splits Sorted by ascending value
  * @returns
  */
-export const splitRates = <T extends Pick<Rate, "StartTime" | "EndTime">>(
+const splitRates = <T extends Pick<Rate, "StartTime" | "EndTime">>(
   rates: T[],
   splits: string[]
 ) => {
@@ -159,7 +159,7 @@ export const splitRates = <T extends Pick<Rate, "StartTime" | "EndTime">>(
  * @param rates
  * @returns Set of times (splits)
  */
-export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
+const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
   rates: T[]
 ) => {
   const splits = new Set<string>();
@@ -181,7 +181,7 @@ export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
  * @param rates Sorted by ascending start time
  * @returns Object that defines if a gantry is operational at a time interval
  */
-export const generateGantryOperationalStatusByTime = <
+const generateGantryOperationalStatusByTime = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(
   rates: T[]
@@ -237,7 +237,7 @@ export const generateGantryOperationalStatusByTime = <
  * @param rates Sorted by ascending start time
  * @returns Object that defines the rate of the gantry at a time interval
  */
-export const generateGantryRatesByTime = <
+const generateGantryRatesByTime = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(
   rates: T[]
@@ -272,7 +272,7 @@ export const generateGantryRatesByTime = <
  *
  * @param ratesByVehicleTypeAndDayType
  */
-export const generateGantryOperationalStatuses = <
+const generateGantryOperationalStatuses = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(ratesByVehicleTypeAndDayType: {
   [vehicleTypeAndDayType: string]: T[];
@@ -303,7 +303,7 @@ export const generateGantryOperationalStatuses = <
  *
  * @param ratesByVehicleTypeAndDayType
  */
-export const generateGantryRates = <
+const generateGantryRates = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(ratesByVehicleTypeAndDayType: {
   [vehicleTypeAndDayType: string]: T[];
@@ -323,4 +323,15 @@ export const generateGantryRates = <
   }
 
   return gantryRates;
+};
+
+export const exportedForTesting = {
+  padGapsWithZeroRates,
+  collapseRates,
+  splitRates,
+  getSplits,
+  generateGantryOperationalStatusByTime,
+  generateGantryRatesByTime,
+  generateGantryOperationalStatuses,
+  generateGantryRates,
 };

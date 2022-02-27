@@ -1,4 +1,6 @@
-import {
+import { exportedForTesting } from "../generate-layers";
+
+const {
   collapseRates,
   generateGantryRatesByTime,
   generateGantryOperationalStatusByTime,
@@ -7,7 +9,7 @@ import {
   splitRates,
   generateGantryOperationalStatuses,
   generateGantryRates,
-} from "../generate-layers";
+} = exportedForTesting;
 
 describe("generate-layers", () => {
   describe("padGapsWithZeroRates", () => {
