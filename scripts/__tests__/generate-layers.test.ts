@@ -6,6 +6,7 @@ import {
   padGapsWithZeroRates,
   splitRates,
   generateGantryOperationalStatuses,
+  generateGantryRates,
 } from "../generate-layers";
 
 describe("generate-layers", () => {
@@ -620,6 +621,99 @@ describe("generate-layers", () => {
           },
           "12:00-13:00": {
             DEF: true,
+          },
+        },
+      });
+    });
+  });
+
+  describe("generateGantryRates", () => {
+    it("should return correct result when there's 1 vehicle and day type", () => {
+      expect(
+        generateGantryRates({
+          "Motorcycle Weekday": [
+            {
+              StartTime: "08:00",
+              EndTime: "10:00",
+              ChargeAmount: 2,
+              ZoneID: "ABC",
+            },
+            {
+              StartTime: "09:00",
+              EndTime: "11:00",
+              ChargeAmount: 1.5,
+              ZoneID: "DEF",
+            },
+          ],
+        })
+      ).toStrictEqual({
+        "Motorcycle Weekday": {
+          "08:00-09:00": {
+            ABC: 2,
+          },
+          "09:00-10:00": {
+            ABC: 2,
+            DEF: 1.5,
+          },
+          "10:00-11:00": {
+            DEF: 1.5,
+          },
+        },
+      });
+    });
+
+    it("should return correct result when there's 2 vehicle and day types", () => {
+      expect(
+        generateGantryRates({
+          "Motorcycle Weekday": [
+            {
+              StartTime: "08:00",
+              EndTime: "10:00",
+              ChargeAmount: 2,
+              ZoneID: "ABC",
+            },
+            {
+              StartTime: "09:00",
+              EndTime: "11:00",
+              ChargeAmount: 1.5,
+              ZoneID: "DEF",
+            },
+          ],
+
+          "Taxi Weekday": [
+            {
+              StartTime: "09:00",
+              EndTime: "10:00",
+              ChargeAmount: 3,
+              ZoneID: "ABC",
+            },
+            {
+              StartTime: "12:00",
+              EndTime: "13:00",
+              ChargeAmount: 2,
+              ZoneID: "DEF",
+            },
+          ],
+        })
+      ).toStrictEqual({
+        "Motorcycle Weekday": {
+          "08:00-09:00": {
+            ABC: 2,
+          },
+          "09:00-10:00": {
+            ABC: 2,
+            DEF: 1.5,
+          },
+          "10:00-11:00": {
+            DEF: 1.5,
+          },
+        },
+        "Taxi Weekday": {
+          "09:00-10:00": {
+            ABC: 3,
+          },
+          "12:00-13:00": {
+            DEF: 2,
           },
         },
       });

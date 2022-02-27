@@ -294,3 +294,33 @@ export const generateGantryOperationalStatuses = <
 
   return gantryOperationalStatuses;
 };
+
+/**
+ * Generates the rates of gantries across the vehicle and day types.
+ *
+ * Preconditions:
+ * - Rates of each vehicle and day type are sorted by ascending start time
+ *
+ * @param ratesByVehicleTypeAndDayType
+ */
+export const generateGantryRates = <
+  T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
+>(ratesByVehicleTypeAndDayType: {
+  [vehicleTypeAndDayType: string]: T[];
+}) => {
+  const gantryRates: {
+    [vehicleTypeAndDayType: string]: {
+      [timeInterval: string]: {
+        [zoneId: string]: number;
+      };
+    };
+  } = {};
+
+  for (const [vehicleTypeAndDayType, rates] of Object.entries(
+    ratesByVehicleTypeAndDayType
+  )) {
+    gantryRates[vehicleTypeAndDayType] = generateGantryRatesByTime(rates);
+  }
+
+  return gantryRates;
+};
