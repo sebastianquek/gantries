@@ -210,3 +210,42 @@ export const getGantryOperationalStatusByTime = <
 
   return result;
 };
+
+/**
+ * Generates the rate of each gantry at every time interval.
+ * The time intervals are calculated in a manner that minimises the number of
+ * time intervals.
+ *
+ * Preconditions:
+ * - Consecutive rates have different charge amounts. This removes the need to
+ * do any collapsing of rates and minimises the number of time intervals
+ *
+ * @param rates Sorted by ascending start time
+ * @returns Object that defines the rate of the gantry at a time interval
+ */
+export const generateGantryRatesByTime = <
+  T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
+>(
+  rates: T[]
+) => {
+  // Sets are not ordered, converting to array to be sorted
+  const sortedSplitsArr = Array.from(getSplits(rates)).sort();
+
+  const ratesByZone = groupBy(rates, "ZoneID");
+  const result: {
+    [timeInterval: string]: {
+      [zoneId: string]: number;
+    };
+  } = {};
+
+  // Adds whether the gantry is operational for each time interval (split)
+  for (const [zoneId, ratesOfZone] of Object.entries(ratesByZone)) {
+    const splitRatesOfZone = splitRates(ratesOfZone, sortedSplitsArr);
+    for (const splitRate of splitRatesOfZone) {
+      const key = `${splitRate.StartTime}-${splitRate.EndTime}`;
+      result[key] = { ...result[key], [zoneId]: splitRate.ChargeAmount };
+    }
+  }
+
+  return result;
+};

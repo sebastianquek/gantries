@@ -1,5 +1,6 @@
 import {
   collapseRates,
+  generateGantryRatesByTime,
   getGantryOperationalStatusByTime,
   getSplits,
   padGapsWithZeroRates,
@@ -392,6 +393,140 @@ describe("generate-layers", () => {
         },
         "10:00-11:00": {
           DEF: true,
+        },
+      });
+    });
+  });
+
+  describe("generateGantryRatesByTime", () => {
+    it("should return correct result when there's only 1 zone with non-consecutive positive rates", () => {
+      expect(
+        generateGantryRatesByTime([
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 2,
+            ZoneID: "ABC",
+          },
+          {
+            StartTime: "11:00",
+            EndTime: "12:00",
+            ChargeAmount: 1.5,
+            ZoneID: "ABC",
+          },
+        ])
+      ).toStrictEqual({
+        "08:00-10:00": {
+          ABC: 2,
+        },
+        "11:00-12:00": {
+          ABC: 1.5,
+        },
+      });
+    });
+
+    it("should return correct result when there's only 1 zone with consecutive positive rates", () => {
+      expect(
+        generateGantryRatesByTime([
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 2,
+            ZoneID: "ABC",
+          },
+          {
+            StartTime: "10:00",
+            EndTime: "12:00",
+            ChargeAmount: 1.5,
+            ZoneID: "ABC",
+          },
+        ])
+      ).toStrictEqual({
+        "08:00-10:00": {
+          ABC: 2,
+        },
+        "10:00-12:00": {
+          ABC: 1.5,
+        },
+      });
+    });
+
+    it("should return correct result when there's 2 zones with 1 interval", () => {
+      expect(
+        generateGantryRatesByTime([
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 2,
+            ZoneID: "ABC",
+          },
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 1.5,
+            ZoneID: "DEF",
+          },
+        ])
+      ).toStrictEqual({
+        "08:00-10:00": {
+          ABC: 2,
+          DEF: 1.5,
+        },
+      });
+    });
+
+    it("should return correct result when there's 2 zones with 2 different intervals that do not overlap", () => {
+      expect(
+        generateGantryRatesByTime([
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 2,
+            ZoneID: "ABC",
+          },
+          {
+            StartTime: "10:00",
+            EndTime: "11:00",
+            ChargeAmount: 1.5,
+            ZoneID: "DEF",
+          },
+        ])
+      ).toStrictEqual({
+        "08:00-10:00": {
+          ABC: 2,
+        },
+        "10:00-11:00": {
+          DEF: 1.5,
+        },
+      });
+    });
+
+    it("should return correct result when there's 2 zones with 2 different intervals that overlap", () => {
+      expect(
+        generateGantryRatesByTime([
+          {
+            StartTime: "08:00",
+            EndTime: "10:00",
+            ChargeAmount: 2,
+            ZoneID: "ABC",
+          },
+          {
+            StartTime: "09:00",
+            EndTime: "11:00",
+            ChargeAmount: 1.5,
+            ZoneID: "DEF",
+          },
+        ])
+      ).toStrictEqual({
+        "08:00-09:00": {
+          ABC: 2,
+        },
+        "09:00-10:00": {
+          ABC: 2,
+          DEF: 1.5,
+        },
+        "10:00-11:00": {
+          DEF: 1.5,
         },
       });
     });
