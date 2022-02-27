@@ -9,6 +9,9 @@ const DAY_END_TIME = "24:00";
  * Given an array of rates, adds $0 rates of the missing intervals.
  * Does not mutate the rates param.
  *
+ * Preconditions:
+ * - `rates` are sorted by ascending start time
+ *
  * @param rates Sorted by ascending start time
  * @returns Array of rates that spans the entire day
  */
@@ -60,6 +63,9 @@ export const padGapsWithZeroRates = (
  * If multiple consecutive rates are positive, they collapse into 1 time interval.
  * Does not mutate the rates param.
  *
+ * Preconditions:
+ * - `rates` are sorted by ascending start time
+ *
  * @param rates Sorted by ascending start time
  * @returns Array of whether a gantry is operational for the time intervals
  */
@@ -94,6 +100,10 @@ export const collapseRates = <
  * Splits rates into multiple time intervals if the start time does not match with
  * one of the specified splits.
  * Does not mutate the rates param.
+ *
+ * Preconditions:
+ * - `rates` are sorted by ascending start time
+ * - `splits` are sorted by ascending value
  *
  * @param rates Sorted by ascending start time
  * @param splits Sorted by ascending value
@@ -165,6 +175,9 @@ export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
  * The time intervals are calculated in a manner that minimises the number of
  * time intervals.
  *
+ * Preconditions:
+ * - `rates` are sorted by ascending start time
+ *
  * @param rates Sorted by ascending start time
  * @returns Object that defines if a gantry is operational at a time interval
  */
@@ -217,6 +230,7 @@ export const generateGantryOperationalStatusByTime = <
  * time intervals.
  *
  * Preconditions:
+ * - `rates` are sorted by ascending start time
  * - Consecutive rates have different charge amounts. This removes the need to
  * do any collapsing of rates and minimises the number of time intervals
  *
