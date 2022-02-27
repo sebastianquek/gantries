@@ -1,5 +1,7 @@
 import type { Rate } from "./types";
 
+import { groupBy } from "lodash";
+
 const DAY_START_TIME = "00:00";
 const DAY_END_TIME = "24:00";
 
@@ -61,10 +63,12 @@ export const padGapsWithZeroRates = (
  * @param rates Sorted by ascending start time
  * @returns Array of whether a gantry is operational for the time intervals
  */
-export const collapseRates = (
-  rates: Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount">[]
+export const collapseRates = <
+  T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount">
+>(
+  rates: T[]
 ) => {
-  const collapsedRates: (Pick<Rate, "StartTime" | "EndTime"> & {
+  const collapsedRates: (Omit<T, "ChargeAmount"> & {
     IsOperational: boolean;
   })[] = [];
 
@@ -74,7 +78,7 @@ export const collapseRates = (
       !previousRate ||
       rate.StartTime !== previousRate.EndTime || // Not consecutive, need to add a new entry
       (rate.ChargeAmount > 0 && !previousRate.IsOperational) || // Current is operational while previous is not
-      (rate.ChargeAmount === 0 && previousRate.IsOperational) // // Current is not operational while previous is
+      (rate.ChargeAmount === 0 && previousRate.IsOperational) // Current is not operational while previous is
     ) {
       const { ChargeAmount, ...rest } = rate;
       collapsedRates.push({ ...rest, IsOperational: ChargeAmount > 0 });
@@ -95,9 +99,8 @@ export const collapseRates = (
  * @param splits Sorted by ascending value
  * @returns
  */
-export const splitRates = (
-  rates: (Pick<Rate, "StartTime" | "EndTime"> &
-    Record<string, string | number | boolean>)[],
+export const splitRates = <T extends Pick<Rate, "StartTime" | "EndTime">>(
+  rates: T[],
   splits: string[]
 ) => {
   const processedRates: typeof rates = [];
@@ -110,12 +113,12 @@ export const splitRates = (
     const split = splits[splitIdx];
 
     if (candidateRate.EndTime <= split) {
-      // split is after the current interval
+      // Split is after the current interval
       processedRates.push(candidateRate);
       candidateRate = undefined;
       rateIdx += 1;
     } else if (split <= candidateRate.StartTime) {
-      // split is before the current interval
+      // Split is before the current interval
       splitIdx += 1;
     } else {
       // rate.EndTime > split && split > rate.StartTime
@@ -146,14 +149,64 @@ export const splitRates = (
  * @param rates
  * @returns Set of times (splits)
  */
-export const getSplits = (
-  rates: (Pick<Rate, "StartTime" | "EndTime"> &
-    Record<string, string | number | boolean>)[]
+export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
+  rates: T[]
 ) => {
-  const splits = new Set();
+  const splits = new Set<string>();
   for (const rate of rates) {
     splits.add(rate.StartTime);
     splits.add(rate.EndTime);
   }
   return splits;
+};
+
+/**
+ * Gets the operational status of each gantry at every time interval.
+ * The time intervals are calculated in a manner that minimises the number of
+ * time intervals.
+ *
+ * @param rates Sorted by ascending start time
+ * @returns Object that defines if a gantry is operational at a time interval
+ */
+export const getGantryOperationalStatusByTime = <
+  T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
+>(
+  rates: T[]
+) => {
+  const splitsAcrossAllZones = new Set<string>();
+  const ratesByZone = groupBy(rates, "ZoneID");
+  const collapsedRatesByZone: {
+    [zoneId: string]: ReturnType<typeof collapseRates>;
+  } = {};
+
+  // Collapse rates for each zone and find the time intervals (splits)
+  for (const [zoneId, ratesOfZone] of Object.entries(ratesByZone)) {
+    const collapsedRates = collapseRates(ratesOfZone);
+    collapsedRatesByZone[zoneId] = collapsedRates;
+
+    // Find time intervals and add them to the splits across all zones;
+    const foundSplits = getSplits(collapsedRates);
+    for (const foundSplit of Array.from(foundSplits)) {
+      splitsAcrossAllZones.add(foundSplit);
+    }
+  }
+
+  // Sets are not ordered, converting to array to be sorted
+  const sortedSplitsArr = Array.from(splitsAcrossAllZones).sort();
+  const result: {
+    [timeInterval: string]: {
+      [zoneId: string]: boolean;
+    };
+  } = {};
+
+  // Adds whether the gantry is operational for each time interval (split)
+  for (const [zoneId, ratesOfZone] of Object.entries(collapsedRatesByZone)) {
+    const splitRatesOfZone = splitRates(ratesOfZone, sortedSplitsArr);
+    for (const splitRate of splitRatesOfZone) {
+      const key = `${splitRate.StartTime}-${splitRate.EndTime}`;
+      result[key] = { ...result[key], [zoneId]: splitRate.IsOperational };
+    }
+  }
+
+  return result;
 };
