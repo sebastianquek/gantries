@@ -1,7 +1,7 @@
 import {
   collapseRates,
   generateGantryRatesByTime,
-  getGantryOperationalStatusByTime,
+  generateGantryOperationalStatusByTime,
   getSplits,
   padGapsWithZeroRates,
   splitRates,
@@ -267,10 +267,10 @@ describe("generate-layers", () => {
     });
   });
 
-  describe("getGantryOperationalStatusByTime", () => {
+  describe("generateGantryOperationalStatusByTime", () => {
     it("should return correct result when there's only 1 zone with non-consecutive positive rates", () => {
       expect(
-        getGantryOperationalStatusByTime([
+        generateGantryOperationalStatusByTime([
           {
             StartTime: "08:00",
             EndTime: "10:00",
@@ -296,7 +296,7 @@ describe("generate-layers", () => {
 
     it("should return correct result when there's only 1 zone with consecutive positive rates", () => {
       expect(
-        getGantryOperationalStatusByTime([
+        generateGantryOperationalStatusByTime([
           {
             StartTime: "08:00",
             EndTime: "10:00",
@@ -319,7 +319,7 @@ describe("generate-layers", () => {
 
     it("should return correct result when there's 2 zones with 1 interval", () => {
       expect(
-        getGantryOperationalStatusByTime([
+        generateGantryOperationalStatusByTime([
           {
             StartTime: "08:00",
             EndTime: "10:00",
@@ -343,7 +343,7 @@ describe("generate-layers", () => {
 
     it("should return correct result when there's 2 zones with 2 different intervals that do not overlap", () => {
       expect(
-        getGantryOperationalStatusByTime([
+        generateGantryOperationalStatusByTime([
           {
             StartTime: "08:00",
             EndTime: "10:00",
@@ -369,7 +369,7 @@ describe("generate-layers", () => {
 
     it("should return correct result when there's 2 zones with 2 different intervals that overlap", () => {
       expect(
-        getGantryOperationalStatusByTime([
+        generateGantryOperationalStatusByTime([
           {
             StartTime: "08:00",
             EndTime: "10:00",

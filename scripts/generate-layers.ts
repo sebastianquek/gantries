@@ -161,14 +161,14 @@ export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
 };
 
 /**
- * Gets the operational status of each gantry at every time interval.
+ * Generates the operational status of each gantry at every time interval.
  * The time intervals are calculated in a manner that minimises the number of
  * time intervals.
  *
  * @param rates Sorted by ascending start time
  * @returns Object that defines if a gantry is operational at a time interval
  */
-export const getGantryOperationalStatusByTime = <
+export const generateGantryOperationalStatusByTime = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(
   rates: T[]
