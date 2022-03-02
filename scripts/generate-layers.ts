@@ -247,18 +247,22 @@ const generateGantryRatesByTime = <
 
   const ratesByZone = groupBy(rates, "ZoneID");
   const result: {
-    [timeInterval: string]: {
-      [zoneId: string]: number;
+    [zoneId: string]: {
+      [timeInterval: string]: number;
     };
   } = {};
 
   // Adds whether the gantry is operational for each time interval (split)
   for (const [zoneId, ratesOfZone] of Object.entries(ratesByZone)) {
     const splitRatesOfZone = splitRates(ratesOfZone, sortedSplitsArr);
+    const timeIntervalsToChargeAmounts: {
+      [timeInterval: string]: number;
+    } = {};
     for (const splitRate of splitRatesOfZone) {
       const key = `${splitRate.StartTime}-${splitRate.EndTime}`;
-      result[key] = { ...result[key], [zoneId]: splitRate.ChargeAmount };
+      timeIntervalsToChargeAmounts[key] = splitRate.ChargeAmount;
     }
+    result[zoneId] = timeIntervalsToChargeAmounts;
   }
 
   return result;
@@ -310,8 +314,8 @@ const generateGantryRates = <
 }) => {
   const gantryRates: {
     [vehicleTypeAndDayType: string]: {
-      [timeInterval: string]: {
-        [zoneId: string]: number;
+      [zoneId: string]: {
+        [timeInterval: string]: number;
       };
     };
   } = {};
