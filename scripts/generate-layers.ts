@@ -2,6 +2,8 @@ import type { Rate } from "./types";
 
 import { groupBy } from "lodash";
 
+import { slugify } from "./utils/slugify";
+
 const DAY_START_TIME = "00:00";
 const DAY_END_TIME = "24:00";
 
@@ -307,7 +309,7 @@ const generateGantryOperationalStatuses = <
  *
  * @param ratesByVehicleTypeAndDayType
  */
-const generateGantryRates = <
+export const generateGantryRates = <
   T extends Pick<Rate, "StartTime" | "EndTime" | "ChargeAmount" | "ZoneID">
 >(ratesByVehicleTypeAndDayType: {
   [vehicleTypeAndDayType: string]: T[];
@@ -329,6 +331,37 @@ const generateGantryRates = <
   return gantryRates;
 };
 
+/**
+ * Each zone refers to a single-level object of rates for all vehicle and day type.
+ *
+ * @param ratesObj
+ */
+export const flattenRates = (ratesObj: {
+  [vehicleTypeAndDayType: string]: {
+    [zoneId: string]: {
+      [timeInterval: string]: number;
+    };
+  };
+}) => {
+  const result: {
+    [zoneId: string]: {
+      [key: string]: number;
+    };
+  } = {};
+
+  for (const [vehicleTypeAndDayType, ratesByZone] of Object.entries(ratesObj)) {
+    for (const [zoneId, ratesByTimeInterval] of Object.entries(ratesByZone)) {
+      result[zoneId] = { ...result[zoneId] };
+      for (const [timeInterval, rate] of Object.entries(ratesByTimeInterval)) {
+        const key = slugify(`${vehicleTypeAndDayType}-${timeInterval}`);
+        result[zoneId][key] = rate;
+      }
+    }
+  }
+
+  return result;
+};
+
 export const exportedForTesting = {
   padGapsWithZeroRates,
   collapseRates,
@@ -337,5 +370,4 @@ export const exportedForTesting = {
   generateGantryOperationalStatusByTime,
   generateGantryRatesByTime,
   generateGantryOperationalStatuses,
-  generateGantryRates,
 };

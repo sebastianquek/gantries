@@ -1,4 +1,8 @@
-import { exportedForTesting } from "../generate-layers";
+import {
+  generateGantryRates,
+  exportedForTesting,
+  flattenRates,
+} from "../generate-layers";
 
 const {
   collapseRates,
@@ -8,7 +12,6 @@ const {
   padGapsWithZeroRates,
   splitRates,
   generateGantryOperationalStatuses,
-  generateGantryRates,
 } = exportedForTesting;
 
 describe("generate-layers", () => {
@@ -709,6 +712,66 @@ describe("generate-layers", () => {
           DEF: {
             "12:00-13:00": 2,
           },
+        },
+      });
+    });
+  });
+
+  describe("flattenRates", () => {
+    it("should flatten rates correctly when an empty object is provided", () => {
+      expect(flattenRates({})).toStrictEqual({});
+    });
+
+    it("should flatten rates correctly when there are no zones for a vehicle and day type", () => {
+      expect(flattenRates({ "Motorcycle Weekday": {} })).toStrictEqual({});
+    });
+
+    it("should flatten rates correctly when there are no rates for a vehicle and day type and zone", () => {
+      expect(flattenRates({ "Motorcycle Weekday": { abc: {} } })).toStrictEqual(
+        {
+          abc: {},
+        }
+      );
+    });
+
+    it("should flatten rates correctly when there's 1 rate", () => {
+      expect(
+        flattenRates({ "Motorcycle Weekday": { abc: { "08:00-09:00": 1 } } })
+      ).toStrictEqual({
+        abc: {
+          "motorcycle-weekday-08-00-09-00": 1,
+        },
+      });
+    });
+
+    it("should flatten rates correctly when there's multiple rate", () => {
+      expect(
+        flattenRates({
+          "Motorcycle Weekday": {
+            abc: {
+              "08:00-09:00": 1,
+              "09:00-10:00": 2,
+            },
+          },
+          "Taxi Weekday": {
+            abc: {
+              "08:00-09:00": 2,
+              "09:00-10:00": 3,
+            },
+            bcd: {
+              "08:00-09:00": 2,
+            },
+          },
+        })
+      ).toStrictEqual({
+        abc: {
+          "motorcycle-weekday-08-00-09-00": 1,
+          "motorcycle-weekday-09-00-10-00": 2,
+          "taxi-weekday-08-00-09-00": 2,
+          "taxi-weekday-09-00-10-00": 3,
+        },
+        bcd: {
+          "taxi-weekday-08-00-09-00": 2,
         },
       });
     });
