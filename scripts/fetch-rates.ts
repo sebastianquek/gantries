@@ -1,6 +1,7 @@
 import "dotenv/config";
 import type { Rate, RatesData } from "./types";
 
+import { writeFileSync } from "fs";
 import { join } from "path";
 
 import axios from "axios";
@@ -86,6 +87,12 @@ const run = async () => {
   Object.entries(parsedRates).forEach(([vehicleTypeAndDayType, rates]) => {
     saveDataToCSV(slugify(vehicleTypeAndDayType), rates, OUTPUT_DATA_DIR);
   });
+
+  // Save to a file that contains all the rates across all vehicle and day types
+  writeFileSync(
+    join(OUTPUT_DATA_DIR, "all-rates.json"),
+    JSON.stringify(parsedRates)
+  );
 
   const parsedVehicleTypes = parseVehicleTypes(rawRates);
   saveDataToCSV(slugify("vehicle types"), parsedVehicleTypes, OUTPUT_DATA_DIR);
