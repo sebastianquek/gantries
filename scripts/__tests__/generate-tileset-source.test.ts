@@ -410,7 +410,7 @@ describe("generate-tileset-source", () => {
         join(__dirname, "./fixtures/empty.ld.json")
       );
       expect(axiosPutSpy).toHaveBeenCalledWith(
-        "base_url/username/tilesetSourceId?access_token=accessToken",
+        "base_url/username/tilesetSourceId",
         expect.objectContaining({
           _streams: expect.arrayContaining([
             expect.stringContaining(
@@ -419,6 +419,9 @@ describe("generate-tileset-source", () => {
           ]),
         }),
         {
+          params: {
+            access_token: "accessToken",
+          },
           headers: {
             "content-type": expect.stringContaining(
               "multipart/form-data; boundary="

@@ -10,7 +10,7 @@ import FormData from "form-data";
 import { flattenRates, generateGantryRates } from "./generate-layers";
 import { importCSVasJSON } from "./utils/importCSVasJSON";
 
-const MAPBOX_PUT_TILESET_SOURCE_URL =
+const MAPBOX_PUT_TILESET_SOURCE_BASE_URL =
   "https://api.mapbox.com/tilesets/v1/sources";
 const GANTRY_LOCATIONS_CSV_FILEPATH = join(
   __dirname,
@@ -88,6 +88,7 @@ const convertGeoJSONPointFeaturestoLDGeoJSON = (
 
 /**
  * Update/insert the tileset source via Mapbox's API
+ * https://docs.mapbox.com/api/maps/mapbox-tiling-service/#replace-a-tileset-source
  *
  * @param baseUrl
  * @param username
@@ -102,18 +103,20 @@ const upsertTilesetSource = async (
   accessToken: string,
   filepath: string
 ) => {
-  const url = `${baseUrl}/${username}/${tilesetSourceId}?access_token=${accessToken}`;
+  const url = `${baseUrl}/${username}/${tilesetSourceId}`;
   const bodyFormData = new FormData();
   bodyFormData.append("file", createReadStream(filepath));
+  const config = {
+    params: { access_token: accessToken },
+    headers: bodyFormData.getHeaders(),
+  };
   try {
     const { data } = await axios.put<{
       id: string;
       files: number;
       source_size: number;
       file_size: number;
-    }>(url, bodyFormData, {
-      headers: bodyFormData.getHeaders(),
-    });
+    }>(url, bodyFormData, config);
     console.log({
       files: data.files,
       sourceSize: data.source_size,
@@ -144,7 +147,7 @@ const run = async () => {
 
   writeFileSync(GANTRIES_GEOJSON_LD_FILEPATH, ldGeoJSON.join("\n"));
   await upsertTilesetSource(
-    MAPBOX_PUT_TILESET_SOURCE_URL,
+    MAPBOX_PUT_TILESET_SOURCE_BASE_URL,
     process.env.MAPBOX_USERNAME ?? "",
     process.env.MAPBOX_TILESET_SOURCE_ID ?? "",
     process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
