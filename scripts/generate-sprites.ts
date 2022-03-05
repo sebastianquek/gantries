@@ -7,7 +7,19 @@ import axios from "axios";
 const MAPBOX_ADD_IMAGE_BASE_URL = "https://api.mapbox.com/styles/v1";
 const GANTRY_ON_SVG_PATH = join(__dirname, "./sprites/gantry-on.svg");
 const GANTRY_OFF_SVG_PATH = join(__dirname, "./sprites/gantry-off.svg");
+const RATE_BG_SVG_PATH = join(__dirname, "./sprites/rate-bg.svg");
 
+/**
+ * Add SVG to sprite
+ * https://docs.mapbox.com/api/maps/styles/#add-new-image-to-sprite
+ * 
+ * @param baseUrl 
+ * @param username 
+ * @param styleId 
+ * @param iconName 
+ * @param accessToken 
+ * @param svgPath 
+ */
 const addSvgToSprite = async (
   baseUrl: string,
   username: string,
@@ -42,6 +54,15 @@ const run = async () => {
     process.env.MAPBOX_SPRITE_GANTRY_OFF ?? "",
     process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
     GANTRY_OFF_SVG_PATH
+  );
+
+  await addSvgToSprite(
+    MAPBOX_ADD_IMAGE_BASE_URL,
+    process.env.MAPBOX_USERNAME ?? "",
+    process.env.MAPBOX_STYLE_ID ?? "",
+    process.env.MAPBOX_SPRITE_RATE_BG ?? "",
+    process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
+    RATE_BG_SVG_PATH
   );
 };
 
