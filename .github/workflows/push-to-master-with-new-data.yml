@@ -10,6 +10,9 @@ on:
 
 env:
   NODE_VERSION: "16"
+  MAPBOX_PRIVATE_ACCESS_TOKEN: ${{ secrets.MAPBOX_PRIVATE_ACCESS_TOKEN }}
+  MAPBOX_USERNAME: ${{ secrets.MAPBOX_USERNAME }}
+  MAPBOX_TILESET_SOURCE_ID: ${{ secrets.MAPBOX_TILESET_SOURCE_ID }}
 
 jobs:
   generate-tileset-source:
