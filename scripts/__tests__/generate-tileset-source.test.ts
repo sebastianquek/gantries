@@ -394,6 +394,14 @@ describe("generate-tileset-source", () => {
 
   describe("upsertTilesetSource", () => {
     it("should provide axios with the correct properties", async () => {
+      axiosPutSpy.mockResolvedValueOnce({
+        data: {
+          id: "id",
+          files: 1,
+          source_size: 1,
+          file_size: 1,
+        },
+      });
       await upsertTilesetSource(
         "base_url",
         "username",
