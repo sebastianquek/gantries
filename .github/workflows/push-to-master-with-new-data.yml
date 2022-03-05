@@ -1,0 +1,26 @@
+name: Push to master with new data
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "public/data/gantry-locations.csv"
+      - "public/data/all-rates.json"
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "16"
+
+jobs:
+  generate-tileset-source:
+    name: "Update tileset source"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run gen:tileset-source
