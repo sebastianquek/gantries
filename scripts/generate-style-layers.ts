@@ -24,20 +24,29 @@ const RATES_JSON_FILEPATH = join(__dirname, "../public/data/all-rates.json");
 const generateRateLayers = (
   keys: string[],
   sourceLayer: string,
-  idPrefix: string
+  idPrefix: string,
+  rateBgSpriteName: string
 ): MapboxStyle["layers"] => {
   return keys.map((key) => ({
     id: `${idPrefix}-${key}`,
     type: "symbol",
     source: "composite",
     "source-layer": sourceLayer,
-    paint: {},
+    paint: {
+      "text-color": "hsl(0, 0%, 100%)",
+    },
     layout: {
-      "text-allow-overlap": true,
-      "text-field": ["get", key],
+      "icon-allow-overlap": true,
+      "icon-image": ["case", ["has", key], rateBgSpriteName, ""],
+      "icon-text-fit": "both",
+      "icon-text-fit-padding": [3, 7, 2, 7],
+      "text-allow-overlap": ["step", ["zoom"], false, 14, true],
+      "text-field": ["case", ["has", key], ["concat", "$", ["get", key]], ""],
+      "text-font": ["Red Hat Text Bold", "Arial Unicode MS Bold"],
       "text-pitch-alignment": "viewport",
-      "text-radial-offset": 1.2,
-      "text-variable-anchor": ["left"],
+      "text-radial-offset": 1.3,
+      "text-size": 18,
+      "text-variable-anchor": ["bottom"],
       visibility: "none",
     },
   }));
@@ -75,6 +84,12 @@ const generateOperationalLayers = (
       ],
       "icon-rotate": ["get", "bearing"],
       "icon-rotation-alignment": "map",
+      "symbol-sort-key": [
+        "case",
+        [">", ["to-number", ["get", key], 0], 0],
+        2,
+        1,
+      ],
       visibility: "none",
     },
   }));
@@ -223,7 +238,8 @@ const run = async () => {
   const rateLayers = generateRateLayers(
     keys,
     process.env.MAPBOX_TILESET_ID ?? "",
-    RATE_LAYER_ID_PREFIX
+    RATE_LAYER_ID_PREFIX,
+    process.env.MAPBOX_SPRITE_RATE_BG ?? ""
   );
   const operationalLayers = generateOperationalLayers(
     keys,
@@ -252,7 +268,7 @@ const run = async () => {
   const { created, modified, ...newStyle } = mergeStyleLayers(
     updatedStyleWithGlyphs,
     [RATE_LAYER_ID_PREFIX, OPERATIONAL_LAYER_ID_PREFIX],
-    [...rateLayers, ...operationalLayers]
+    [...operationalLayers, ...rateLayers]
   );
 
   // Push changes to Mapbox

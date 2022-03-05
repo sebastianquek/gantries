@@ -23,25 +23,40 @@ const axiosPatchSpy = jest.spyOn(axios, "patch");
 describe("generate-style-layers", () => {
   describe("generateRateLayers", () => {
     it("should return empty array if no keys are provided", () => {
-      expect(generateRateLayers([], "sourceLayer", "rate")).toStrictEqual([]);
+      expect(
+        generateRateLayers([], "sourceLayer", "rate", "rate-bg")
+      ).toStrictEqual([]);
     });
 
     it("should return correctly when multiple keys are provided", () => {
       expect(
-        generateRateLayers(["key1", "key2"], "sourceLayer", "rate")
+        generateRateLayers(["key1", "key2"], "sourceLayer", "rate", "rate-bg")
       ).toStrictEqual([
         {
           id: "rate-key1",
           type: "symbol",
           source: "composite",
           "source-layer": "sourceLayer",
-          paint: {},
+          paint: {
+            "text-color": "hsl(0, 0%, 100%)",
+          },
           layout: {
-            "text-allow-overlap": true,
-            "text-field": ["get", "key1"],
+            "icon-allow-overlap": true,
+            "icon-image": ["case", ["has", "key1"], "rate-bg", ""],
+            "icon-text-fit": "both",
+            "icon-text-fit-padding": [3, 7, 2, 7],
+            "text-allow-overlap": ["step", ["zoom"], false, 14, true],
+            "text-field": [
+              "case",
+              ["has", "key1"],
+              ["concat", "$", ["get", "key1"]],
+              "",
+            ],
+            "text-font": ["Red Hat Text Bold", "Arial Unicode MS Bold"],
             "text-pitch-alignment": "viewport",
-            "text-radial-offset": 1.2,
-            "text-variable-anchor": ["left"],
+            "text-radial-offset": 1.3,
+            "text-size": 18,
+            "text-variable-anchor": ["bottom"],
             visibility: "none",
           },
         },
@@ -50,13 +65,26 @@ describe("generate-style-layers", () => {
           type: "symbol",
           source: "composite",
           "source-layer": "sourceLayer",
-          paint: {},
+          paint: {
+            "text-color": "hsl(0, 0%, 100%)",
+          },
           layout: {
-            "text-allow-overlap": true,
-            "text-field": ["get", "key2"],
+            "icon-allow-overlap": true,
+            "icon-image": ["case", ["has", "key2"], "rate-bg", ""],
+            "icon-text-fit": "both",
+            "icon-text-fit-padding": [3, 7, 2, 7],
+            "text-allow-overlap": ["step", ["zoom"], false, 14, true],
+            "text-field": [
+              "case",
+              ["has", "key2"],
+              ["concat", "$", ["get", "key2"]],
+              "",
+            ],
+            "text-font": ["Red Hat Text Bold", "Arial Unicode MS Bold"],
             "text-pitch-alignment": "viewport",
-            "text-radial-offset": 1.2,
-            "text-variable-anchor": ["left"],
+            "text-radial-offset": 1.3,
+            "text-size": 18,
+            "text-variable-anchor": ["bottom"],
             visibility: "none",
           },
         },
@@ -103,6 +131,12 @@ describe("generate-style-layers", () => {
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
+            "symbol-sort-key": [
+              "case",
+              [">", ["to-number", ["get", "key1"], 0], 0],
+              2,
+              1,
+            ],
             visibility: "none",
           },
         },
@@ -122,6 +156,12 @@ describe("generate-style-layers", () => {
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
+            "symbol-sort-key": [
+              "case",
+              [">", ["to-number", ["get", "key2"], 0], 0],
+              2,
+              1,
+            ],
             visibility: "none",
           },
         },
