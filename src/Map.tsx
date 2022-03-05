@@ -29,9 +29,9 @@ export const Map = () => {
 
   useMap({
     mapRef: mapRef,
-    initialLng: 103.8229313,
-    initialLat: 1.3551607,
-    initialZoom: 11.5,
+    initialLng: 103.837,
+    initialLat: 1.31,
+    initialZoom: 12.15,
     mapStyle: mapStyle,
   });
 
