@@ -1,7 +1,7 @@
 import type { Rate } from "./types";
 
 import "dotenv/config";
-import { createReadStream, readFileSync, writeFileSync } from "fs";
+import { createReadStream, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { join } from "path";
 
 import axios from "axios";
@@ -106,14 +106,24 @@ const upsertTilesetSource = async (
   const bodyFormData = new FormData();
   bodyFormData.append("file", createReadStream(filepath));
   try {
-    const { data } = await axios.put<{ id: string }>(url, bodyFormData, {
+    const { data } = await axios.put<{
+      id: string;
+      files: number;
+      source_size: number;
+      file_size: number;
+    }>(url, bodyFormData, {
       headers: bodyFormData.getHeaders(),
     });
-    console.log(data);
+    console.log({
+      files: data.files,
+      sourceSize: data.source_size,
+      fileSize: data.file_size,
+    });
   } catch (e) {
     if (axios.isAxiosError(e)) {
       console.log(e.toJSON());
     }
+    throw e;
   }
 };
 
@@ -140,6 +150,7 @@ const run = async () => {
     process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
     GANTRIES_GEOJSON_LD_FILEPATH
   );
+  unlinkSync(GANTRIES_GEOJSON_LD_FILEPATH);
 };
 
 // Ensures that the fetching does not run when tests are ran on this module.
