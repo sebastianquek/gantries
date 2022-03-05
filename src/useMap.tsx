@@ -36,7 +36,8 @@ export const useMap = ({
   let style = "";
   switch (mapStyle) {
     case "STREETS":
-      style = "mapbox://styles/mapbox/streets-v11?optimize=true";
+      // style = "mapbox://styles/mapbox/streets-v11?optimize=true";
+      style = `${process.env.REACT_APP_MAPBOX_STYLE ?? ""}`;
       break;
     default:
     case "SATELLITE_STREETS":
