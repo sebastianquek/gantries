@@ -403,14 +403,14 @@ describe("generate-tileset-source", () => {
         },
       });
       await upsertTilesetSource(
-        "base_url",
+        "baseUrl",
         "username",
         "tilesetSourceId",
         "accessToken",
         join(__dirname, "./fixtures/empty.ld.json")
       );
       expect(axiosPutSpy).toHaveBeenCalledWith(
-        "base_url/username/tilesetSourceId",
+        "baseUrl/username/tilesetSourceId",
         expect.objectContaining({
           _streams: expect.arrayContaining([
             expect.stringContaining(
