@@ -19,6 +19,19 @@ env:
   MAPBOX_SPRITE_GANTRY_OFF: ${{ secrets.MAPBOX_SPRITE_GANTRY_OFF }}
 
 jobs:
+  generate-fonts:
+    name: "Add fonts"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run gen:fonts
+
   generate-tileset-source:
     name: "Update tileset source"
     runs-on: ubuntu-latest

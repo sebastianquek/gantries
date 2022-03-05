@@ -10,6 +10,7 @@
     "gen:tileset": "npx ts-node scripts/generate-tileset.ts",
     "gen:styles": "npx ts-node scripts/generate-style-layers.ts",
     "gen:sprites": "npx ts-node scripts/generate-sprites.ts",
+    "gen:fonts": "npx ts-node scripts/generate-fonts.ts",
     "lint": "eslint . --ext .js,.ts,.tsx",
     "start": "react-scripts start",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
