@@ -133,6 +133,20 @@ const updateCompositeUrl = (
 };
 
 /**
+ * Ensures the glpyhs point to the username's fonts. Default is mapbox
+ * which cannot be customised.
+ *
+ * @param currentStyle
+ * @param username
+ */
+const updateGlyphs = (currentStyle: MapboxStyle, username: string) => {
+  return {
+    ...currentStyle,
+    glyphs: `mapbox://fonts/${username}/{fontstack}/{range}.pbf`,
+  };
+};
+
+/**
  * Removes layers whose id starts with one of the prefixes, then adds the new
  * layers.
  *
@@ -226,13 +240,17 @@ const run = async () => {
     process.env.MAPBOX_STYLE_ID ?? "",
     process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? ""
   );
-  const updatedStyle = updateCompositeUrl(
+  const updatedStyleWithCompositeUrl = updateCompositeUrl(
     currentStyle,
     process.env.MAPBOX_USERNAME ?? "",
     process.env.MAPBOX_TILESET_ID ?? ""
   );
+  const updatedStyleWithGlyphs = updateGlyphs(
+    updatedStyleWithCompositeUrl,
+    process.env.MAPBOX_USERNAME ?? ""
+  );
   const { created, modified, ...newStyle } = mergeStyleLayers(
-    updatedStyle,
+    updatedStyleWithGlyphs,
     [RATE_LAYER_ID_PREFIX, OPERATIONAL_LAYER_ID_PREFIX],
     [...rateLayers, ...operationalLayers]
   );
@@ -257,6 +275,7 @@ export const exportedForTesting = {
   generateOperationalLayers,
   retrieveStyle,
   updateCompositeUrl,
+  updateGlyphs,
   mergeStyleLayers,
   updateStyle,
 };

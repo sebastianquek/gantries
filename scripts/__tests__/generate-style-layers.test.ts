@@ -11,6 +11,7 @@ const {
   generateOperationalLayers,
   retrieveStyle,
   updateCompositeUrl,
+  updateGlyphs,
   mergeStyleLayers,
   updateStyle,
 } = exportedForTesting;
@@ -177,6 +178,15 @@ describe("generate-style-layers", () => {
       expect(
         updateCompositeUrl(styleWithTilesetUrl, "username", "tilesetId")
       ).toStrictEqual(styleWithTilesetUrl);
+    });
+  });
+
+  describe("updateGlyphs", () => {
+    it("should update the glyphs property correctly", () => {
+      expect(updateGlyphs(style, "username")).toStrictEqual({
+        ...style,
+        glyphs: "mapbox://fonts/username/{fontstack}/{range}.pbf",
+      });
     });
   });
 
