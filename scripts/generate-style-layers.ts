@@ -62,13 +62,16 @@ const generateOperationalLayers = (
     "source-layer": sourceLayer,
     paint: {},
     layout: {
-      visibility: "none",
+      "icon-allow-overlap": true,
       "icon-image": [
         "case",
         [">", ["to-number", ["get", key], 0], 0],
         gantryOnSpriteName,
         gantryOffSpriteName,
       ],
+      "icon-rotate": ["get", "bearing"],
+      "icon-rotation-alignment": "map",
+      visibility: "none",
     },
   }));
 };

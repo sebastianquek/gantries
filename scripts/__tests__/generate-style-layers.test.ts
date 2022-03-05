@@ -85,13 +85,16 @@ describe("generate-style-layers", () => {
           "source-layer": "sourceLayer",
           paint: {},
           layout: {
-            visibility: "none",
+            "icon-allow-overlap": true,
             "icon-image": [
               "case",
               [">", ["to-number", ["get", "key1"], 0], 0],
               "gantry-on",
               "gantry-off",
             ],
+            "icon-rotate": ["get", "bearing"],
+            "icon-rotation-alignment": "map",
+            visibility: "none",
           },
         },
         {
@@ -101,13 +104,16 @@ describe("generate-style-layers", () => {
           "source-layer": "sourceLayer",
           paint: {},
           layout: {
-            visibility: "none",
+            "icon-allow-overlap": true,
             "icon-image": [
               "case",
               [">", ["to-number", ["get", "key2"], 0], 0],
               "gantry-on",
               "gantry-off",
             ],
+            "icon-rotate": ["get", "bearing"],
+            "icon-rotation-alignment": "map",
+            visibility: "none",
           },
         },
       ]);
