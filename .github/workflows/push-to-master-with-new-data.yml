@@ -32,6 +32,7 @@ jobs:
   generate-tileset:
     name: "Create and publish tileset"
     runs-on: ubuntu-latest
+    needs: generate-tileset-source
     timeout-minutes: 5
 
     steps:
