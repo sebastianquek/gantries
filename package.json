@@ -8,6 +8,7 @@
     "fetch:rates": "npx ts-node scripts/fetch-rates.ts",
     "gen:tileset-source": "npx ts-node scripts/generate-tileset-source.ts",
     "gen:tileset": "npx ts-node scripts/generate-tileset.ts",
+    "gen:styles": "npx ts-node scripts/generate-style-layers.ts",
     "lint": "eslint . --ext .js,.ts,.tsx",
     "start": "react-scripts start",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
