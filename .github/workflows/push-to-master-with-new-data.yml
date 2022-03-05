@@ -13,6 +13,7 @@ env:
   MAPBOX_PRIVATE_ACCESS_TOKEN: ${{ secrets.MAPBOX_PRIVATE_ACCESS_TOKEN }}
   MAPBOX_USERNAME: ${{ secrets.MAPBOX_USERNAME }}
   MAPBOX_TILESET_SOURCE_ID: ${{ secrets.MAPBOX_TILESET_SOURCE_ID }}
+  MAPBOX_TILESET_ID: ${{ secrets.MAPBOX_TILESET_ID }}
 
 jobs:
   generate-tileset-source:
@@ -27,3 +28,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npm run gen:tileset-source
+
+  generate-tileset:
+    name: "Create and publish tileset"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm run gen:tileset
