@@ -36,8 +36,12 @@ describe("generate-style-layers", () => {
           "source-layer": "sourceLayer",
           paint: {},
           layout: {
-            visibility: "none",
+            "text-allow-overlap": true,
             "text-field": ["get", "key1"],
+            "text-pitch-alignment": "viewport",
+            "text-radial-offset": 1.2,
+            "text-variable-anchor": ["left"],
+            visibility: "none",
           },
         },
         {
@@ -47,8 +51,12 @@ describe("generate-style-layers", () => {
           "source-layer": "sourceLayer",
           paint: {},
           layout: {
-            visibility: "none",
+            "text-allow-overlap": true,
             "text-field": ["get", "key2"],
+            "text-pitch-alignment": "viewport",
+            "text-radial-offset": 1.2,
+            "text-variable-anchor": ["left"],
+            visibility: "none",
           },
         },
       ]);
