@@ -161,7 +161,7 @@ const splitRates = <T extends Pick<Rate, "StartTime" | "EndTime">>(
  * @param rates
  * @returns Set of times (splits)
  */
-const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
+export const getSplits = <T extends Pick<Rate, "StartTime" | "EndTime">>(
   rates: T[]
 ) => {
   const splits = new Set<string>();
