@@ -1,11 +1,11 @@
 import type { DayType, VehicleType } from "./types";
 
-import { format, getDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { dayTypes, vehicleTypes } from "./constants";
 import { useMap } from "./useMap";
+import { getDayType, getTime } from "./utils/datetime";
 import { pickSplit } from "./utils/pickSplit";
 import { slugify } from "./utils/slugify";
 import { useFetchJSON } from "./utils/useFetchJSON";
@@ -54,8 +54,8 @@ export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const [vehicleType, setVechicleType] = useState<VehicleType>(vehicleTypes[0]);
-  const [dayType, setDayType] = useState<DayType>(dayTypes[0]);
-  const [time, setTime] = useState<string>("08:00");
+  const [dayType, setDayType] = useState<DayType>(getDayType("Weekdays"));
+  const [time, setTime] = useState<string>(getTime());
 
   const [layerId, setLayerId] = useState<string | null>(null);
   const prevLayerId = usePrevious(layerId);
@@ -75,22 +75,8 @@ export const Map = () => {
 
   const setDayTypeAndTimeToNow = () => {
     const now = new Date();
-    setTime(format(now, "HH:mm"));
-    setDayType((current) => {
-      switch (getDay(now)) {
-        case 0: // ERP not operational on Sunday
-          // TODO: let user know it's sunday
-          return current;
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          return "Weekdays";
-        case 6:
-          return "Saturday";
-      }
-    });
+    setTime(getTime(now));
+    setDayType((current) => getDayType(current, now));
   };
 
   /**
