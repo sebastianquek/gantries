@@ -1,5 +1,6 @@
 import type { DayType, VehicleType } from "./types";
 
+import { format, getDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -45,6 +46,10 @@ const Input = styled.input`
   width: 12ch;
 `;
 
+const Button = styled.button`
+  font-family: inherit;
+`;
+
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -67,6 +72,26 @@ export const Map = () => {
     initialZoom: 12.15,
     mapStyle: "STREETS",
   });
+
+  const setDayTypeAndTimeToNow = () => {
+    const now = new Date();
+    setTime(format(now, "HH:mm"));
+    setDayType((current) => {
+      switch (getDay(now)) {
+        case 0: // ERP not operational on Sunday
+          // TODO: let user know it's sunday
+          return current;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          return "Weekdays";
+        case 6:
+          return "Saturday";
+      }
+    });
+  };
 
   /**
    * Update target layer id to toggle on based on
@@ -142,6 +167,7 @@ export const Map = () => {
           value={time}
           onChange={(event) => setTime(event.target.value)}
         ></Input>
+        <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
       </Controls>
     </Wrapper>
   );
