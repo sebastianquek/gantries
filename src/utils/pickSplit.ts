@@ -1,14 +1,12 @@
-import { format } from "date-fns";
 /**
  * Based on the current time, ignoring timezones, pick the correct
  * time interval.
  *
- * @param date
+ * @param time In "HH:mm" format
  * @param splits Array of "HH:mm" strings, in ascending order
  * @returns String in format "HH:mm-HH:mm"
  */
-export const pickSplit = (date: Date, splits: string[]): string | null => {
-  const time = format(date, "HH:mm");
+export const pickSplit = (time: string, splits: string[]): string | null => {
   for (let i = 0; i < splits.length; i++) {
     const split = splits[i];
     if ((i === 0 && time < split) || i === splits.length - 1) {
