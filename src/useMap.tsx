@@ -63,6 +63,17 @@ export const useMap = ({
       zoom: initialZoom,
     });
 
+    mapboxRef.current.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        showUserHeading: true,
+        showUserLocation: true,
+        trackUserLocation: true,
+      })
+    );
+
     mapboxRef.current.once("load", () => {
       setIsLoaded(true);
     });
