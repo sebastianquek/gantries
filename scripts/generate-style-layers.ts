@@ -53,7 +53,36 @@ const generateRateLayers = (
 };
 
 /**
- * Generates layers to be used to show whether a gantry is operational.
+ * Generate base operational layer that shows all gantries
+ * as off.
+ *
+ * @param sourceLayer
+ * @param idPrefix
+ * @param gantryOffSpriteName
+ */
+const generateBaseOperationalLayer = (
+  sourceLayer: string,
+  idPrefix: string,
+  gantryOffSpriteName: string
+): MapboxStyle["layers"][0] => {
+  return {
+    id: `${idPrefix}-base`,
+    type: "symbol",
+    source: "composite",
+    "source-layer": sourceLayer,
+    paint: {},
+    layout: {
+      "icon-allow-overlap": true,
+      "icon-image": gantryOffSpriteName,
+      "icon-rotate": ["get", "bearing"],
+      "icon-rotation-alignment": "map",
+      "symbol-sort-key": 1,
+    },
+  };
+};
+
+/**
+ * Generates layers to be used to show whether a gantry is on.
  *
  * @param keys
  * @param sourceLayer
@@ -65,8 +94,7 @@ const generateOperationalLayers = (
   keys: string[],
   sourceLayer: string,
   idPrefix: string,
-  gantryOnSpriteName: string,
-  gantryOffSpriteName: string
+  gantryOnSpriteName: string
 ): MapboxStyle["layers"] => {
   return keys.map((key) => ({
     id: `${idPrefix}-${key}`,
@@ -80,7 +108,7 @@ const generateOperationalLayers = (
         "case",
         [">", ["to-number", ["get", key], 0], 0],
         gantryOnSpriteName,
-        gantryOffSpriteName,
+        "",
       ],
       "icon-rotate": ["get", "bearing"],
       "icon-rotation-alignment": "map",
@@ -241,12 +269,16 @@ const run = async () => {
     RATE_LAYER_ID_PREFIX,
     process.env.MAPBOX_SPRITE_RATE_BG ?? ""
   );
+  const operationalBaseLayer = generateBaseOperationalLayer(
+    process.env.MAPBOX_TILESET_ID ?? "",
+    OPERATIONAL_LAYER_ID_PREFIX,
+    process.env.MAPBOX_SPRITE_GANTRY_OFF ?? ""
+  );
   const operationalLayers = generateOperationalLayers(
     keys,
     process.env.MAPBOX_TILESET_ID ?? "",
     OPERATIONAL_LAYER_ID_PREFIX,
-    process.env.MAPBOX_SPRITE_GANTRY_ON ?? "",
-    process.env.MAPBOX_SPRITE_GANTRY_OFF ?? ""
+    process.env.MAPBOX_SPRITE_GANTRY_ON ?? ""
   );
 
   // Retrieve and update style object
@@ -268,7 +300,7 @@ const run = async () => {
   const { created, modified, ...newStyle } = mergeStyleLayers(
     updatedStyleWithGlyphs,
     [RATE_LAYER_ID_PREFIX, OPERATIONAL_LAYER_ID_PREFIX],
-    [...operationalLayers, ...rateLayers]
+    [operationalBaseLayer, ...operationalLayers, ...rateLayers]
   );
 
   // Push changes to Mapbox
@@ -288,6 +320,7 @@ if (process.env.NODE_ENV !== "test") {
 
 export const exportedForTesting = {
   generateRateLayers,
+  generateBaseOperationalLayer,
   generateOperationalLayers,
   retrieveStyle,
   updateCompositeUrl,

@@ -8,6 +8,7 @@ import { style } from "./fixtures/style";
 
 const {
   generateRateLayers,
+  generateBaseOperationalLayer,
   generateOperationalLayers,
   retrieveStyle,
   updateCompositeUrl,
@@ -92,16 +93,31 @@ describe("generate-style-layers", () => {
     });
   });
 
+  describe("generateBaseOperationalLayer", () => {
+    it("should return correctly", () => {
+      expect(
+        generateBaseOperationalLayer("sourceLayer", "operational", "gantry-off")
+      ).toStrictEqual({
+        id: "operational-base",
+        type: "symbol",
+        source: "composite",
+        "source-layer": "sourceLayer",
+        paint: {},
+        layout: {
+          "icon-allow-overlap": true,
+          "icon-image": "gantry-off",
+          "icon-rotate": ["get", "bearing"],
+          "icon-rotation-alignment": "map",
+          "symbol-sort-key": 1,
+        },
+      });
+    });
+  });
+
   describe("generateOperationalLayers", () => {
     it("should return empty array if no keys are provided", () => {
       expect(
-        generateOperationalLayers(
-          [],
-          "sourceLayer",
-          "operational",
-          "gantry-on",
-          "gantry-off"
-        )
+        generateOperationalLayers([], "sourceLayer", "operational", "gantry-on")
       ).toStrictEqual([]);
     });
 
@@ -111,8 +127,7 @@ describe("generate-style-layers", () => {
           ["key1", "key2"],
           "sourceLayer",
           "operational",
-          "gantry-on",
-          "gantry-off"
+          "gantry-on"
         )
       ).toStrictEqual([
         {
@@ -127,7 +142,7 @@ describe("generate-style-layers", () => {
               "case",
               [">", ["to-number", ["get", "key1"], 0], 0],
               "gantry-on",
-              "gantry-off",
+              "",
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
@@ -152,7 +167,7 @@ describe("generate-style-layers", () => {
               "case",
               [">", ["to-number", ["get", "key2"], 0], 0],
               "gantry-on",
-              "gantry-off",
+              "",
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
