@@ -7,9 +7,10 @@ import { join } from "path";
 import axios from "axios";
 import { chain, pick } from "lodash";
 
+import { slugify } from "../src/utils/slugify";
+
 import { getSplits } from "./generate-layers";
 import { saveDataToCSV } from "./utils/saveDataToCSV";
-import { slugify } from "./utils/slugify";
 
 const RATES_URL = "http://datamall2.mytransport.sg/ltaodataservice/ERPRates";
 const HEADERS = {

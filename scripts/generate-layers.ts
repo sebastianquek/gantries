@@ -2,7 +2,7 @@ import type { Rate } from "./types";
 
 import { groupBy } from "lodash";
 
-import { slugify } from "./utils/slugify";
+import { slugify } from "../src/utils/slugify";
 
 const DAY_START_TIME = "00:00";
 const DAY_END_TIME = "24:00";
