@@ -203,6 +203,9 @@ export const Map = () => {
       return;
     }
     const key = slugify(`${vehicleType}-${dayType}`);
+    if (!splits[key]) {
+      return;
+    }
     const split = pickSplit(time, splits[key]);
     setLayerId(split ? slugify(`${key}-${split}`) : null);
   }, [vehicleType, dayType, time, splits]);
