@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { dayTypes, vehicleTypes } from "./constants";
+import { ReactComponent as Bus } from "./svg/bus.svg";
+import { ReactComponent as Car } from "./svg/car.svg";
+import { ReactComponent as Motorcycle } from "./svg/motorcycle.svg";
+import { ReactComponent as Truck } from "./svg/truck.svg";
 import { useMap } from "./useMap";
 import { getDayType, getTime } from "./utils/datetime";
 import { pickSplit } from "./utils/pickSplit";
@@ -21,33 +25,144 @@ const Wrapper = styled.div`
 
 const MapboxWrapper = styled.div`
   position: absolute;
-  top: 0;
+  top: 3rem;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 0.5rem;
+  right: 0.5rem;
+
+  canvas {
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+  }
 `;
 
-const Controls = styled.div`
+const TopBar = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  margin: 1em;
+  right: 0;
+  margin: 0.5rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
+  gap: 0.5rem;
+`;
+
+const Left = styled.div`
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const Middle = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const Right = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Pill = styled.div`
+  display: flex;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c2c2c;
+`;
+
+const VehicleSelectWrapper = styled.div`
+  position: relative;
+  display: flex;
+  width: 4ch;
+  overflow: hidden;
+  border: 1px solid #535353;
+  background: white;
+  border-right: none;
+  border-top-left-radius: 500px;
+  border-bottom-left-radius: 500px;
+`;
+
+const VehicleIcon = styled.div`
+  position: absolute;
+  padding: 5px 10px 5px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `;
 
 const Select = styled.select`
-  font-family: inherit;
+  appearance: none;
+  font: inherit;
+  border: 1px solid #535353;
+  background: white;
+  padding: 8px 12px 6px;
+  border-right: none;
+  line-height: 1;
+  cursor: pointer;
+
+  &:first-child {
+    padding-left: 12px;
+    border-top-left-radius: 500px;
+    border-bottom-left-radius: 500px;
+  }
+`;
+
+const VehicleSelect = styled(Select)`
+  opacity: 0;
 `;
 
 const Input = styled.input`
-  font-family: inherit;
-  width: 12ch;
+  appearance: none;
+  font: inherit;
+  border: 1px solid #535353;
+  background: white;
+  padding: 8px 12px 6px;
+  line-height: 1;
+  cursor: pointer;
+
+  &:last-child {
+    border-top-right-radius: 500px;
+    border-bottom-right-radius: 500px;
+  }
+
+  &[type="time" i]::-webkit-calendar-picker-indicator {
+    padding: 0;
+    margin: -2px 0 0 4px;
+  }
+`;
+
+const AppTitle = styled.h1`
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 `;
 
 const Button = styled.button`
   font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c2c2c;
+  background: white;
+  border: 1px solid #535353;
+  border-radius: 500px;
+  padding: 8px 12px 6px;
+  cursor: pointer;
 `;
 
 export const Map = () => {
@@ -122,11 +237,33 @@ export const Map = () => {
     }
   }, [isLoaded, layerId, map, prevLayerId]);
 
+  let vehicleIcon;
+  switch (vehicleType) {
+    case "Passenger Cars/Light Goods Vehicles/Taxis":
+    case "Light Goods Vehicles":
+    case "Taxis":
+      vehicleIcon = <Car />;
+      break;
+    case "Motorcycles":
+      vehicleIcon = <Motorcycle />;
+      break;
+    case "Heavy Goods Vehicles/Small Buses":
+      vehicleIcon = <Bus />;
+      break;
+    case "Very Heavy Goods Vehicles/Big Buses":
+      vehicleIcon = <Truck />;
+      break;
+  }
+
   return (
     <Wrapper>
       <MapboxWrapper ref={mapRef} />
-      <Controls>
-        <Select
+      <TopBar>
+        <Left>
+          <Pill>
+            <VehicleSelectWrapper>
+              <VehicleIcon>{vehicleIcon}</VehicleIcon>
+              <VehicleSelect
           value={vehicleType}
           onChange={(event) =>
             setVechicleType(event.target.value as VehicleType)
@@ -137,7 +274,8 @@ export const Map = () => {
               {vehicleType}
             </option>
           ))}
-        </Select>
+              </VehicleSelect>
+            </VehicleSelectWrapper>
         <Select
           value={dayType}
           onChange={(event) => setDayType(event.target.value as DayType)}
@@ -153,8 +291,16 @@ export const Map = () => {
           value={time}
           onChange={(event) => setTime(event.target.value)}
         ></Input>
+          </Pill>
         <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
-      </Controls>
+        </Left>
+        <Middle>
+          <AppTitle>Gantries</AppTitle>
+        </Middle>
+        <Right>
+          <Button>Info</Button>
+        </Right>
+      </TopBar>
     </Wrapper>
   );
 };
