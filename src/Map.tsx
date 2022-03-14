@@ -4,6 +4,7 @@ import type { MapLayerMouseEvent } from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import { GantryInfo } from "./GantryInfo";
 import { dayTypes, vehicleTypes } from "./constants";
 import { ReactComponent as Bus } from "./svg/bus.svg";
 import { ReactComponent as Car } from "./svg/car.svg";
@@ -27,13 +28,12 @@ const Wrapper = styled.div`
 const MapboxWrapper = styled.div`
   position: absolute;
   top: 3rem;
-  bottom: 0;
+  bottom: 0.5rem;
   left: 0.5rem;
   right: 0.5rem;
 
   canvas {
-    border-top-left-radius: 1.5rem;
-    border-top-right-radius: 1.5rem;
+    border-radius: 1.5rem;
   }
 `;
 
@@ -166,6 +166,22 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const GantryInfoPositioner = styled.div`
+  position: absolute;
+  z-index: 10;
+  left: 1rem;
+
+  @media (max-width: 768px) {
+    bottom: 0;
+    right: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    top: 3.5rem;
+    width: 300px;
+  }
+`;
+
 const GANTRY_BASE_LAYER_ID = "operational-base";
 
 export const Map = () => {
@@ -177,6 +193,8 @@ export const Map = () => {
 
   const [layerId, setLayerId] = useState<string | null>(null);
   const prevLayerId = usePrevious(layerId);
+
+  const [selectedGantry, setSelectedGantry] = useState<Gantry>();
 
   const { result: splits } =
     useFetchJSON<{ [vehicleAndDayType: string]: string[] }>(
@@ -216,9 +234,10 @@ export const Map = () => {
   useEffect(() => {
     const onClick = (e: MapLayerMouseEvent) => {
       if (e.features && e.features.length > 0) {
-        const feature = e.features[0].properties as Gantry;
+        const gantry = e.features[0].properties as Gantry;
+        setSelectedGantry(gantry);
         map?.flyTo({
-          center: [feature.longitude, feature.latitude],
+          center: [gantry.longitude, gantry.latitude],
         });
       }
     };
@@ -324,6 +343,14 @@ export const Map = () => {
           <Button>Info</Button>
         </Right>
       </TopBar>
+      <GantryInfoPositioner>
+        <GantryInfo
+          gantry={selectedGantry}
+          vehicleType={vehicleType}
+          dayType={dayType}
+          time={time}
+        />
+      </GantryInfoPositioner>
     </Wrapper>
   );
 };
