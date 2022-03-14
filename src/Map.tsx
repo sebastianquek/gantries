@@ -1,4 +1,5 @@
-import type { DayType, VehicleType } from "./types";
+import type { DayType, Gantry, VehicleType } from "./types";
+import type { MapLayerMouseEvent } from "mapbox-gl";
 
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -165,6 +166,8 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const GANTRY_BASE_LAYER_ID = "operational-base";
+
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -209,6 +212,23 @@ export const Map = () => {
     const split = pickSplit(time, splits[key]);
     setLayerId(split ? slugify(`${key}-${split}`) : null);
   }, [vehicleType, dayType, time, splits]);
+
+  useEffect(() => {
+    const onClick = (e: MapLayerMouseEvent) => {
+      if (e.features && e.features.length > 0) {
+        const feature = e.features[0].properties as Gantry;
+        map?.flyTo({
+          center: [feature.longitude, feature.latitude],
+        });
+      }
+    };
+
+    map?.on("click", GANTRY_BASE_LAYER_ID, onClick);
+
+    return () => {
+      map?.off("click", GANTRY_BASE_LAYER_ID, onClick);
+    };
+  }, [map]);
 
   /**
    * Toggle off the previous target layer id
@@ -267,35 +287,35 @@ export const Map = () => {
             <VehicleSelectWrapper>
               <VehicleIcon>{vehicleIcon}</VehicleIcon>
               <VehicleSelect
-          value={vehicleType}
-          onChange={(event) =>
-            setVechicleType(event.target.value as VehicleType)
-          }
-        >
-          {vehicleTypes.map((vehicleType) => (
-            <option key={vehicleType} value={vehicleType}>
-              {vehicleType}
-            </option>
-          ))}
+                value={vehicleType}
+                onChange={(event) =>
+                  setVechicleType(event.target.value as VehicleType)
+                }
+              >
+                {vehicleTypes.map((vehicleType) => (
+                  <option key={vehicleType} value={vehicleType}>
+                    {vehicleType}
+                  </option>
+                ))}
               </VehicleSelect>
             </VehicleSelectWrapper>
-        <Select
-          value={dayType}
-          onChange={(event) => setDayType(event.target.value as DayType)}
-        >
-          {dayTypes.map((dayType) => (
-            <option key={dayType} value={dayType}>
-              {dayType}
-            </option>
-          ))}
-        </Select>
-        <Input
-          type="time"
-          value={time}
-          onChange={(event) => setTime(event.target.value)}
-        ></Input>
+            <Select
+              value={dayType}
+              onChange={(event) => setDayType(event.target.value as DayType)}
+            >
+              {dayTypes.map((dayType) => (
+                <option key={dayType} value={dayType}>
+                  {dayType}
+                </option>
+              ))}
+            </Select>
+            <Input
+              type="time"
+              value={time}
+              onChange={(event) => setTime(event.target.value)}
+            ></Input>
           </Pill>
-        <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
+          <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
         </Left>
         <Middle>
           <AppTitle>Gantries</AppTitle>
