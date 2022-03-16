@@ -195,6 +195,8 @@ export const Map = () => {
   const prevLayerId = usePrevious(layerId);
 
   const [selectedGantry, setSelectedGantry] = useState<Gantry>();
+  const [selectedGantryId, setSelectedGantryId] = useState<string | number>();
+  const prevSelectedGantryId = usePrevious(selectedGantryId);
 
   const { result: splits } =
     useFetchJSON<{ [vehicleAndDayType: string]: string[] }>(
@@ -236,6 +238,7 @@ export const Map = () => {
       if (e.features && e.features.length > 0) {
         const gantry = e.features[0].properties as Gantry;
         setSelectedGantry(gantry);
+        setSelectedGantryId(e.features[0].id);
         map?.flyTo({
           center: [gantry.longitude, gantry.latitude],
         });
@@ -248,6 +251,30 @@ export const Map = () => {
       map?.off("click", GANTRY_BASE_LAYER_ID, onClick);
     };
   }, [map]);
+
+  useEffect(() => {
+    if (prevSelectedGantryId) {
+      map?.setFeatureState(
+        {
+          source: "composite",
+          id: prevSelectedGantryId,
+          sourceLayer: "gantries",
+        },
+        { highlight: false }
+      );
+    }
+
+    if (selectedGantryId) {
+      map?.setFeatureState(
+        {
+          source: "composite",
+          id: selectedGantryId,
+          sourceLayer: "gantries",
+        },
+        { highlight: true }
+      );
+    }
+  }, [map, prevSelectedGantryId, selectedGantryId]);
 
   /**
    * Toggle off the previous target layer id
