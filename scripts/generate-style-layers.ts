@@ -76,7 +76,6 @@ const generateBaseOperationalLayer = (
       "icon-image": gantryOffSpriteName,
       "icon-rotate": ["get", "bearing"],
       "icon-rotation-alignment": "map",
-      "symbol-sort-key": 1,
     },
   };
 };
@@ -112,12 +111,6 @@ const generateOperationalLayers = (
       ],
       "icon-rotate": ["get", "bearing"],
       "icon-rotation-alignment": "map",
-      "symbol-sort-key": [
-        "case",
-        [">", ["to-number", ["get", key], 0], 0],
-        2,
-        1,
-      ],
       visibility: "none",
     },
   }));
