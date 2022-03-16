@@ -241,6 +241,7 @@ export const Map = () => {
         setSelectedGantryId(e.features[0].id);
         map?.flyTo({
           center: [gantry.longitude, gantry.latitude],
+          offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
         });
       }
     };
