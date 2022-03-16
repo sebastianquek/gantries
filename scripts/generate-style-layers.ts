@@ -360,6 +360,7 @@ export const exportedForTesting = {
   generateRateLayers,
   generateBaseOperationalLayer,
   generateOperationalLayers,
+  generateHighlightOutlineLayer,
   retrieveStyle,
   updateCompositeUrl,
   updateGlyphs,

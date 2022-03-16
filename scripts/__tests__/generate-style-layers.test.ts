@@ -10,6 +10,7 @@ const {
   generateRateLayers,
   generateBaseOperationalLayer,
   generateOperationalLayers,
+  generateHighlightOutlineLayer,
   retrieveStyle,
   updateCompositeUrl,
   updateGlyphs,
@@ -108,7 +109,6 @@ describe("generate-style-layers", () => {
           "icon-image": "gantry-off",
           "icon-rotate": ["get", "bearing"],
           "icon-rotation-alignment": "map",
-          "symbol-sort-key": 1,
         },
       });
     });
@@ -146,12 +146,6 @@ describe("generate-style-layers", () => {
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
-            "symbol-sort-key": [
-              "case",
-              [">", ["to-number", ["get", "key1"], 0], 0],
-              2,
-              1,
-            ],
             visibility: "none",
           },
         },
@@ -171,16 +165,41 @@ describe("generate-style-layers", () => {
             ],
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
-            "symbol-sort-key": [
-              "case",
-              [">", ["to-number", ["get", "key2"], 0], 0],
-              2,
-              1,
-            ],
             visibility: "none",
           },
         },
       ]);
+    });
+  });
+
+  describe("generateHighlightOutlineLayer", () => {
+    it("should return correctly", () => {
+      expect(
+        generateHighlightOutlineLayer(
+          "sourceLayer",
+          "highlight",
+          "gantry-highlight-outline"
+        )
+      ).toStrictEqual({
+        id: "highlight-base",
+        type: "symbol",
+        source: "composite",
+        "source-layer": "sourceLayer",
+        paint: {
+          "icon-opacity": [
+            "case",
+            ["boolean", ["feature-state", "highlight"], false],
+            1,
+            0,
+          ],
+        },
+        layout: {
+          "icon-allow-overlap": true,
+          "icon-image": "gantry-highlight-outline",
+          "icon-rotate": ["get", "bearing"],
+          "icon-rotation-alignment": "map",
+        },
+      });
     });
   });
 
