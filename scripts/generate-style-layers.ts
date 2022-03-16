@@ -10,6 +10,7 @@ import { flattenRates, generateGantryRates } from "./generate-layers";
 
 const RATE_LAYER_ID_PREFIX = "rate";
 const OPERATIONAL_LAYER_ID_PREFIX = "operational";
+const HIGHLIGHT_LAYER_ID_PREFIX = "highlight";
 const MAPBOX_RETRIEVE_STYLE_BASE_URL = "https://api.mapbox.com/styles/v1";
 const MAPBOX_UPDATE_STYLE_BASE_URL = "https://api.mapbox.com/styles/v1";
 const RATES_JSON_FILEPATH = join(__dirname, "../public/data/all-rates.json");
@@ -114,6 +115,41 @@ const generateOperationalLayers = (
       visibility: "none",
     },
   }));
+};
+
+/**
+ * Generate base operational layer that shows all gantries
+ * as off.
+ *
+ * @param sourceLayer
+ * @param idPrefix
+ * @param gantryHighlightOutlineSpriteName
+ */
+const generateHighlightOutlineLayer = (
+  sourceLayer: string,
+  idPrefix: string,
+  gantryHighlightOutlineSpriteName: string
+): MapboxStyle["layers"][0] => {
+  return {
+    id: `${idPrefix}-base`,
+    type: "symbol",
+    source: "composite",
+    "source-layer": sourceLayer,
+    paint: {
+      "icon-opacity": [
+        "case",
+        ["boolean", ["feature-state", "highlight"], false],
+        1,
+        0,
+      ],
+    },
+    layout: {
+      "icon-allow-overlap": true,
+      "icon-image": gantryHighlightOutlineSpriteName,
+      "icon-rotate": ["get", "bearing"],
+      "icon-rotation-alignment": "map",
+    },
+  };
 };
 
 /**
@@ -273,6 +309,11 @@ const run = async () => {
     OPERATIONAL_LAYER_ID_PREFIX,
     process.env.MAPBOX_SPRITE_GANTRY_ON ?? ""
   );
+  const highlightLayer = generateHighlightOutlineLayer(
+    process.env.MAPBOX_TILESET_ID ?? "",
+    HIGHLIGHT_LAYER_ID_PREFIX,
+    process.env.MAPBOX_SPRITE_GANTRY_HIGHLIGHT_OUTLINE ?? ""
+  );
 
   // Retrieve and update style object
   const currentStyle = await retrieveStyle(
@@ -292,8 +333,12 @@ const run = async () => {
   );
   const { created, modified, ...newStyle } = mergeStyleLayers(
     updatedStyleWithGlyphs,
-    [RATE_LAYER_ID_PREFIX, OPERATIONAL_LAYER_ID_PREFIX],
-    [operationalBaseLayer, ...operationalLayers, ...rateLayers]
+    [
+      RATE_LAYER_ID_PREFIX,
+      OPERATIONAL_LAYER_ID_PREFIX,
+      HIGHLIGHT_LAYER_ID_PREFIX,
+    ],
+    [operationalBaseLayer, ...operationalLayers, highlightLayer, ...rateLayers]
   );
 
   // Push changes to Mapbox
