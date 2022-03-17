@@ -1,12 +1,13 @@
 import type { DayType, Gantry, VehicleType } from "./types";
 
-import styled from "styled-components";
+import { useCallback, useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
 import { useGantryRates } from "./useGantryRates";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ viewType: "minimal" | "all" }>`
   border-radius: 1.5rem;
   background: white;
   display: flex;
@@ -14,6 +15,19 @@ const Wrapper = styled.div`
   padding: 1rem;
   gap: 0.5rem;
   width: 100%;
+  touch-action: none;
+  transition: all 0.4s;
+
+  ${({ viewType }) =>
+    viewType === "all"
+      ? css`
+          margin-bottom: 1rem;
+        `
+      : css`
+          padding-bottom: 1.5rem;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        `}
 `;
 
 const TitleBar = styled.div`
@@ -37,6 +51,16 @@ const CurrentRate = styled.p`
   align-self: flex-start;
 `;
 
+type GestureState = {
+  isTracking: boolean;
+  startX: number;
+  startY: number;
+  startTime: number;
+  endX: number;
+  endY: number;
+  endTime: number;
+};
+
 export const GantryInfo = ({
   gantry,
   vehicleType,
@@ -54,9 +78,68 @@ export const GantryInfo = ({
     dayType,
   });
 
+  const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const gestureState = useRef<GestureState>({
+    isTracking: false,
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    endX: 0,
+    endY: 0,
+    endTime: 0,
+  });
+
+  const gestureStart = useCallback((e: TouchEvent) => {
+    if (e.touches.length === 1) {
+      gestureState.current.isTracking = true;
+      gestureState.current.startX = e.targetTouches[0].clientX;
+      gestureState.current.startY = e.targetTouches[0].clientY;
+      gestureState.current.startTime = performance.now();
+    } else {
+      gestureState.current.isTracking = false;
+    }
+  }, []);
+
+  const gestureMove = useCallback((e: TouchEvent) => {
+    if (gestureState.current.isTracking) {
+      gestureState.current.endX = e.targetTouches[0].clientX;
+      gestureState.current.endY = e.targetTouches[0].clientY;
+      gestureState.current.endTime = performance.now();
+    }
+  }, []);
+
+  const gestureEnd = useCallback(() => {
+    gestureState.current.isTracking = false;
+    const deltaY = gestureState.current.endY - gestureState.current.startY;
+    const deltaTime =
+      gestureState.current.endTime - gestureState.current.startTime;
+
+    if ((deltaTime < 200 && deltaY > 0) || deltaY > 100) {
+      setViewType("minimal");
+    } else if ((deltaTime < 200 && deltaY > 0) || deltaY < -100) {
+      setViewType("all");
+    }
+  }, []);
+
+  useEffect(() => {
+    const _wrapper = wrapperRef.current;
+
+    _wrapper?.addEventListener("touchstart", gestureStart);
+    _wrapper?.addEventListener("touchmove", gestureMove);
+    _wrapper?.addEventListener("touchend", gestureEnd);
+
+    return () => {
+      _wrapper?.removeEventListener("touchstart", gestureStart);
+      _wrapper?.removeEventListener("touchmove", gestureMove);
+      _wrapper?.removeEventListener("touchend", gestureEnd);
+    };
+  });
+
   if (!gantry) {
     return (
-      <Wrapper>
+      <Wrapper viewType={viewType}>
         <TitleBar>
           <GantryInfoIcon />
           <Name>Click on a gantry to see more</Name>
@@ -70,7 +153,7 @@ export const GantryInfo = ({
   )?.amount;
 
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef} viewType={viewType}>
       <TitleBar>
         <GantryInfoIcon zone={gantry.zone} />
         <Name>{gantry.name}</Name>
@@ -81,6 +164,7 @@ export const GantryInfo = ({
           maxRateAmount={maxRateAmount}
           rates={rates}
           time={time}
+          viewType={viewType}
         />
       )}
     </Wrapper>

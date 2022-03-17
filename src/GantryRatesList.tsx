@@ -47,6 +47,7 @@ export const GantryRatesList = ({
   maxRateAmount,
   rates,
   time,
+  viewType,
 }: {
   maxRateAmount: number;
   rates: {
@@ -55,10 +56,21 @@ export const GantryRatesList = ({
     amount: number;
   }[];
   time: string;
+  viewType: "minimal" | "all";
 }) => {
+  let filteredRates = rates;
+  if (viewType === "minimal" && rates.length > 4) {
+    const idx = filteredRates.findIndex(({ startTime, endTime }) => {
+      return time >= startTime && time < endTime;
+    });
+    filteredRates = [
+      ...rates.slice(idx),
+      ...rates.slice(0, 4 - (rates.length - idx)),
+    ];
+  }
   return (
     <Rates>
-      {rates.map(({ startTime, endTime, amount }) => {
+      {filteredRates.map(({ startTime, endTime, amount }) => {
         const interval = `${startTime} - ${endTime}`;
         const isCurrent = time >= startTime && time < endTime;
         return (
