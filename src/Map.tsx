@@ -112,19 +112,16 @@ const Select = styled.select`
   border-right: none;
   line-height: 1;
   cursor: pointer;
-
-  &:first-child {
-    padding-left: 12px;
-    border-top-left-radius: 500px;
-    border-bottom-left-radius: 500px;
-  }
+  border-radius: 0;
 `;
 
 const VehicleSelect = styled(Select)`
   opacity: 0;
 `;
 
-const Input = styled.input`
+const DayTypeSelect = styled(Select)``;
+
+const TimeInput = styled.input`
   appearance: none;
   font: inherit;
   border: 1px solid #535353;
@@ -132,11 +129,10 @@ const Input = styled.input`
   padding: 8px 12px 6px;
   line-height: 1;
   cursor: pointer;
-
-  &:last-child {
-    border-top-right-radius: 500px;
-    border-bottom-right-radius: 500px;
-  }
+  max-width: 12ch;
+  border-radius: 0;
+  border-top-right-radius: 500px;
+  border-bottom-right-radius: 500px;
 
   &[type="time" i]::-webkit-calendar-picker-indicator {
     padding: 0;
@@ -346,7 +342,7 @@ export const Map = () => {
                 ))}
               </VehicleSelect>
             </VehicleSelectWrapper>
-            <Select
+            <DayTypeSelect
               value={dayType}
               onChange={(event) => setDayType(event.target.value as DayType)}
             >
@@ -355,12 +351,13 @@ export const Map = () => {
                   {dayType}
                 </option>
               ))}
-            </Select>
-            <Input
+            </DayTypeSelect>
+            <TimeInput
               type="time"
               value={time}
+              pattern="[0-9]{2}:[0-9]{2}"
               onChange={(event) => setTime(event.target.value)}
-            ></Input>
+            />
           </Pill>
           <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
         </Left>
