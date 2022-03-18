@@ -6,6 +6,7 @@ import styled, { css } from "styled-components";
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
 import { useGantryRates } from "./useGantryRates";
+import { useMatchMedia } from "./utils/useMatchMedia";
 
 const Wrapper = styled.div<{ viewType: "minimal" | "all" }>`
   border-radius: 1.5rem;
@@ -78,9 +79,14 @@ export const GantryInfo = ({
     dayType,
   });
 
+  const isMobile = useMatchMedia("(max-width: 768px)");
   const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    setViewType(isMobile ? "minimal" : "all");
+  }, [isMobile]);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const gestureState = useRef<GestureState>({
     isTracking: false,
     startX: 0,
