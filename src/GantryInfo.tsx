@@ -163,7 +163,9 @@ export const GantryInfo = ({
       <TitleBar>
         <GantryInfoIcon zone={gantry.zone} />
         <Name>{gantry.name}</Name>
-        <CurrentRate>${currentRateAmount}</CurrentRate>
+        {currentRateAmount !== undefined && (
+          <CurrentRate>${currentRateAmount}</CurrentRate>
+        )}
       </TitleBar>
       {rates.length > 0 && (
         <GantryRatesList
