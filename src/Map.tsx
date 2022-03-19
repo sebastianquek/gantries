@@ -15,6 +15,7 @@ import { getDayType, getTime } from "./utils/datetime";
 import { pickSplit } from "./utils/pickSplit";
 import { slugify } from "./utils/slugify";
 import { useFetchJSON } from "./utils/useFetchJSON";
+import { useStateWithLocalStorage } from "./utils/useLocalStorage";
 import { usePrevious } from "./utils/usePrevious";
 
 const Wrapper = styled.div`
@@ -183,7 +184,10 @@ const GANTRY_BASE_LAYER_ID = "operational-base";
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
-  const [vehicleType, setVechicleType] = useState<VehicleType>(vehicleTypes[0]);
+  const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
+    vehicleTypes[0],
+    "vehicleType"
+  );
   const [dayType, setDayType] = useState<DayType>(getDayType("Weekdays"));
   const [time, setTime] = useState<string>(getTime());
 
@@ -332,7 +336,7 @@ export const Map = () => {
               <VehicleSelect
                 value={vehicleType}
                 onChange={(event) =>
-                  setVechicleType(event.target.value as VehicleType)
+                  setVehicleType(event.target.value as VehicleType)
                 }
               >
                 {vehicleTypes.map((vehicleType) => (
