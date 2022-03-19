@@ -130,7 +130,7 @@ const TimeInput = styled.input`
   padding: 8px 12px 6px;
   line-height: 1;
   cursor: pointer;
-  max-width: 12ch;
+  max-width: 13ch;
   border-radius: 0;
   border-top-right-radius: 500px;
   border-bottom-right-radius: 500px;
