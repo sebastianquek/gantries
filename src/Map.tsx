@@ -182,6 +182,14 @@ const GantryInfoPositioner = styled.div`
 const GANTRY_BASE_LAYER_ID = "operational-base";
 
 export const Map = () => {
+  // TODO: remove once the buildDate is shown visually
+  useEffect(() => {
+    const buildDate = process.env.REACT_APP_BUILD_TIME
+      ? new Date(Number(process.env.REACT_APP_BUILD_TIME))
+      : undefined;
+    console.log(`last checked: ${buildDate?.toLocaleString() ?? ""}`);
+  }, []);
+
   const mapRef = useRef<HTMLDivElement>(null);
 
   const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
