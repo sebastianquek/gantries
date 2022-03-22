@@ -5,7 +5,7 @@ on:
     # https://crontab.guru/#0_0,12_*_*_*
     # Runs every day at midnight and noon
     - cron: "0 0,12 * * *"
-  
+
   workflow_dispatch:
 
 env:
@@ -28,6 +28,13 @@ jobs:
       - run: npm ci
 
       - run: npm run fetch:rates
+
+      # Trigger a new deploy which updates the last check time
+      - name: Update last check
+        uses: netlify/actions/build@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
       # Using this based on this guide:
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
