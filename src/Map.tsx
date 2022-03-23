@@ -5,9 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { GantryInfo } from "./GantryInfo";
+import { ProjectInfo } from "./ProjectInfo";
 import { dayTypes, vehicleTypes } from "./constants";
 import { ReactComponent as Bus } from "./svg/bus.svg";
 import { ReactComponent as Car } from "./svg/car.svg";
+import { ReactComponent as CrossIcon } from "./svg/close-outline.svg";
 import { ReactComponent as Motorcycle } from "./svg/motorcycle.svg";
 import { ReactComponent as Truck } from "./svg/truck.svg";
 import { useMap } from "./useMap";
@@ -179,18 +181,51 @@ const GantryInfoPositioner = styled.div`
   }
 `;
 
+const ProjectInfoPositioner = styled.div`
+  position: absolute;
+  z-index: 20;
+
+  @media (max-width: 768px) {
+    left: 0;
+  }
+
+  @media (min-width: 768px) {
+    width: 300px;
+  }
+`;
+
+const Backdrop = styled.div`
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+`;
+
+const ProjectInfoCloseButton = styled.button`
+  color: #2c2c2c;
+  border: none;
+  padding: 1em;
+  font-size: 20px;
+  z-index: 40;
+  background: none;
+  cursor: pointer;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
 const GANTRY_BASE_LAYER_ID = "operational-base";
 
 export const Map = () => {
-  // TODO: remove once the buildDate is shown visually
-  useEffect(() => {
-    const buildDate = process.env.REACT_APP_BUILD_TIME
-      ? new Date(Number(process.env.REACT_APP_BUILD_TIME))
-      : undefined;
-    console.log(`last checked: ${buildDate?.toLocaleString() ?? ""}`);
-  }, []);
-
   const mapRef = useRef<HTMLDivElement>(null);
+
+  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(true);
 
   const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
     vehicleTypes[0],
@@ -377,7 +412,27 @@ export const Map = () => {
           <AppTitle>Gantries</AppTitle>
         </Middle>
         <Right>
-          <Button>Info</Button>
+          {isProjectInfoVisible ? (
+            <ProjectInfoPositioner>
+              <Backdrop onClick={() => setIsProjectInfoVisible((b) => !b)} />
+              <ProjectInfo
+                lastUpdateDate={
+                  process.env.REACT_APP_BUILD_TIME
+                    ? new Date(Number(process.env.REACT_APP_BUILD_TIME))
+                    : undefined
+                }
+              />
+              <ProjectInfoCloseButton
+                onClick={() => setIsProjectInfoVisible((b) => !b)}
+              >
+                <CrossIcon />
+              </ProjectInfoCloseButton>
+            </ProjectInfoPositioner>
+          ) : (
+            <Button onClick={() => setIsProjectInfoVisible((b) => !b)}>
+              Info
+            </Button>
+          )}
         </Right>
       </TopBar>
       <GantryInfoPositioner>
