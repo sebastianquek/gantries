@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "See Singapore's ERP rates easily",
   "scripts": {
-    "build": "cross-env REACT_APP_BUILD_TIME=$(npx ts-node -e 'console.log(Date.now())') react-scripts --max_old_space_size=4096 build",
+    "build": "cross-env REACT_APP_BUILD_TIME=$(npx -y ts-node -e 'console.log(Date.now())') react-scripts --max_old_space_size=4096 build",
     "eject": "react-scripts eject",
     "fetch:rates": "npx ts-node scripts/fetch-rates.ts",
     "gen:tileset-source": "npx ts-node scripts/generate-tileset-source.ts",
@@ -12,7 +12,7 @@
     "gen:sprites": "npx ts-node scripts/generate-sprites.ts",
     "gen:fonts": "npx ts-node scripts/generate-fonts.ts",
     "lint": "eslint . --ext .js,.ts,.tsx",
-    "start": "cross-env REACT_APP_BUILD_TIME=$(npx ts-node -e 'console.log(Date.now())') react-scripts start",
+    "start": "cross-env REACT_APP_BUILD_TIME=$(npx -y ts-node -e 'console.log(Date.now())') react-scripts start",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
     "test": "react-scripts test",
     "tsc": "npx tsc --noEmit"
