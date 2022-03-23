@@ -214,7 +214,7 @@ const GANTRY_BASE_LAYER_ID = "operational-base";
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
-  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(true);
+  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(false);
 
   const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
     vehicleTypes[0],
