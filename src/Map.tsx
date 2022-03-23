@@ -48,6 +48,8 @@ const TopBar = styled.div`
   margin: 0.5rem;
   display: flex;
   gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.8rem;
 `;
 
 const Left = styled.div`
@@ -75,9 +77,6 @@ const Right = styled.div`
 
 const Pill = styled.div`
   display: flex;
-  font-size: 13px;
-  font-weight: 600;
-  color: #2c2c2c;
 `;
 
 const VehicleSelectWrapper = styled.div`
@@ -85,7 +84,7 @@ const VehicleSelectWrapper = styled.div`
   display: flex;
   width: 4ch;
   overflow: hidden;
-  border: 1px solid #535353;
+  border: 1px solid hsl(0deg 0% 40%);
   background: white;
   border-right: none;
   border-top-left-radius: 500px;
@@ -108,13 +107,11 @@ const VehicleIcon = styled.div`
 
 const Select = styled.select`
   appearance: none;
-  font: inherit;
-  border: 1px solid #535353;
+  border: 1px solid hsl(0deg 0% 40%);
   background: white;
   padding: 8px 12px 6px;
   border-right: none;
   line-height: 1;
-  cursor: pointer;
   border-radius: 0;
 `;
 
@@ -126,12 +123,10 @@ const DayTypeSelect = styled(Select)``;
 
 const TimeInput = styled.input`
   appearance: none;
-  font: inherit;
-  border: 1px solid #535353;
+  border: 1px solid hsl(0deg 0% 40%);
   background: white;
   padding: 8px 12px 6px;
   line-height: 1;
-  cursor: pointer;
   max-width: 13ch;
   border-radius: 0;
   border-top-right-radius: 500px;
@@ -148,21 +143,16 @@ const AppTitle = styled.h1`
   padding: 0;
   line-height: 1;
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 800;
   letter-spacing: 0.1em;
 `;
 
 const Button = styled.button`
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: #2c2c2c;
   background: white;
-  border: 1px solid #535353;
+  border: 1px solid hsl(0deg 0% 40%);
   border-radius: 500px;
   padding: 8px 12px 6px;
-  cursor: pointer;
 `;
 
 const GantryInfoPositioner = styled.div`
@@ -207,7 +197,6 @@ const Backdrop = styled.div`
 `;
 
 const ProjectInfoCloseButton = styled.button`
-  color: #2c2c2c;
   border: none;
   padding: 1em;
   font-size: 20px;

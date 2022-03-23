@@ -7,10 +7,9 @@ const Wrapper = styled.div`
   background: white;
   padding: 1.5rem;
   border: 1px solid hsl(0deg 0% 80%);
-
-  p {
-    line-height: 1.3;
-  }
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.3;
 
   em {
     display: inline-block;
@@ -20,8 +19,9 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  margin: 0.8rem 0 0;
-  font-size: 18px;
+  margin: 0.5rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.2;
 `;
 
 const GantryIconWrapper = styled.div`
