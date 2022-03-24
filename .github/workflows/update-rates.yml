@@ -10,7 +10,6 @@ on:
 
 env:
   NODE_VERSION: "16"
-  DATAMALL_ACCOUNT_KEY: ${{ secrets.DATAMALL_ACCOUNT_KEY }}
 
 jobs:
   fetch-rates:
@@ -27,7 +26,10 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run fetch:rates
+      - name: Fetch rates
+        env:
+          DATAMALL_ACCOUNT_KEY: ${{ secrets.DATAMALL_ACCOUNT_KEY }}
+        run: npm run fetch:rates
 
       # Update the last check date env var and trigger a new deploy
       - name: Update last check and trigger deploy
