@@ -29,9 +29,14 @@ jobs:
 
       - run: npm run fetch:rates
 
-      # Trigger a new deploy which updates the last check time
-      - name: Update last check
-        run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK_ID }}
+      # Update the last check date env var and trigger a new deploy
+      - name: Update last check and trigger deploy
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          npx netlify-cli env:set REACT_APP_LAST_CHECK_DATE $(npx -y ts-node -e 'console.log(Date.now())')
+        # run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK_ID }}
 
       # Using this based on this guide:
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
