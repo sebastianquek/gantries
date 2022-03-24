@@ -66,7 +66,7 @@ export const ProjectInfo = ({
           <em>{lastCheckDate.toString()}</em>
         </p>
       )}
-      {version && <Version>{version.slice(0, 6)}</Version>}
+      {version && <Version>{version.slice(0, 7)}</Version>}
       <a href="https://github.com/sebastianquek/gantries">GitHub</a>
     </Wrapper>
   );
