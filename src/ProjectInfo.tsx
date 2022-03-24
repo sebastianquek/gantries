@@ -30,7 +30,25 @@ const GantryIconWrapper = styled.div`
   }
 `;
 
-export const ProjectInfo = ({ lastUpdateDate }: { lastUpdateDate?: Date }) => {
+const Version = styled.p`
+  display: block;
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  margin: 0;
+  font-size: 0.75em;
+  font-style: italic;
+  color: hsl(0deg 0% 40%);
+`;
+
+export const ProjectInfo = ({
+  lastCheckDate,
+  version,
+}: {
+  lastCheckDate?: Date;
+  version?: string;
+}) => {
+  console.log(version);
   return (
     <Wrapper>
       <GantryIconWrapper>
@@ -41,14 +59,14 @@ export const ProjectInfo = ({ lastUpdateDate }: { lastUpdateDate?: Date }) => {
         Rates and gantry location data are obtained from LTA&#39;s DataMall
         while OpenStreetMap is used to calculate the bearing of the gantries.
       </p>
-      {lastUpdateDate && (
+      {lastCheckDate && (
         <p>
           Last check for updates:
           <br />
-          <em>{lastUpdateDate.toString()}</em>
+          <em>{lastCheckDate.toString()}</em>
         </p>
       )}
-
+      {version && <Version>{version.slice(0, 6)}</Version>}
       <a href="https://github.com/sebastianquek/gantries">GitHub</a>
     </Wrapper>
   );

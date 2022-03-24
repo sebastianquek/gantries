@@ -405,11 +405,12 @@ export const Map = () => {
             <ProjectInfoPositioner>
               <Backdrop onClick={() => setIsProjectInfoVisible((b) => !b)} />
               <ProjectInfo
-                lastUpdateDate={
-                  process.env.REACT_APP_BUILD_TIME
-                    ? new Date(Number(process.env.REACT_APP_BUILD_TIME))
+                lastCheckDate={
+                  process.env.REACT_APP_LAST_CHECK_DATE
+                    ? new Date(Number(process.env.REACT_APP_LAST_CHECK_DATE))
                     : undefined
                 }
+                version={process.env.REACT_APP_COMMIT_REF}
               />
               <ProjectInfoCloseButton
                 onClick={() => setIsProjectInfoVisible((b) => !b)}
