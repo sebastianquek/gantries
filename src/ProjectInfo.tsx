@@ -48,7 +48,6 @@ export const ProjectInfo = ({
   lastCheckDate?: Date;
   version?: string;
 }) => {
-  console.log(version);
   return (
     <Wrapper>
       <GantryIconWrapper>
