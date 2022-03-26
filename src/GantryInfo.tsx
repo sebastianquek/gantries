@@ -14,10 +14,12 @@ const Wrapper = styled.div<{ viewType: "minimal" | "all" }>`
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  padding-top: 1.5rem;
   gap: 0.5rem;
   width: 100%;
   touch-action: none;
   transition: all 0.4s;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);
 
   ${({ viewType }) =>
     viewType === "all"
@@ -29,6 +31,18 @@ const Wrapper = styled.div<{ viewType: "minimal" | "all" }>`
           border-bottom-right-radius: 0;
           border-bottom-left-radius: 0;
         `}
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    height: 2px;
+    width: 3rem;
+    background-color: hsla(0, 0%, 65%, 1);
+    border-radius: 500px;
+    transform: translateX(-50%);
+  }
 `;
 
 const TitleBar = styled.div`
