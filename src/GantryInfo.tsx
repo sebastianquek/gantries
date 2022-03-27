@@ -225,7 +225,7 @@ export const GantryInfo = ({
 
   if (!gantry) {
     return (
-      <Wrapper viewType={viewType} isDraggable={false}>
+      <Wrapper viewType="all" isDraggable={false}>
         <TitleBar>
           <GantryInfoIcon />
           <Name>Click on a gantry to see more</Name>
