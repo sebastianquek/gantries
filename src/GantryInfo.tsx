@@ -15,33 +15,33 @@ const bounce = keyframes`
     transform: translate3d(0, 0, 0);
     animation-timing-function: ease-out;
   }
-  16% {
+  12% {
     transform: translate3d(0, -80px, 0);
   }
-  25% {
+  32% {
     transform: translate3d(0, -80px, 0);
     animation-timing-function: ease-in;
   }
-  55% {
+  59.2% {
     transform: translate3d(0, -24px, 0);
     animation-timing-function: ease-in;
   }
-  73.75% {
+  76.2% {
     transform: translate3d(0, -12px, 0);
     animation-timing-function: ease-in;
   }
-  86.5% {
+  87.76% {
     transform: translate3d(0, -6px, 0);
     animation-timing-function: ease-in;
   }
-  94.75% {
+  95.24% {
     transform: translate3d(0, -4px, 0);
     animation-timing-function: ease-in;
   }
-  43.75%,
-  66.25%,
-  81.25%,
-  90.25%,
+  49%,
+  69.4%,
+  83%,
+  91.16%,
   100% {
     transform: translate3d(0, 0px, 0);
     animation-timing-function: ease-out;
@@ -95,7 +95,7 @@ const Wrapper = styled.div<{
   ${({ showBounceAnimation = false }) =>
     showBounceAnimation &&
     css`
-      animation: ${bounce} 2s linear 0.5s;
+      animation: ${bounce} 2.5s linear 0.5s;
     `}
 `;
 
