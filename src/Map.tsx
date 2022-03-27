@@ -4,6 +4,7 @@ import type { MapLayerMouseEvent } from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import { AlertBanner } from "./AlertBanner";
 import { GantryInfo } from "./GantryInfo";
 import { ProjectInfo } from "./ProjectInfo";
 import { dayTypes, vehicleTypes } from "./constants";
@@ -167,7 +168,7 @@ const GantryInfoPositioner = styled.div`
 
   @media (min-width: 768px) {
     top: 3.5rem;
-    width: 300px;
+    width: 350px;
   }
 `;
 
@@ -207,6 +208,20 @@ const ProjectInfoCloseButton = styled.button`
   position: absolute;
   top: 0;
   right: 0;
+`;
+
+const AlertBannerPositioner = styled.div`
+  position: absolute;
+  right: 3.5rem;
+  top: 3.5rem;
+
+  @media (max-width: 768px) {
+    left: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    width: 270px;
+  }
 `;
 
 const GANTRY_BASE_LAYER_ID = "operational-base";
@@ -425,6 +440,14 @@ export const Map = () => {
           )}
         </Right>
       </TopBar>
+      {new Date().getDay() === 0 && (
+        <AlertBannerPositioner>
+          <AlertBanner>
+            {`ERP is not operational on Sundays, you're seeing rates for
+              ${dayType}.`}
+          </AlertBanner>
+        </AlertBannerPositioner>
+      )}
       <GantryInfoPositioner>
         <GantryInfo
           gantry={selectedGantry}
