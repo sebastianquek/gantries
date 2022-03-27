@@ -1,6 +1,11 @@
+import FlipMove from "react-flip-move";
 import styled from "styled-components";
 
-const Rates = styled.div`
+const OverflowWrapper = styled.div`
+  overflow: hidden;
+`;
+
+const Rates = styled(FlipMove)`
   display: flex;
   flex-direction: column;
   font-size: 13px;
@@ -71,28 +76,30 @@ export const GantryRatesList = ({
     ];
   }
   return (
-    <Rates>
-      {filteredRates.map(({ startTime, endTime, amount }) => {
-        const interval = `${startTime} - ${endTime}`;
-        const isCurrent = time >= startTime && time < endTime;
-        return (
-          <RateItem key={interval}>
-            <RateInterval isCurrent={isCurrent}>{interval}</RateInterval>
-            <RateBarWrapper>
-              <RateBar
-                isCurrent={isCurrent}
-                style={{
-                  width:
-                    amount === 0
-                      ? `1px`
-                      : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
-                }}
-              />
-            </RateBarWrapper>
-            <RateValue isCurrent={isCurrent}>${amount}</RateValue>
-          </RateItem>
-        );
-      })}
-    </Rates>
+    <OverflowWrapper>
+      <Rates enterAnimation="fade" leaveAnimation="none">
+        {filteredRates.map(({ startTime, endTime, amount }) => {
+          const interval = `${startTime} - ${endTime}`;
+          const isCurrent = time >= startTime && time < endTime;
+          return (
+            <RateItem key={`${interval}-${amount}`}>
+              <RateInterval isCurrent={isCurrent}>{interval}</RateInterval>
+              <RateBarWrapper>
+                <RateBar
+                  isCurrent={isCurrent}
+                  style={{
+                    width:
+                      amount === 0
+                        ? `1px`
+                        : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
+                  }}
+                />
+              </RateBarWrapper>
+              <RateValue isCurrent={isCurrent}>${amount}</RateValue>
+            </RateItem>
+          );
+        })}
+      </Rates>
+    </OverflowWrapper>
   );
 };
