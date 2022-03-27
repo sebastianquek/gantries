@@ -1,7 +1,7 @@
 import type { DayType, Gantry, VehicleType } from "./types";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
@@ -10,9 +10,48 @@ import { ReactComponent as Checkmark } from "./svg/checkmark-sharp.svg";
 import { useGantryRates } from "./useGantryRates";
 import { useMatchMedia } from "./utils/useMatchMedia";
 
+const bounce = keyframes`
+  0% {
+    transform: translate3d(0, 0, 0);
+    animation-timing-function: ease-out;
+  }
+  16% {
+    transform: translate3d(0, -80px, 0);
+  }
+  25% {
+    transform: translate3d(0, -80px, 0);
+    animation-timing-function: ease-in;
+  }
+  55% {
+    transform: translate3d(0, -24px, 0);
+    animation-timing-function: ease-in;
+  }
+  73.75% {
+    transform: translate3d(0, -12px, 0);
+    animation-timing-function: ease-in;
+  }
+  86.5% {
+    transform: translate3d(0, -6px, 0);
+    animation-timing-function: ease-in;
+  }
+  94.75% {
+    transform: translate3d(0, -4px, 0);
+    animation-timing-function: ease-in;
+  }
+  43.75%,
+  66.25%,
+  81.25%,
+  90.25%,
+  100% {
+    transform: translate3d(0, 0px, 0);
+    animation-timing-function: ease-out;
+  }
+`;
+
 const Wrapper = styled.div<{
   viewType: "minimal" | "all";
   isDraggable?: boolean;
+  showBounceAnimation?: boolean;
 }>`
   border-radius: 1.5rem;
   background: white;
@@ -51,6 +90,12 @@ const Wrapper = styled.div<{
         border-radius: 500px;
         transform: translateX(-50%);
       }
+    `}
+
+  ${({ showBounceAnimation = false }) =>
+    showBounceAnimation &&
+    css`
+      animation: ${bounce} 2s linear 0.5s;
     `}
 `;
 
@@ -158,10 +203,19 @@ export const GantryInfo = ({
   const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
 
   const [dragOffsetY, setDragOffsetY] = useState(0);
+  const [showBounceAnimation, setShowBounceAnimation] = useState(false);
 
   useEffect(() => {
     setViewType(isMobile ? "minimal" : "all");
   }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile && gantry && rates.length > 1) {
+      // hint to the user that the bottom sheet is draggable
+      // when there's a selected gantry and it has more than 1 rate
+      setShowBounceAnimation(true);
+    }
+  }, [gantry, isMobile, rates.length]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const gestureState = useRef<GestureState>({
@@ -250,6 +304,7 @@ export const GantryInfo = ({
         transition: dragOffsetY === 0 ? "transform 0.4s" : "none",
       }}
       isDraggable={isMobile}
+      showBounceAnimation={showBounceAnimation}
     >
       <TitleBar>
         <GantryInfoIcon zone={gantry.zone} />
