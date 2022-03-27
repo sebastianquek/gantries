@@ -7,6 +7,7 @@ import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
 import { ReactComponent as ArrowUp } from "./svg/arrow-up-sharp.svg";
 import { ReactComponent as Checkmark } from "./svg/checkmark-sharp.svg";
+import { ReactComponent as GantryIcon } from "./svg/gantry-on.svg";
 import { useGantryRates } from "./useGantryRates";
 import { useMatchMedia } from "./utils/useMatchMedia";
 
@@ -281,7 +282,7 @@ export const GantryInfo = ({
     return (
       <Wrapper viewType="all" isDraggable={false}>
         <TitleBar>
-          <GantryInfoIcon />
+          <GantryIcon />
           <Name>Click on a gantry to see more</Name>
         </TitleBar>
       </Wrapper>
