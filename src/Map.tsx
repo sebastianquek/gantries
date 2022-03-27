@@ -39,6 +39,10 @@ const MapboxWrapper = styled.div`
   canvas {
     border-radius: 1.5rem;
   }
+
+  .mapboxgl-ctrl-group {
+    border-radius: 500px;
+  }
 `;
 
 const TopBar = styled.div`
