@@ -1,8 +1,8 @@
-import type { DayType, Gantry, VehicleType } from "./types";
+import type { DayType, Gantry, VehicleType } from "../types";
 
 import { useEffect, useState } from "react";
 
-import { slugify } from "./utils/slugify";
+import { slugify } from "../utils/slugify";
 
 type Rate = { startTime: string; endTime: string; amount: number };
 

@@ -1,15 +1,16 @@
-import type { DayType, Gantry, VehicleType } from "./types";
+import type { DayType, Gantry, VehicleType } from "../types";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 
+import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
+import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
+import { ReactComponent as GantryIcon } from "../svg/gantry-on.svg";
+import { useMatchMedia } from "../utils/useMatchMedia";
+
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
-import { ReactComponent as ArrowUp } from "./svg/arrow-up-sharp.svg";
-import { ReactComponent as Checkmark } from "./svg/checkmark-sharp.svg";
-import { ReactComponent as GantryIcon } from "./svg/gantry-on.svg";
 import { useGantryRates } from "./useGantryRates";
-import { useMatchMedia } from "./utils/useMatchMedia";
 
 const bounce = keyframes`
   0% {
