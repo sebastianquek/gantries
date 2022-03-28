@@ -1,12 +1,16 @@
+import type { OutletContextType } from "../Map";
 import type { DayType, Gantry, VehicleType } from "../types";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useOutletContext, useParams } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
 import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
 import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
 import { ReactComponent as GantryIcon } from "../svg/gantry-on.svg";
+import { queryMap } from "../utils/queryMap";
 import { useMatchMedia } from "../utils/useMatchMedia";
+import { usePrevious } from "../utils/usePrevious";
 
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
@@ -347,5 +351,38 @@ export const GantryInfo = ({
         </GestureHelperText>
       )}
     </Wrapper>
+  );
+};
+
+export const GantryInfoOutlet = () => {
+  const location = useLocation();
+  const { gantryId } = useParams();
+  const prevGantryId = usePrevious(gantryId);
+
+  const { map, vehicleType, dayType, time } =
+    useOutletContext<OutletContextType>();
+
+  const [gantry, setGantry] = useState<Gantry>();
+
+  useEffect(() => {
+    if (gantry === undefined || gantryId !== prevGantryId) {
+      const { gantry: gantryFromState } = (location.state ?? {}) as {
+        gantry?: Gantry;
+      };
+      if (gantryFromState) {
+        setGantry(gantryFromState);
+      } else {
+        setGantry(map && gantryId ? queryMap(map, gantryId) : undefined);
+      }
+    }
+  }, [gantry, gantryId, location.state, map, prevGantryId]);
+
+  return (
+    <GantryInfo
+      gantry={gantry}
+      vehicleType={vehicleType}
+      dayType={dayType}
+      time={time}
+    />
   );
 };

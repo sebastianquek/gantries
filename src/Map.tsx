@@ -1,17 +1,18 @@
 import type { DayType, Gantry, VehicleType } from "./types";
-import type { MapLayerMouseEvent } from "mapbox-gl";
+import type { LngLatLike, MapLayerMouseEvent } from "mapbox-gl";
 
 import { useEffect, useRef, useState } from "react";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { AlertBanner } from "./AlertBanner";
-import { GantryInfo } from "./GantryInfo";
 import { TopBar } from "./TopBar";
 import { GANTRY_BASE_LAYER_ID, VEHICLE_TYPES } from "./constants";
 import { useLayerId } from "./useLayerId";
 import { useMap } from "./useMap";
 import { useMapLayers } from "./useMapLayers";
 import { getDayType, getTime } from "./utils/datetime";
+import { queryMap } from "./utils/queryMap";
 import { useStateWithLocalStorage } from "./utils/useLocalStorage";
 
 const Wrapper = styled.div`
@@ -68,6 +69,13 @@ const GantryInfoPositioner = styled.div`
   }
 `;
 
+export type OutletContextType = {
+  map: mapboxgl.Map | undefined;
+  vehicleType: VehicleType;
+  dayType: DayType;
+  time: string;
+};
+
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +88,9 @@ export const Map = () => {
 
   const [layerId] = useLayerId(vehicleType, dayType, time);
 
-  const [selectedGantry, setSelectedGantry] = useState<Gantry>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { gantryId } = useParams();
 
   const { map, isLoaded } = useMap({
     mapRef: mapRef,
@@ -94,7 +104,7 @@ export const Map = () => {
     const onClick = (e: MapLayerMouseEvent) => {
       if (e.features && e.features.length > 0) {
         const gantry = e.features[0].properties as Gantry;
-        setSelectedGantry(gantry);
+        navigate(gantry.id, { state: { gantry } });
       }
     };
 
@@ -103,18 +113,31 @@ export const Map = () => {
     return () => {
       map?.off("click", GANTRY_BASE_LAYER_ID, onClick);
     };
-  }, [map]);
+  }, [map, navigate]);
 
-  useMapLayers(map, isLoaded, layerId, selectedGantry?.id);
+  useMapLayers(map, isLoaded, layerId, gantryId);
 
   useEffect(() => {
-    if (map && selectedGantry?.longitude && selectedGantry?.latitude) {
+    if (!map || !isLoaded || !gantryId) {
+      return;
+    }
+    let center: LngLatLike | undefined;
+    const { gantry } = (location.state ?? {}) as { gantry?: Gantry };
+    if (gantry) {
+      center = [gantry.longitude, gantry.latitude];
+    } else {
+      const gantry = queryMap(map, gantryId);
+      if (gantry?.longitude && gantry.latitude) {
+        center = [gantry.longitude, gantry.latitude];
+      }
+    }
+    if (center) {
       map.flyTo({
-        center: [selectedGantry.longitude, selectedGantry.latitude],
+        center,
         offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
       });
     }
-  }, [map, selectedGantry?.latitude, selectedGantry?.longitude]);
+  }, [gantryId, isLoaded, location.state, map]);
 
   return (
     <Wrapper>
@@ -136,11 +159,13 @@ export const Map = () => {
         </AlertBannerPositioner>
       )}
       <GantryInfoPositioner>
-        <GantryInfo
-          gantry={selectedGantry}
-          vehicleType={vehicleType}
-          dayType={dayType}
-          time={time}
+        <Outlet
+          context={{
+            map: isLoaded ? map : undefined,
+            vehicleType,
+            dayType,
+            time,
+          }}
         />
       </GantryInfoPositioner>
     </Wrapper>

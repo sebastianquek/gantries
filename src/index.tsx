@@ -4,6 +4,7 @@ import "./index.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { GantryInfoOutlet } from "./GantryInfo";
 import { Map } from "./Map";
 import reportWebVitals from "./reportWebVitals";
 
@@ -11,7 +12,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Map />} />
+        <Route path="/" element={<Map />}>
+          <Route path=":gantryId" element={<GantryInfoOutlet />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

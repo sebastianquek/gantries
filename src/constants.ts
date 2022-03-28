@@ -8,4 +8,6 @@ export const VEHICLE_TYPES = [
 ] as const;
 
 export const DAY_TYPES = ["Weekdays", "Saturday"] as const;
+
 export const GANTRY_BASE_LAYER_ID = "operational-base";
+export const GANTRY_SOURCE_LAYER = "gantries";

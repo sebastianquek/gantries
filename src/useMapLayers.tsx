@@ -12,8 +12,12 @@ export const useMapLayers = (
   const prevSelectedGantryId = usePrevious(selectedGantryId);
 
   useEffect(() => {
+    if (!isMapLoaded || !map) {
+      return;
+    }
+
     if (prevSelectedGantryId) {
-      map?.setFeatureState(
+      map.setFeatureState(
         {
           source: "composite",
           id: prevSelectedGantryId,
@@ -24,7 +28,7 @@ export const useMapLayers = (
     }
 
     if (selectedGantryId) {
-      map?.setFeatureState(
+      map.setFeatureState(
         {
           source: "composite",
           id: selectedGantryId,
@@ -33,7 +37,7 @@ export const useMapLayers = (
         { highlight: true }
       );
     }
-  }, [map, prevSelectedGantryId, selectedGantryId]);
+  }, [map, isMapLoaded, prevSelectedGantryId, selectedGantryId]);
 
   /**
    * Toggle off the previous target layer id
