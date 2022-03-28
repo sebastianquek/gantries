@@ -2,7 +2,12 @@ import type { OutletContextType } from "../Map";
 import type { DayType, Gantry, VehicleType } from "../types";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, useOutletContext, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
 import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
@@ -355,6 +360,7 @@ export const GantryInfo = ({
 };
 
 export const GantryInfoOutlet = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { gantryId } = useParams();
   const prevGantryId = usePrevious(gantryId);
@@ -372,10 +378,18 @@ export const GantryInfoOutlet = () => {
       if (gantryFromState) {
         setGantry(gantryFromState);
       } else {
-        setGantry(map && gantryId ? queryMap(map, gantryId) : undefined);
+        if (map && gantryId) {
+          const gantryFromQuery = queryMap(map, gantryId);
+          if (gantryFromQuery) {
+            setGantry(gantryFromQuery);
+          } else {
+            // Couldn't find the gantry, go back to root
+            navigate("/", { replace: true });
+          }
+        }
       }
     }
-  }, [gantry, gantryId, location.state, map, prevGantryId]);
+  }, [gantry, gantryId, location.state, map, navigate, prevGantryId]);
 
   return (
     <GantryInfo
