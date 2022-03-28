@@ -8,13 +8,11 @@ import { AlertBanner } from "./AlertBanner";
 import { GantryInfo } from "./GantryInfo";
 import { TopBar } from "./TopBar";
 import { vehicleTypes } from "./constants";
+import { useLayerId } from "./useLayerId";
 import { useMap } from "./useMap";
+import { useMapLayers } from "./useMapLayers";
 import { getDayType, getTime } from "./utils/datetime";
-import { pickSplit } from "./utils/pickSplit";
-import { slugify } from "./utils/slugify";
-import { useFetchJSON } from "./utils/useFetchJSON";
 import { useStateWithLocalStorage } from "./utils/useLocalStorage";
-import { usePrevious } from "./utils/usePrevious";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -82,17 +80,10 @@ export const Map = () => {
   const [dayType, setDayType] = useState<DayType>(getDayType("Weekdays"));
   const [time, setTime] = useState<string>(getTime());
 
-  const [layerId, setLayerId] = useState<string | null>(null);
-  const prevLayerId = usePrevious(layerId);
+  const [layerId] = useLayerId(vehicleType, dayType, time);
 
   const [selectedGantry, setSelectedGantry] = useState<Gantry>();
   const [selectedGantryId, setSelectedGantryId] = useState<string | number>();
-  const prevSelectedGantryId = usePrevious(selectedGantryId);
-
-  const { result: splits } =
-    useFetchJSON<{ [vehicleAndDayType: string]: string[] }>(
-      "/data/splits.json"
-    );
 
   const { map, isLoaded } = useMap({
     mapRef: mapRef,
@@ -101,22 +92,6 @@ export const Map = () => {
     initialZoom: 12.15,
     mapStyle: "STREETS",
   });
-
-  /**
-   * Update target layer id to toggle on based on
-   * vehicleType, dayType and time.
-   */
-  useEffect(() => {
-    if (!splits) {
-      return;
-    }
-    const key = slugify(`${vehicleType}-${dayType}`);
-    if (!splits[key]) {
-      return;
-    }
-    const split = pickSplit(time, splits[key]);
-    setLayerId(split ? slugify(`${key}-${split}`) : null);
-  }, [vehicleType, dayType, time, splits]);
 
   useEffect(() => {
     const onClick = (e: MapLayerMouseEvent) => {
@@ -138,59 +113,7 @@ export const Map = () => {
     };
   }, [map]);
 
-  useEffect(() => {
-    if (prevSelectedGantryId) {
-      map?.setFeatureState(
-        {
-          source: "composite",
-          id: prevSelectedGantryId,
-          sourceLayer: "gantries",
-        },
-        { highlight: false }
-      );
-    }
-
-    if (selectedGantryId) {
-      map?.setFeatureState(
-        {
-          source: "composite",
-          id: selectedGantryId,
-          sourceLayer: "gantries",
-        },
-        { highlight: true }
-      );
-    }
-  }, [map, prevSelectedGantryId, selectedGantryId]);
-
-  /**
-   * Toggle off the previous target layer id
-   * Toggle on the current target layer id
-   */
-  useEffect(() => {
-    if (!isLoaded || !map) {
-      return;
-    }
-    if (prevLayerId) {
-      const operationalId = `operational-${prevLayerId}`;
-      const rateId = `rate-${prevLayerId}`;
-      if (map.getLayer(operationalId)) {
-        map.setLayoutProperty(operationalId, "visibility", "none");
-      }
-      if (map.getLayer(rateId)) {
-        map.setLayoutProperty(rateId, "visibility", "none");
-      }
-    }
-    if (layerId) {
-      const operationalId = `operational-${layerId}`;
-      const rateId = `rate-${layerId}`;
-      if (map.getLayer(operationalId)) {
-        map.setLayoutProperty(operationalId, "visibility", "visible");
-      }
-      if (map.getLayer(rateId)) {
-        map.setLayoutProperty(rateId, "visibility", "visible");
-      }
-    }
-  }, [isLoaded, layerId, map, prevLayerId]);
+  useMapLayers(map, isLoaded, layerId, selectedGantryId);
 
   return (
     <Wrapper>
