@@ -288,7 +288,7 @@ export const GantryInfo = ({
       <Wrapper viewType="all" isDraggable={false}>
         <TitleBar>
           <GantryIcon />
-          <Name>Click on a gantry to see more</Name>
+          <Name>Loading...</Name>
         </TitleBar>
       </Wrapper>
     );
@@ -384,5 +384,19 @@ export const GantryInfoOutlet = () => {
       dayType={dayType}
       time={time}
     />
+  );
+};
+
+/**
+ * Shows up when no gantry is selected
+ */
+export const GantryInfoHelpPanelOutlet = () => {
+  return (
+    <Wrapper viewType="all" isDraggable={false}>
+      <TitleBar>
+        <GantryIcon />
+        <Name>Click on a gantry to see more</Name>
+      </TitleBar>
+    </Wrapper>
   );
 };
