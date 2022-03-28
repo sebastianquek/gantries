@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { AlertBanner } from "./AlertBanner";
 import { GantryInfo } from "./GantryInfo";
 import { TopBar } from "./TopBar";
-import { vehicleTypes } from "./constants";
+import { GANTRY_BASE_LAYER_ID, VEHICLE_TYPES } from "./constants";
 import { useLayerId } from "./useLayerId";
 import { useMap } from "./useMap";
 import { useMapLayers } from "./useMapLayers";
@@ -68,13 +68,11 @@ const GantryInfoPositioner = styled.div`
   }
 `;
 
-const GANTRY_BASE_LAYER_ID = "operational-base";
-
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
-    vehicleTypes[0],
+    VEHICLE_TYPES[0],
     "vehicleType"
   );
   const [dayType, setDayType] = useState<DayType>(getDayType("Weekdays"));

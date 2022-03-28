@@ -1,7 +1,7 @@
-import type { dayTypes, vehicleTypes } from "./constants";
+import type { DAY_TYPES, VEHICLE_TYPES } from "./constants";
 
-export type VehicleType = typeof vehicleTypes[number];
-export type DayType = typeof dayTypes[number];
+export type VehicleType = typeof VEHICLE_TYPES[number];
+export type DayType = typeof DAY_TYPES[number];
 
 export type Gantry = {
   bearing: number;

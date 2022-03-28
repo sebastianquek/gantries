@@ -1,4 +1,4 @@
-export const vehicleTypes = [
+export const VEHICLE_TYPES = [
   "Passenger Cars/Light Goods Vehicles/Taxis",
   "Motorcycles",
   "Heavy Goods Vehicles/Small Buses",
@@ -7,4 +7,5 @@ export const vehicleTypes = [
   "Taxis",
 ] as const;
 
-export const dayTypes = ["Weekdays", "Saturday"] as const;
+export const DAY_TYPES = ["Weekdays", "Saturday"] as const;
+export const GANTRY_BASE_LAYER_ID = "operational-base";

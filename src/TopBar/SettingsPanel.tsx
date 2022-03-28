@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 
 import { Button } from "../common/Button";
-import { dayTypes, vehicleTypes } from "../constants";
+import { DAY_TYPES, VEHICLE_TYPES } from "../constants";
 import { ReactComponent as Bus } from "../svg/bus.svg";
 import { ReactComponent as Car } from "../svg/car.svg";
 import { ReactComponent as Motorcycle } from "../svg/motorcycle.svg";
@@ -126,7 +126,7 @@ export const SettingsPanel = ({
               setVehicleType(event.target.value as VehicleType)
             }
           >
-            {vehicleTypes.map((vehicleType) => (
+            {VEHICLE_TYPES.map((vehicleType) => (
               <option key={vehicleType} value={vehicleType}>
                 {vehicleType}
               </option>
@@ -137,7 +137,7 @@ export const SettingsPanel = ({
           value={dayType}
           onChange={(event) => setDayType(event.target.value as DayType)}
         >
-          {dayTypes.map((dayType) => (
+          {DAY_TYPES.map((dayType) => (
             <option key={dayType} value={dayType}>
               {dayType}
             </option>
