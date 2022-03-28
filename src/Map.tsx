@@ -97,10 +97,6 @@ export const Map = () => {
       if (e.features && e.features.length > 0) {
         const gantry = e.features[0].properties as Gantry;
         setSelectedGantry(gantry);
-        map?.flyTo({
-          center: [gantry.longitude, gantry.latitude],
-          offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
-        });
       }
     };
 
@@ -112,6 +108,15 @@ export const Map = () => {
   }, [map]);
 
   useMapLayers(map, isLoaded, layerId, selectedGantry?.id);
+
+  useEffect(() => {
+    if (map && selectedGantry?.longitude && selectedGantry?.latitude) {
+      map.flyTo({
+        center: [selectedGantry.longitude, selectedGantry.latitude],
+        offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
+      });
+    }
+  }, [map, selectedGantry?.latitude, selectedGantry?.longitude]);
 
   return (
     <Wrapper>
