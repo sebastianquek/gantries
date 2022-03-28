@@ -6,7 +6,7 @@ export const useMapLayers = (
   map: mapboxgl.Map | undefined,
   isMapLoaded: boolean,
   layerId: string | undefined,
-  selectedGantryId: string | number | undefined
+  selectedGantryId: string | undefined
 ) => {
   const prevLayerId = usePrevious(layerId);
   const prevSelectedGantryId = usePrevious(selectedGantryId);

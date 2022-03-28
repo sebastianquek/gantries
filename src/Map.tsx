@@ -83,7 +83,6 @@ export const Map = () => {
   const [layerId] = useLayerId(vehicleType, dayType, time);
 
   const [selectedGantry, setSelectedGantry] = useState<Gantry>();
-  const [selectedGantryId, setSelectedGantryId] = useState<string | number>();
 
   const { map, isLoaded } = useMap({
     mapRef: mapRef,
@@ -98,7 +97,6 @@ export const Map = () => {
       if (e.features && e.features.length > 0) {
         const gantry = e.features[0].properties as Gantry;
         setSelectedGantry(gantry);
-        setSelectedGantryId(e.features[0].id);
         map?.flyTo({
           center: [gantry.longitude, gantry.latitude],
           offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
@@ -113,7 +111,7 @@ export const Map = () => {
     };
   }, [map]);
 
-  useMapLayers(map, isLoaded, layerId, selectedGantryId);
+  useMapLayers(map, isLoaded, layerId, selectedGantry?.id);
 
   return (
     <Wrapper>
