@@ -1,0 +1,8 @@
+{
+  "short_name": "Gantries",
+  "name": "Gantries",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#DE6235",
+  "background_color": "#ffffff"
+}
