@@ -25,6 +25,10 @@ const VehicleSelectWrapper = styled.div`
   border-right: none;
   border-top-left-radius: 500px;
   border-bottom-left-radius: 500px;
+
+  &:focus-within {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
 `;
 
 const VehicleIcon = styled.div`
@@ -49,6 +53,10 @@ const Select = styled.select`
   border-right: none;
   line-height: 1;
   border-radius: 0;
+
+  &:focus-visible {
+    z-index: 10;
+  }
 `;
 
 const VehicleSelect = styled(Select)`
