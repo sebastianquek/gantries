@@ -28,6 +28,7 @@ const Wrapper = styled.div`
 `;
 
 const MapboxWrapper = styled.div`
+  position: relative;
   height: 100%;
 
   canvas {
