@@ -53,7 +53,11 @@ const createTileset = async (
     console.log("Successfully created tileset");
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      const axiosError: AxiosError<{ message: string }> = e;
+      // `isAxiosError` types `e` as AxiosError<unknown, any>
+      // Typing `axiosError` as `AxiosError<{ message: string }>` throws a
+      // type error that 'unknown' is not assignable to type '{ message: string; }'.
+      // As such, this explicit cast is required.
+      const axiosError = e as AxiosError<{ message: string }>;
       if (
         axiosError.response?.status === 400 &&
         axiosError.response?.data.message.includes("already exists")
