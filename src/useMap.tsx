@@ -9,12 +9,17 @@ export const useMap = ({
   initialLng,
   initialLat,
   initialZoom = 13,
+  initialBounds = [
+    [103.5997, 1.20634], // bottom-left, sw
+    [104.03846, 1.47337], // top-right, ne
+  ],
   mapStyle,
 }: {
   mapRef: React.RefObject<HTMLDivElement>;
   initialLng: number;
   initialLat: number;
   initialZoom?: number;
+  initialBounds?: mapboxgl.MapboxOptions["maxBounds"];
   mapStyle?: MapStyle;
 }): {
   lng: number;
@@ -61,6 +66,7 @@ export const useMap = ({
       style,
       center: [initialLng, initialLat],
       zoom: initialZoom,
+      maxBounds: initialBounds,
     });
 
     mapboxRef.current.addControl(
@@ -77,7 +83,7 @@ export const useMap = ({
     mapboxRef.current.once("load", () => {
       setIsLoaded(true);
     });
-  }, [initialLat, initialLng, initialZoom, mapRef, style]);
+  }, [initialBounds, initialLat, initialLng, initialZoom, mapRef, style]);
 
   useEffect(() => {
     if (mapboxRef.current) {
