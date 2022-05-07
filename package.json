@@ -11,11 +11,11 @@
     "gen:styles": "npx ts-node scripts/generate-style-layers.ts",
     "gen:sprites": "npx ts-node scripts/generate-sprites.ts",
     "gen:fonts": "npx ts-node scripts/generate-fonts.ts",
-    "lint": "eslint . --ext .js,.ts,.tsx",
+    "lint": "eslint --ext .js,.ts,.tsx",
     "start": "react-scripts start",
     "test:scripts": "jest --testPathPattern=scripts/.*.test.ts",
     "test": "react-scripts test",
-    "tsc": "npx tsc --noEmit"
+    "tsc": "tsc --noEmit"
   },
   "keywords": [
     "erp",
@@ -48,6 +48,7 @@
     "form-data": "^4.0.0",
     "jest": "^28.1.0",
     "prettier": "^2.6.2",
+    "simple-git-hooks": "^2.7.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
@@ -75,5 +76,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm run tsc"
   }
 }
