@@ -52,7 +52,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          add-paths: data
+          add-paths: "public/data"
           commit-message: "chore: update rates"
           branch: "chore/update-rates"
           delete-branch: true
