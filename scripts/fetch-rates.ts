@@ -56,7 +56,7 @@ const fetchRates = async (baseUrl = RATES_URL, pageSize = 500) => {
  *  Rates with positive amounts, grouped by vehicle type and day type, with each
  *  group being sorted by zone id, start time and end time.
  */
-export const parseRates = (rates: Rate[]) => {
+const parseRates = (rates: Rate[]) => {
   return (
     chain(rates)
       // Store only intervals with positive ERP rates since the time intervals where
@@ -76,7 +76,7 @@ export const parseRates = (rates: Rate[]) => {
  * @param rates Rate objects
  * @returns Unique vehicle types from the given Rate objects
  */
-export const parseVehicleTypes = (rates: Rate[]) => {
+const parseVehicleTypes = (rates: Rate[]) => {
   return chain(rates)
     .map((o) => pick(o, "VehicleType"))
     .uniqBy("VehicleType")
@@ -119,7 +119,7 @@ const getSplitsByVehicleAndDayType = <
  *
  * @param obj
  */
-export const stringifyWithSortedKeys = (obj: Record<string, unknown>) => {
+const stringifyWithSortedKeys = (obj: Record<string, unknown>) => {
   const allKeys = new Set<string>();
   JSON.stringify(obj, (key: string, value: unknown) => {
     allKeys.add(key);
@@ -158,3 +158,9 @@ const run = async () => {
 if (process.env.NODE_ENV !== "test") {
   void run();
 }
+
+export const exportedForTesting = {
+  parseRates,
+  parseVehicleTypes,
+  stringifyWithSortedKeys,
+};

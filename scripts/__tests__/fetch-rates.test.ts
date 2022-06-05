@@ -1,14 +1,13 @@
-import {
-  parseRates,
-  parseVehicleTypes,
-  stringifyWithSortedKeys,
-} from "../fetch-rates";
+import { exportedForTesting } from "../fetch-rates";
 
 import {
   includesNonPositiveChargeAmounts,
   ungrouped,
   unsorted,
 } from "./fixtures/rates";
+
+const { parseRates, parseVehicleTypes, stringifyWithSortedKeys } =
+  exportedForTesting;
 
 describe("fetch-rates", () => {
   describe("parseRates", () => {
