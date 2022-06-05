@@ -113,6 +113,21 @@ const getSplitsByVehicleAndDayType = <
   return splitsByVehicleAndDayType;
 };
 
+/**
+ * JSON stringifies an object while ensuring the keys are sorted.
+ * Nested object's keys are sorted too.
+ *
+ * @param obj
+ */
+export const stringifyWithSortedKeys = (obj: Record<string, unknown>) => {
+  const allKeys = new Set<string>();
+  JSON.stringify(obj, (key: string, value: unknown) => {
+    allKeys.add(key);
+    return value;
+  });
+  return JSON.stringify(obj, Array.from(allKeys).sort());
+};
+
 const run = async () => {
   const rawRates = await fetchRates();
 
@@ -126,13 +141,13 @@ const run = async () => {
   // Save a file that contains all the rates across all vehicle and day types
   writeFileSync(
     join(OUTPUT_DATA_DIR, "all-rates.json"),
-    JSON.stringify(parsedRates)
+    stringifyWithSortedKeys(parsedRates)
   );
 
   const splitsByVehicleAndDayType = getSplitsByVehicleAndDayType(parsedRates);
   writeFileSync(
     join(OUTPUT_DATA_DIR, "splits.json"),
-    JSON.stringify(splitsByVehicleAndDayType)
+    stringifyWithSortedKeys(splitsByVehicleAndDayType)
   );
 
   const parsedVehicleTypes = parseVehicleTypes(rawRates);

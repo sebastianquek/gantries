@@ -1,4 +1,8 @@
-import { parseRates, parseVehicleTypes } from "../fetch-rates";
+import {
+  parseRates,
+  parseVehicleTypes,
+  stringifyWithSortedKeys,
+} from "../fetch-rates";
 
 import {
   includesNonPositiveChargeAmounts,
@@ -160,6 +164,86 @@ describe("fetch-rates", () => {
         { VehicleType: "Light Goods Vehicles" },
         { VehicleType: "Passenger Cars/Light Goods Vehicles/Taxis" },
       ]);
+    });
+  });
+
+  describe("stringifyWithSortedKeys", () => {
+    it("should sort correctly for string and number values", () => {
+      expect(
+        stringifyWithSortedKeys({
+          b: 2,
+          a: 1,
+        })
+      ).toStrictEqual(
+        JSON.stringify({
+          a: 1,
+          b: 2,
+        })
+      );
+
+      expect(
+        stringifyWithSortedKeys({
+          b: "b",
+          a: "a",
+        })
+      ).toStrictEqual(
+        JSON.stringify({
+          a: "a",
+          b: "b",
+        })
+      );
+    });
+
+    it("should sort correctly for array values", () => {
+      expect(
+        stringifyWithSortedKeys({
+          b: [1, 2],
+          a: [3, 4],
+        })
+      ).toStrictEqual(
+        JSON.stringify({
+          a: [3, 4],
+          b: [1, 2],
+        })
+      );
+
+      expect(
+        stringifyWithSortedKeys({
+          b: [{ b1: 1 }, { b1: 2 }],
+          a: [{ a1: 3 }, { a1: 4 }],
+        })
+      ).toStrictEqual(
+        JSON.stringify({
+          a: [{ a1: 3 }, { a1: 4 }],
+          b: [{ b1: 1 }, { b1: 2 }],
+        })
+      );
+    });
+
+    it("should sort nested properties", () => {
+      expect(
+        stringifyWithSortedKeys({
+          b: [
+            { a: 1, c: 3, b: 2 },
+            { c: 6, b: 5, a: 4 },
+          ],
+          a: [
+            { a: 1, b: 2 },
+            { b: 4, a: 3 },
+          ],
+        })
+      ).toStrictEqual(
+        JSON.stringify({
+          a: [
+            { a: 1, b: 2 },
+            { a: 3, b: 4 },
+          ],
+          b: [
+            { a: 1, b: 2, c: 3 },
+            { a: 4, b: 5, c: 6 },
+          ],
+        })
+      );
     });
   });
 });
