@@ -162,12 +162,12 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   return (
     <Wrapper
       ref={wrapperRef}
-      viewType={viewType}
+      viewType={hasMultipleRates ? viewType : "all"}
       style={{
         transform: `translate3d(0, ${dragYWithFriction}px, 0)`,
         transition: dragY === 0 ? "transform 0.4s" : "none",
       }}
-      isDraggable={isMobile}
+      isDraggable={isMobile && hasMultipleRates}
       showBounceAnimation={showBounceAnimation}
       onAnimationEnd={() => (hasShownBounceAnimation = true)}
     >
