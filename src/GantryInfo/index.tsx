@@ -53,8 +53,25 @@ const bounce = keyframes`
   }
 `;
 
+const GantryInfoPositioner = styled.div`
+  position: absolute;
+  z-index: 10;
+  left: 1rem;
+  touch-action: none;
+
+  @media (max-width: 768px) {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    top: 3.5rem;
+    width: 350px;
+  }
+`;
+
 const Wrapper = styled.div<{
-  viewType: "minimal" | "all";
+  viewType: ViewType;
   isDraggable?: boolean;
   showBounceAnimation?: boolean;
 }>`
@@ -69,15 +86,12 @@ const Wrapper = styled.div<{
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);
 
   ${({ viewType }) =>
-    viewType === "all"
-      ? css`
-          margin-bottom: 1rem;
-        `
-      : css`
-          padding-bottom: 1.5rem;
-          border-bottom-right-radius: 0;
-          border-bottom-left-radius: 0;
-        `}
+    viewType === "minimal" &&
+    css`
+      padding-bottom: 0.5rem;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    `}
 
   ${({ isDraggable = true }) =>
     isDraggable &&
@@ -141,9 +155,11 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
 
   if (!gantry) {
     return (
-      <Wrapper viewType="all" isDraggable={false}>
-        <GantryTitleBar title="Loading..." />
-      </Wrapper>
+      <GantryInfoPositioner>
+        <Wrapper viewType="all" isDraggable={false}>
+          <GantryTitleBar title="Loading..." />
+        </Wrapper>
+      </GantryInfoPositioner>
     );
   }
 
@@ -160,36 +176,38 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     hasMultipleRates;
 
   return (
-    <Wrapper
-      ref={wrapperRef}
-      viewType={hasMultipleRates ? viewType : "all"}
-      style={{
-        transform: `translate3d(0, ${dragYWithFriction}px, 0)`,
-        transition: dragY === 0 ? "transform 0.4s" : "none",
-      }}
-      isDraggable={isMobile && hasMultipleRates}
-      showBounceAnimation={showBounceAnimation}
-      onAnimationEnd={() => (hasShownBounceAnimation = true)}
-    >
-      <GantryTitleBar
-        title={gantry.name}
-        zone={gantry.zone}
-        amount={currentRateAmount}
-      />
-      {rates.length > 0 && (
-        <GantryRatesList
-          maxRateAmount={maxRateAmount}
-          rates={rates}
-          time={time}
-          viewType={viewType}
+    <GantryInfoPositioner>
+      <Wrapper
+        ref={wrapperRef}
+        viewType={hasMultipleRates ? viewType : "all"}
+        style={{
+          transform: `translate3d(0, ${dragYWithFriction}px, 0)`,
+          transition: dragY === 0 ? "transform 0.4s" : "none",
+        }}
+        isDraggable={isMobile && hasMultipleRates}
+        showBounceAnimation={showBounceAnimation}
+        onAnimationEnd={() => (hasShownBounceAnimation = true)}
+      >
+        <GantryTitleBar
+          title={gantry.name}
+          zone={gantry.zone}
+          amount={currentRateAmount}
         />
-      )}
-      {hasMultipleRates && viewType === "minimal" && (
-        <GestureHelperText
-          state={dragY < -dragYThreshold ? "RELEASE" : "CONTINUE"}
-        />
-      )}
-    </Wrapper>
+        {rates.length > 0 && (
+          <GantryRatesList
+            maxRateAmount={maxRateAmount}
+            rates={rates}
+            time={time}
+            viewType={viewType}
+          />
+        )}
+        {hasMultipleRates && viewType === "minimal" && (
+          <GestureHelperText
+            state={dragY < -dragYThreshold ? "RELEASE" : "CONTINUE"}
+          />
+        )}
+      </Wrapper>
+    </GantryInfoPositioner>
   );
 };
 
@@ -208,8 +226,10 @@ export const GantryInfoOutlet = () => {
  */
 export const GantryInfoHelpPanelOutlet = () => {
   return (
-    <Wrapper viewType="all" isDraggable={false}>
-      <GantryTitleBar title="Click on a gantry to see more" />
-    </Wrapper>
+    <GantryInfoPositioner>
+      <Wrapper viewType="all" isDraggable={false}>
+        <GantryTitleBar title="Click on a gantry to see more" />
+      </Wrapper>
+    </GantryInfoPositioner>
   );
 };

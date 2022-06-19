@@ -43,22 +43,6 @@ const MapboxWrapper = styled.div`
   }
 `;
 
-const GantryInfoPositioner = styled.div`
-  position: absolute;
-  z-index: 10;
-  left: 1rem;
-
-  @media (max-width: 768px) {
-    bottom: 0;
-    right: 1rem;
-  }
-
-  @media (min-width: 768px) {
-    top: 3.5rem;
-    width: 350px;
-  }
-`;
-
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const { gantryId } = useParams();
@@ -82,10 +66,8 @@ export const Map = () => {
     <Wrapper>
       <TopBar />
       <MapboxWrapper ref={mapRef} />
-      <GantryInfoPositioner>
-        <Outlet context={{ gantry }} />
-      </GantryInfoPositioner>
       <AlertBanner />
+      <Outlet context={{ gantry }} />
     </Wrapper>
   );
 };
