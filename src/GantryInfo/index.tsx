@@ -1,16 +1,16 @@
 import type { Gantry, OutletContextType } from "../types";
+import type { ViewType } from "./types";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
 import { useFilters } from "../contexts/FiltersContext";
-import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
-import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
 import { useMatchMedia } from "../utils/useMatchMedia";
 
 import { GantryRatesList } from "./GantryRatesList";
 import { GantryTitleBar } from "./GantryTitleBar";
+import { GestureHelperText } from "./GestureHelperText";
 import { useGesture } from "./useGesture";
 import { calcTranslateY } from "./utils/calcTranslateY";
 import { extractGantryRates } from "./utils/extractGantryRates";
@@ -104,30 +104,6 @@ const Wrapper = styled.div<{
     `}
 `;
 
-const GestureHelperText = styled.div`
-  position: absolute;
-  top: 99%;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  background-color: white;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.7rem;
-  gap: 0.25em;
-
-  p {
-    margin: 0;
-    text-align: center;
-  }
-`;
-
-const GestureHelperIcon = styled.div`
-  font-size: 1rem;
-`;
-
 export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
@@ -139,7 +115,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   }, [dayType, gantry, vehicleType]);
 
   const isMobile = useMatchMedia("(max-width: 768px)");
-  const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
+  const [viewType, setViewType] = useState<ViewType>("minimal");
 
   const [showBounceAnimation, setShowBounceAnimation] = useState(false);
 
@@ -182,6 +158,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const currentRateAmount = rates.find(
     ({ startTime, endTime }) => time >= startTime && time < endTime
   )?.amount;
+  const hasMultipleRates = rates.length > 1;
 
   return (
     <Wrapper
@@ -207,28 +184,10 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
           viewType={viewType}
         />
       )}
-      {viewType === "minimal" && (
-        <GestureHelperText>
-          {dragY < -dragYThreshold ? (
-            <>
-              <GestureHelperIcon>
-                <Checkmark />
-              </GestureHelperIcon>
-              <p>Release to see all rates</p>
-            </>
-          ) : (
-            <>
-              <GestureHelperIcon>
-                <ArrowUp />
-              </GestureHelperIcon>
-              <p>
-                Continue dragging upwards
-                <br />
-                to see all rates
-              </p>
-            </>
-          )}
-        </GestureHelperText>
+      {hasMultipleRates && viewType === "minimal" && (
+        <GestureHelperText
+          state={dragY < -dragYThreshold ? "RELEASE" : "CONTINUE"}
+        />
       )}
     </Wrapper>
   );
