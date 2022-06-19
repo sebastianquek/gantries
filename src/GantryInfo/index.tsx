@@ -193,14 +193,12 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
           zone={gantry.zone}
           amount={currentRateAmount}
         />
-        {rates.length > 0 && (
-          <GantryRatesList
-            maxRateAmount={maxRateAmount}
-            rates={rates}
-            time={time}
-            viewType={viewType}
-          />
-        )}
+        <GantryRatesList
+          maxRateAmount={maxRateAmount}
+          rates={rates}
+          time={time}
+          viewType={viewType}
+        />
         {hasMultipleRates && viewType === "minimal" && (
           <GestureHelperText
             state={dragY < -dragYThreshold ? "RELEASE" : "CONTINUE"}
