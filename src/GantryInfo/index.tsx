@@ -11,6 +11,7 @@ import { useMatchMedia } from "../utils/useMatchMedia";
 
 import { GantryRatesList } from "./GantryRatesList";
 import { GantryTitleBar } from "./GantryTitleBar";
+import { useGesture } from "./useGesture";
 import { calcTranslateY } from "./utils/calcTranslateY";
 import { extractGantryRates } from "./utils/extractGantryRates";
 
@@ -127,18 +128,6 @@ const GestureHelperIcon = styled.div`
   font-size: 1rem;
 `;
 
-const DRAG_Y_THRESHOLD = 100;
-
-type GestureState = {
-  isTracking: boolean;
-  startX: number;
-  startY: number;
-  startTime: number;
-  endX: number;
-  endY: number;
-  endTime: number;
-};
-
 export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
@@ -152,7 +141,6 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const isMobile = useMatchMedia("(max-width: 768px)");
   const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
 
-  const [dragOffsetY, setDragOffsetY] = useState(0);
   const [showBounceAnimation, setShowBounceAnimation] = useState(false);
 
   useEffect(() => {
@@ -168,63 +156,18 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   }, [gantry, isMobile, rates.length]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const gestureState = useRef<GestureState>({
-    isTracking: false,
-    startX: 0,
-    startY: 0,
-    startTime: 0,
-    endX: 0,
-    endY: 0,
-    endTime: 0,
-  });
-
-  const gestureStart = useCallback((e: TouchEvent) => {
-    if (e.touches.length === 1) {
-      gestureState.current.isTracking = true;
-      gestureState.current.startX = e.targetTouches[0].clientX;
-      gestureState.current.startY = e.targetTouches[0].clientY;
-      gestureState.current.startTime = performance.now();
-    } else {
-      gestureState.current.isTracking = false;
-    }
-  }, []);
-
-  const gestureMove = useCallback((e: TouchEvent) => {
-    if (gestureState.current.isTracking) {
-      gestureState.current.endX = e.targetTouches[0].clientX;
-      gestureState.current.endY = e.targetTouches[0].clientY;
-      gestureState.current.endTime = performance.now();
-      setDragOffsetY(gestureState.current.endY - gestureState.current.startY);
-    }
-  }, []);
-
-  const gestureEnd = useCallback(() => {
-    gestureState.current.isTracking = false;
-    const deltaY = gestureState.current.endY - gestureState.current.startY;
-    const deltaTime =
-      gestureState.current.endTime - gestureState.current.startTime;
-
-    if ((deltaTime < 200 && deltaY > 0) || deltaY > DRAG_Y_THRESHOLD) {
-      setViewType("minimal");
-    } else if ((deltaTime < 200 && deltaY < 0) || deltaY < -DRAG_Y_THRESHOLD) {
-      setViewType("all");
-    }
-
-    setDragOffsetY(0);
-  }, []);
-
-  useEffect(() => {
-    const _wrapper = wrapperRef.current;
-
-    _wrapper?.addEventListener("touchstart", gestureStart);
-    _wrapper?.addEventListener("touchmove", gestureMove);
-    _wrapper?.addEventListener("touchend", gestureEnd);
-
-    return () => {
-      _wrapper?.removeEventListener("touchstart", gestureStart);
-      _wrapper?.removeEventListener("touchmove", gestureMove);
-      _wrapper?.removeEventListener("touchend", gestureEnd);
-    };
+  const { dragY, dragYThreshold } = useGesture({
+    ref: wrapperRef,
+    onEnd: useCallback((state) => {
+      switch (state) {
+        case "COLLAPSED":
+          setViewType("minimal");
+          break;
+        case "EXPANDED":
+          setViewType("all");
+          break;
+      }
+    }, []),
   });
 
   if (!gantry) {
@@ -235,6 +178,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     );
   }
 
+  const dragYWithFriction = calcTranslateY(viewType, dragY, dragYThreshold);
   const currentRateAmount = rates.find(
     ({ startTime, endTime }) => time >= startTime && time < endTime
   )?.amount;
@@ -244,12 +188,8 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
       ref={wrapperRef}
       viewType={viewType}
       style={{
-        transform: `translate3d(0, ${calcTranslateY(
-          viewType,
-          dragOffsetY,
-          DRAG_Y_THRESHOLD
-        )}px, 0)`,
-        transition: dragOffsetY === 0 ? "transform 0.4s" : "none",
+        transform: `translate3d(0, ${dragYWithFriction}px, 0)`,
+        transition: dragY === 0 ? "transform 0.4s" : "none",
       }}
       isDraggable={isMobile}
       showBounceAnimation={showBounceAnimation}
@@ -269,7 +209,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
       )}
       {viewType === "minimal" && (
         <GestureHelperText>
-          {dragOffsetY < -DRAG_Y_THRESHOLD ? (
+          {dragY < -dragYThreshold ? (
             <>
               <GestureHelperIcon>
                 <Checkmark />
