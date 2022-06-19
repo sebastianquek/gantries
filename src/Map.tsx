@@ -83,7 +83,7 @@ export const Map = () => {
       <TopBar />
       <MapboxWrapper ref={mapRef} />
       <GantryInfoPositioner>
-        <Outlet context={{ map }} />
+        <Outlet context={{ gantry }} />
       </GantryInfoPositioner>
       <AlertBanner />
     </Wrapper>
