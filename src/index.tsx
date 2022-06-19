@@ -6,18 +6,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { GantryInfoHelpPanelOutlet, GantryInfoOutlet } from "./GantryInfo";
 import { Map } from "./Map";
+import { FiltersProvider } from "./contexts/FiltersContext";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Map />}>
-          <Route path=":gantryId" element={<GantryInfoOutlet />} />
-          <Route index={true} element={<GantryInfoHelpPanelOutlet />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <FiltersProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Map />}>
+            <Route path=":gantryId" element={<GantryInfoOutlet />} />
+            <Route index={true} element={<GantryInfoHelpPanelOutlet />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </FiltersProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

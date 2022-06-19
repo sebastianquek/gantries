@@ -1,10 +1,10 @@
 import type { DayType, VehicleType } from "../types";
-import type { Dispatch, SetStateAction } from "react";
 
 import styled from "styled-components";
 
 import { Button } from "../common/Button";
 import { DAY_TYPES, VEHICLE_TYPES } from "../constants";
+import { useFilters, useFiltersDispatch } from "../contexts/FiltersContext";
 import { ReactComponent as Bus } from "../svg/bus.svg";
 import { ReactComponent as Car } from "../svg/car.svg";
 import { ReactComponent as Motorcycle } from "../svg/motorcycle.svg";
@@ -82,27 +82,26 @@ const TimeInput = styled.input`
   }
 `;
 
-type SettingsPanelProps = {
-  vehicleType: VehicleType;
-  setVehicleType: Dispatch<SetStateAction<VehicleType>>;
-  dayType: DayType;
-  setDayType: Dispatch<SetStateAction<DayType>>;
-  time: string;
-  setTime: Dispatch<SetStateAction<string>>;
-};
+export const SettingsPanel = () => {
+  const { vehicleType, dayType, time } = useFilters();
+  const dispatch = useFiltersDispatch();
 
-export const SettingsPanel = ({
-  vehicleType,
-  setVehicleType,
-  dayType,
-  setDayType,
-  time,
-  setTime,
-}: SettingsPanelProps) => {
+  const setVehicleType = (vehicleType: VehicleType) => {
+    dispatch?.({ type: "changed_vehicle_type", vehicleType });
+  };
+
+  const setDayType = (dayType: DayType) => {
+    dispatch?.({ type: "changed_day_type", dayType });
+  };
+
+  const setTime = (time: string) => {
+    dispatch?.({ type: "changed_time", time });
+  };
+
   const setDayTypeAndTimeToNow = () => {
     const now = new Date();
     setTime(getTime(now));
-    setDayType((current) => getDayType(current, now));
+    setDayType(getDayType(now));
   };
 
   let vehicleIcon;

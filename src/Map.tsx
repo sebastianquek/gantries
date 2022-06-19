@@ -1,19 +1,18 @@
 import type { DayType, Gantry, VehicleType } from "./types";
 import type { LngLatLike, MapLayerMouseEvent } from "mapbox-gl";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { AlertBanner } from "./AlertBanner";
 import { TopBar } from "./TopBar";
-import { GANTRY_BASE_LAYER_ID, VEHICLE_TYPES } from "./constants";
+import { GANTRY_BASE_LAYER_ID } from "./constants";
+import { useFilters } from "./contexts/FiltersContext";
 import { useLayerId } from "./useLayerId";
 import { useMap } from "./useMap";
 import { useMapLayers } from "./useMapLayers";
-import { getDayType, getTime } from "./utils/datetime";
 import { queryMap } from "./utils/queryMap";
-import { useStateWithLocalStorage } from "./utils/useLocalStorage";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -47,20 +46,6 @@ const MapboxWrapper = styled.div`
   }
 `;
 
-const AlertBannerPositioner = styled.div`
-  position: absolute;
-  right: 3.5rem;
-  top: 3.5rem;
-
-  @media (max-width: 768px) {
-    left: 1rem;
-  }
-
-  @media (min-width: 768px) {
-    width: 270px;
-  }
-`;
-
 const GantryInfoPositioner = styled.div`
   position: absolute;
   z-index: 10;
@@ -87,13 +72,7 @@ export type OutletContextType = {
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
-  const [vehicleType, setVehicleType] = useStateWithLocalStorage<VehicleType>(
-    VEHICLE_TYPES[0],
-    "vehicleType"
-  );
-  const [dayType, setDayType] = useState<DayType>(getDayType("Weekdays"));
-  const [time, setTime] = useState<string>(getTime());
-
+  const { vehicleType, dayType, time } = useFilters();
   const [layerId] = useLayerId(vehicleType, dayType, time);
 
   const navigate = useNavigate();
@@ -149,23 +128,8 @@ export const Map = () => {
 
   return (
     <Wrapper>
-      <TopBar
-        vehicleType={vehicleType}
-        setVehicleType={setVehicleType}
-        dayType={dayType}
-        setDayType={setDayType}
-        time={time}
-        setTime={setTime}
-      />
+      <TopBar />
       <MapboxWrapper ref={mapRef} />
-      {new Date().getDay() === 0 && (
-        <AlertBannerPositioner>
-          <AlertBanner>
-            {`ERP is not operational on Sundays, you're seeing rates for
-              ${dayType}.`}
-          </AlertBanner>
-        </AlertBannerPositioner>
-      )}
       <GantryInfoPositioner>
         <Outlet
           context={{
@@ -176,6 +140,7 @@ export const Map = () => {
           }}
         />
       </GantryInfoPositioner>
+      <AlertBanner />
     </Wrapper>
   );
 };

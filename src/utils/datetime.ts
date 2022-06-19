@@ -7,8 +7,8 @@ export const getTime = (now = new Date()): string => {
 };
 
 export const getDayType = (
-  defaultDayType: DayType,
-  now = new Date()
+  now = new Date(),
+  defaultDayType: DayType = "Weekdays"
 ): DayType => {
   switch (getDay(now)) {
     case 0: // ERP not operational on Sunday

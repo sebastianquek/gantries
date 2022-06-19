@@ -1,6 +1,3 @@
-import type { DayType, VehicleType } from "../types";
-import type { Dispatch, SetStateAction } from "react";
-
 import styled from "styled-components";
 
 import { ProjectInfo } from "./ProjectInfo";
@@ -47,34 +44,11 @@ const AppTitle = styled.h1`
   letter-spacing: 0.1em;
 `;
 
-type TopBarProps = {
-  vehicleType: VehicleType;
-  setVehicleType: Dispatch<SetStateAction<VehicleType>>;
-  dayType: DayType;
-  setDayType: Dispatch<SetStateAction<DayType>>;
-  time: string;
-  setTime: Dispatch<SetStateAction<string>>;
-};
-
-export const TopBar = ({
-  vehicleType,
-  setVehicleType,
-  dayType,
-  setDayType,
-  time,
-  setTime,
-}: TopBarProps) => {
+export const TopBar = () => {
   return (
     <Wrapper>
       <Left>
-        <SettingsPanel
-          vehicleType={vehicleType}
-          setVehicleType={setVehicleType}
-          dayType={dayType}
-          setDayType={setDayType}
-          time={time}
-          setTime={setTime}
-        />
+        <SettingsPanel />
       </Left>
       <Middle>
         <AppTitle>Gantries</AppTitle>
