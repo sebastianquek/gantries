@@ -7,11 +7,10 @@ import styled, { css, keyframes } from "styled-components";
 import { useFilters } from "../contexts/FiltersContext";
 import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
 import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
-import { ReactComponent as GantryIcon } from "../svg/gantry-on.svg";
 import { useMatchMedia } from "../utils/useMatchMedia";
 
-import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
+import { GantryTitleBar } from "./GantryTitleBar";
 import { extractGantryRates } from "./utils/extractGantryRates";
 
 const bounce = keyframes`
@@ -125,27 +124,6 @@ const GestureHelperText = styled.div`
 
 const GestureHelperIcon = styled.div`
   font-size: 1rem;
-`;
-
-const TitleBar = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-`;
-
-const Name = styled.h2`
-  margin: 0;
-  font-size: 14px;
-  font-weight: 800;
-  flex-grow: 1;
-`;
-
-const CurrentRate = styled.p`
-  font-size: 32px;
-  margin: 0;
-  font-weight: 700;
-  font-family: "IBM Plex Sans";
-  align-self: flex-start;
 `;
 
 const DRAG_Y_THRESHOLD = 100;
@@ -277,10 +255,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   if (!gantry) {
     return (
       <Wrapper viewType="all" isDraggable={false}>
-        <TitleBar>
-          <GantryIcon />
-          <Name>Loading...</Name>
-        </TitleBar>
+        <GantryTitleBar title="Loading..." />
       </Wrapper>
     );
   }
@@ -303,13 +278,11 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
       isDraggable={isMobile}
       showBounceAnimation={showBounceAnimation}
     >
-      <TitleBar>
-        <GantryInfoIcon zone={gantry.zone} />
-        <Name>{gantry.name}</Name>
-        {currentRateAmount !== undefined && (
-          <CurrentRate>${currentRateAmount}</CurrentRate>
-        )}
-      </TitleBar>
+      <GantryTitleBar
+        title={gantry.name}
+        zone={gantry.zone}
+        amount={currentRateAmount}
+      />
       {rates.length > 0 && (
         <GantryRatesList
           maxRateAmount={maxRateAmount}
@@ -361,10 +334,7 @@ export const GantryInfoOutlet = () => {
 export const GantryInfoHelpPanelOutlet = () => {
   return (
     <Wrapper viewType="all" isDraggable={false}>
-      <TitleBar>
-        <GantryIcon />
-        <Name>Click on a gantry to see more</Name>
-      </TitleBar>
+      <GantryTitleBar title="Click on a gantry to see more" />
     </Wrapper>
   );
 };
