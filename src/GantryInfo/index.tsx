@@ -1,5 +1,5 @@
 import type { Gantry, OutletContextType } from "../types";
-import type { ViewType } from "./types";
+import type { Dimensions, ViewType } from "./types";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
@@ -121,6 +121,11 @@ const Wrapper = styled.div<{
 // Bounce animation should only show once regardless of the GantryInfo instance
 let hasShownBounceAnimation = false;
 
+const initialDimensions: Dimensions = {
+  positionerHeight: undefined,
+  panelYFromBottom: 0,
+};
+
 export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
@@ -138,19 +143,74 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     setViewType(isMobile ? "minimal" : "all");
   }, [isMobile]);
 
+  const [{ positionerHeight, panelYFromBottom }, setDimensions] =
+    useState<Dimensions>(initialDimensions);
+
+  const hasMultipleRates = rates.length > 1;
+  // Hint to the user that the bottom sheet is draggable
+  const showBounceAnimation =
+    hasShownBounceAnimation === false &&
+    isMobile &&
+    viewType === "minimal" &&
+    hasMultipleRates;
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { bind, dragY, dragYThreshold } = useGesture({
-    onEnd: useCallback((state) => {
-      switch (state) {
-        case "COLLAPSED":
-          setViewType("minimal");
-          break;
-        case "EXPANDED":
-          setViewType("all");
-          break;
+    isEnabled: hasMultipleRates,
+    onStart: useCallback(() => {
+      if (wrapperRef.current) {
+        setDimensions({
+          positionerHeight: wrapperRef.current.getBoundingClientRect().height,
+          panelYFromBottom: 0,
+        });
       }
     }, []),
+    onEnd: useCallback(
+      (state, dragY, dragYThreshold) => {
+        switch (state) {
+          case "COLLAPSED":
+            setViewType("minimal");
+            break;
+          case "EXPANDED":
+            setViewType("all");
+            break;
+        }
+        const dragYWithFriction = calcTranslateY(
+          viewType,
+          dragY,
+          dragYThreshold
+        );
+        setDimensions((d) => ({
+          ...d,
+          positionerHeight: (d.positionerHeight ?? 0) - dragYWithFriction, // maintain height
+        }));
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setDimensions((d) => {
+              if (d.positionerHeight !== undefined) {
+                const newHeight =
+                  wrapperRef.current?.getBoundingClientRect().height ?? 0;
+                return {
+                  ...d,
+                  panelYFromBottom: d.positionerHeight - newHeight,
+                };
+              }
+              return d;
+            });
+          });
+        });
+      },
+      [viewType]
+    ),
   });
+
+  const resetTransition = () => {
+    setDimensions(initialDimensions);
+  };
+
+  useEffect(() => {
+    resetTransition();
+  }, [gantry]);
 
   if (!gantry) {
     return (
@@ -166,26 +226,31 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const currentRateAmount = rates.find(
     ({ startTime, endTime }) => time >= startTime && time < endTime
   )?.amount;
-  const hasMultipleRates = rates.length > 1;
-  // Hint to the user that the bottom sheet is draggable
-  const showBounceAnimation =
-    hasShownBounceAnimation === false &&
-    isMobile &&
-    viewType === "minimal" &&
-    hasMultipleRates;
 
   return (
-    <GantryInfoPositioner>
+    <GantryInfoPositioner
+      style={{
+        height:
+          positionerHeight !== undefined
+            ? `calc(${positionerHeight}px + (${-dragYWithFriction}px))`
+            : "auto",
+      }}
+    >
       <Wrapper
         ref={wrapperRef}
         viewType={hasMultipleRates ? viewType : "all"}
         style={{
-          transform: `translate3d(0, ${dragYWithFriction}px, 0)`,
-          transition: dragY === 0 ? "transform 0.4s" : "none",
+          transform: `translate3d(0, ${panelYFromBottom}px, 0)`,
+          transition: panelYFromBottom !== 0 ? "transform 0.5s" : "none",
         }}
         isDraggable={isMobile && hasMultipleRates}
         showBounceAnimation={showBounceAnimation}
         onAnimationEnd={() => (hasShownBounceAnimation = true)}
+        onTransitionEnd={(e) => {
+          if (e.target === wrapperRef.current) {
+            resetTransition();
+          }
+        }}
         {...bind}
       >
         <GantryTitleBar
