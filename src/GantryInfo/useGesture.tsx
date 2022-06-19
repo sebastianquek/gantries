@@ -60,15 +60,19 @@ export const useGesture = ({
   );
 
   const onTouchMove: TouchEventHandler = useCallback((e) => {
-    if (gestureState.current.isTracking) {
-      gestureState.current.endX = e.targetTouches[0].clientX;
-      gestureState.current.endY = e.targetTouches[0].clientY;
-      gestureState.current.endTime = performance.now();
-      setDragY(gestureState.current.endY - gestureState.current.startY);
+    if (!gestureState.current.isTracking) {
+      return;
     }
+    gestureState.current.endX = e.targetTouches[0].clientX;
+    gestureState.current.endY = e.targetTouches[0].clientY;
+    gestureState.current.endTime = performance.now();
+    setDragY(gestureState.current.endY - gestureState.current.startY);
   }, []);
 
   const onTouchEnd = useCallback(() => {
+    if (!gestureState.current.isTracking) {
+      return;
+    }
     gestureState.current.isTracking = false;
     const deltaY = gestureState.current.endY - gestureState.current.startY;
     const deltaTime =
