@@ -152,7 +152,8 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     hasShownBounceAnimation === false &&
     isMobile &&
     viewType === "minimal" &&
-    hasMultipleRates;
+    hasMultipleRates &&
+    positionerHeight === undefined; // implies that panel is not being dragged
 
   const positionerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
