@@ -13,3 +13,7 @@ export type Gantry = {
 } & {
   [rate: string]: number;
 };
+
+export type OutletContextType = {
+  gantry: Gantry | null | undefined;
+};

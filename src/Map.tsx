@@ -1,4 +1,4 @@
-import type { DayType, Gantry, VehicleType } from "./types";
+import type { Gantry } from "./types";
 
 import { useRef } from "react";
 import { Outlet, useParams } from "react-router-dom";
@@ -6,7 +6,6 @@ import styled from "styled-components";
 
 import { AlertBanner } from "./AlertBanner";
 import { TopBar } from "./TopBar";
-import { useFilters } from "./contexts/FiltersContext";
 import { useMap } from "./useMap";
 import { useMapInteractions } from "./useMapInteractions";
 import { useToggleMapLayers } from "./useToggleMapLayers";
@@ -60,17 +59,8 @@ const GantryInfoPositioner = styled.div`
   }
 `;
 
-export type OutletContextType = {
-  map: mapboxgl.Map | undefined;
-  vehicleType: VehicleType;
-  dayType: DayType;
-  time: string;
-};
-
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
-
-  const { vehicleType, dayType, time } = useFilters();
   const { gantryId } = useParams();
 
   const { map } = useMap({
@@ -93,14 +83,7 @@ export const Map = () => {
       <TopBar />
       <MapboxWrapper ref={mapRef} />
       <GantryInfoPositioner>
-        <Outlet
-          context={{
-            map,
-            vehicleType,
-            dayType,
-            time,
-          }}
-        />
+        <Outlet context={{ map }} />
       </GantryInfoPositioner>
       <AlertBanner />
     </Wrapper>

@@ -1,21 +1,14 @@
-import type { OutletContextType } from "../Map";
-import type { DayType, Gantry, VehicleType } from "../types";
+import type { Gantry, OutletContextType } from "../types";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { Navigate, useOutletContext } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
+import { useFilters } from "../contexts/FiltersContext";
 import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
 import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
 import { ReactComponent as GantryIcon } from "../svg/gantry-on.svg";
-import { queryMap } from "../utils/queryMap";
 import { useMatchMedia } from "../utils/useMatchMedia";
-import { usePrevious } from "../utils/usePrevious";
 
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
@@ -193,17 +186,8 @@ type GestureState = {
   endTime: number;
 };
 
-export const GantryInfo = ({
-  gantry,
-  vehicleType,
-  dayType,
-  time,
-}: {
-  gantry: Gantry | undefined;
-  vehicleType: VehicleType;
-  dayType: DayType;
-  time: string;
-}) => {
+export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
+  const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useGantryRates({
     gantry,
     vehicleType,
@@ -360,44 +344,12 @@ export const GantryInfo = ({
 };
 
 export const GantryInfoOutlet = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { gantryId } = useParams();
-  const prevGantryId = usePrevious(gantryId);
+  const { gantry } = useOutletContext<OutletContextType>();
 
-  const { map, vehicleType, dayType, time } =
-    useOutletContext<OutletContextType>();
-
-  const [gantry, setGantry] = useState<Gantry>();
-
-  useEffect(() => {
-    if (gantry === undefined || gantryId !== prevGantryId) {
-      const { gantry: gantryFromState } = (location.state ?? {}) as {
-        gantry?: Gantry;
-      };
-      if (gantryFromState) {
-        setGantry(gantryFromState);
-      } else {
-        if (map && gantryId) {
-          const gantryFromQuery = queryMap(map, gantryId);
-          if (gantryFromQuery) {
-            setGantry(gantryFromQuery);
-          } else {
-            // Couldn't find the gantry, go back to root
-            navigate("/", { replace: true });
-          }
-        }
-      }
-    }
-  }, [gantry, gantryId, location.state, map, navigate, prevGantryId]);
-
-  return (
-    <GantryInfo
-      gantry={gantry}
-      vehicleType={vehicleType}
-      dayType={dayType}
-      time={time}
-    />
+  return gantry === null ? (
+    <Navigate to="/" replace={true} />
+  ) : (
+    <GantryInfo gantry={gantry} />
   );
 };
 
