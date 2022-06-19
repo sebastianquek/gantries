@@ -154,13 +154,22 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     viewType === "minimal" &&
     hasMultipleRates;
 
+  const positionerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { bind, dragY, dragYThreshold } = useGesture({
     isEnabled: hasMultipleRates,
     onStart: useCallback(() => {
-      if (wrapperRef.current) {
+      if (wrapperRef.current && positionerRef.current) {
+        // In the event that the panel is still in transition and the user
+        // starts dragging, the panel should start moving from the current
+        // offset position
+        const panelInitialYOffset =
+          positionerRef.current.getBoundingClientRect().bottom -
+          wrapperRef.current.getBoundingClientRect().bottom;
         setDimensions({
-          positionerHeight: wrapperRef.current.getBoundingClientRect().height,
+          positionerHeight:
+            panelInitialYOffset +
+            wrapperRef.current.getBoundingClientRect().height,
           panelYFromBottom: 0,
         });
       }
@@ -229,6 +238,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
 
   return (
     <GantryInfoPositioner
+      ref={positionerRef}
       style={{
         height:
           positionerHeight !== undefined
