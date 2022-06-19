@@ -104,6 +104,9 @@ const Wrapper = styled.div<{
     `}
 `;
 
+// Bounce animation should only show once regardless of the GantryInfo instance
+let hasShownBounceAnimation = false;
+
 export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
@@ -117,19 +120,9 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const isMobile = useMatchMedia("(max-width: 768px)");
   const [viewType, setViewType] = useState<ViewType>("minimal");
 
-  const [showBounceAnimation, setShowBounceAnimation] = useState(false);
-
   useEffect(() => {
     setViewType(isMobile ? "minimal" : "all");
   }, [isMobile]);
-
-  useEffect(() => {
-    if (isMobile && gantry && rates.length > 1) {
-      // hint to the user that the bottom sheet is draggable
-      // when there's a selected gantry and it has more than 1 rate
-      setShowBounceAnimation(true);
-    }
-  }, [gantry, isMobile, rates.length]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { dragY, dragYThreshold } = useGesture({
@@ -159,6 +152,12 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     ({ startTime, endTime }) => time >= startTime && time < endTime
   )?.amount;
   const hasMultipleRates = rates.length > 1;
+  // Hint to the user that the bottom sheet is draggable
+  const showBounceAnimation =
+    hasShownBounceAnimation === false &&
+    isMobile &&
+    viewType === "minimal" &&
+    hasMultipleRates;
 
   return (
     <Wrapper
@@ -170,6 +169,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
       }}
       isDraggable={isMobile}
       showBounceAnimation={showBounceAnimation}
+      onAnimationEnd={() => (hasShownBounceAnimation = true)}
     >
       <GantryTitleBar
         title={gantry.name}
