@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import type { TouchEventHandler } from "react";
+
+import { useCallback, useMemo, useRef, useState } from "react";
 
 type GestureState = {
   isTracking: boolean;
@@ -14,12 +16,10 @@ const DEFAULT_DRAG_Y_THRESHOLD = 100;
 const DEFAULT_DRAG_MS_THRESHOLD = 200;
 
 export const useGesture = ({
-  ref,
   onEnd,
   dragYThreshold = DEFAULT_DRAG_Y_THRESHOLD,
   dragMSThreshold = DEFAULT_DRAG_MS_THRESHOLD,
 }: {
-  ref: React.RefObject<HTMLElement>;
   onEnd: (state: "COLLAPSED" | "EXPANDED") => void;
   dragYThreshold?: number;
   dragMSThreshold?: number;
@@ -36,7 +36,7 @@ export const useGesture = ({
 
   const [dragY, setDragY] = useState(0);
 
-  const gestureStart = useCallback((e: TouchEvent) => {
+  const onTouchStart: TouchEventHandler = useCallback((e) => {
     if (e.touches.length === 1) {
       gestureState.current.isTracking = true;
       gestureState.current.startX = e.targetTouches[0].clientX;
@@ -47,7 +47,7 @@ export const useGesture = ({
     }
   }, []);
 
-  const gestureMove = useCallback((e: TouchEvent) => {
+  const onTouchMove: TouchEventHandler = useCallback((e) => {
     if (gestureState.current.isTracking) {
       gestureState.current.endX = e.targetTouches[0].clientX;
       gestureState.current.endY = e.targetTouches[0].clientY;
@@ -56,7 +56,7 @@ export const useGesture = ({
     }
   }, []);
 
-  const gestureEnd = useCallback(() => {
+  const onTouchEnd = useCallback(() => {
     gestureState.current.isTracking = false;
     const deltaY = gestureState.current.endY - gestureState.current.startY;
     const deltaTime =
@@ -77,21 +77,17 @@ export const useGesture = ({
     setDragY(0);
   }, [dragMSThreshold, dragYThreshold, onEnd]);
 
-  useEffect(() => {
-    const target = ref.current;
-
-    target?.addEventListener("touchstart", gestureStart);
-    target?.addEventListener("touchmove", gestureMove);
-    target?.addEventListener("touchend", gestureEnd);
-
-    return () => {
-      target?.removeEventListener("touchstart", gestureStart);
-      target?.removeEventListener("touchmove", gestureMove);
-      target?.removeEventListener("touchend", gestureEnd);
-    };
-  }, [gestureEnd, gestureMove, gestureStart, ref]);
+  const bind = useMemo(
+    () => ({
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+    }),
+    [onTouchEnd, onTouchMove, onTouchStart]
+  );
 
   return {
+    bind,
     dragY,
     dragYThreshold,
     dragMSThreshold,

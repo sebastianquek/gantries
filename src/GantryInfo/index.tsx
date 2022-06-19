@@ -139,8 +139,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   }, [isMobile]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { dragY, dragYThreshold } = useGesture({
-    ref: wrapperRef,
+  const { bind, dragY, dragYThreshold } = useGesture({
     onEnd: useCallback((state) => {
       switch (state) {
         case "COLLAPSED":
@@ -187,6 +186,7 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
         isDraggable={isMobile && hasMultipleRates}
         showBounceAnimation={showBounceAnimation}
         onAnimationEnd={() => (hasShownBounceAnimation = true)}
+        {...bind}
       >
         <GantryTitleBar
           title={gantry.name}
