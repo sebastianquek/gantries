@@ -22,26 +22,14 @@ export const useMap = ({
   initialBounds?: mapboxgl.MapboxOptions["maxBounds"];
   mapStyle?: MapStyle;
 }): {
-  lng: number;
-  lat: number;
-  zoom: number;
-  isLoaded: boolean;
-  isMoving: boolean;
   map?: mapboxgl.Map;
 } => {
   const mapboxRef = useRef<mapboxgl.Map>();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
-  const [cameraState, setCameraState] = useState({
-    lng: initialLng,
-    lat: initialLat,
-    zoom: initialZoom,
-  });
 
   let style = "";
   switch (mapStyle) {
     case "STREETS":
-      // style = "mapbox://styles/mapbox/streets-v11?optimize=true";
       style = `${process.env.REACT_APP_MAPBOX_STYLE ?? ""}`;
       break;
     default:
@@ -91,48 +79,7 @@ export const useMap = ({
     }
   }, [style]);
 
-  useEffect(() => {
-    const moveFn = () => {
-      if (!mapboxRef.current) {
-        return;
-      }
-      const { lat, lng } = mapboxRef.current.getCenter();
-      const zoom = mapboxRef.current.getZoom();
-      setCameraState({
-        lng,
-        lat,
-        zoom,
-      });
-    };
-    mapboxRef.current?.on("move", moveFn);
-
-    const moveStartFn = () => {
-      if (!mapboxRef.current) {
-        return;
-      }
-      setIsMoving(true);
-    };
-    mapboxRef.current?.on("movestart", moveStartFn);
-
-    const moveEndFn = () => {
-      if (!mapboxRef.current) {
-        return;
-      }
-      setIsMoving(false);
-    };
-    mapboxRef.current?.on("moveend", moveEndFn);
-
-    return () => {
-      mapboxRef.current?.off("move", moveFn);
-      mapboxRef.current?.off("movestart", moveStartFn);
-      mapboxRef.current?.off("moveend", moveEndFn);
-    };
-  }, []);
-
   return {
-    ...cameraState,
-    isLoaded,
-    isMoving,
-    map: mapboxRef.current,
+    map: isLoaded ? mapboxRef.current : undefined,
   };
 };

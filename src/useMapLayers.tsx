@@ -4,7 +4,6 @@ import { usePrevious } from "./utils/usePrevious";
 
 export const useMapLayers = (
   map: mapboxgl.Map | undefined,
-  isMapLoaded: boolean,
   layerId: string | undefined,
   selectedGantryId: string | undefined
 ) => {
@@ -12,7 +11,7 @@ export const useMapLayers = (
   const prevSelectedGantryId = usePrevious(selectedGantryId);
 
   useEffect(() => {
-    if (!isMapLoaded || !map) {
+    if (!map) {
       return;
     }
 
@@ -37,14 +36,14 @@ export const useMapLayers = (
         { highlight: true }
       );
     }
-  }, [map, isMapLoaded, prevSelectedGantryId, selectedGantryId]);
+  }, [map, prevSelectedGantryId, selectedGantryId]);
 
   /**
    * Toggle off the previous target layer id
    * Toggle on the current target layer id
    */
   useEffect(() => {
-    if (!isMapLoaded || !map) {
+    if (!map) {
       return;
     }
     if (prevLayerId) {
@@ -67,5 +66,5 @@ export const useMapLayers = (
         map.setLayoutProperty(rateId, "visibility", "visible");
       }
     }
-  }, [isMapLoaded, layerId, map, prevLayerId]);
+  }, [layerId, map, prevLayerId]);
 };

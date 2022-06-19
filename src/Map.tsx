@@ -100,7 +100,7 @@ export const Map = () => {
   const location = useLocation();
   const { gantryId } = useParams();
 
-  const { map, isLoaded } = useMap({
+  const { map } = useMap({
     mapRef: mapRef,
     initialLng: 103.837,
     initialLat: 1.31,
@@ -123,10 +123,10 @@ export const Map = () => {
     };
   }, [map, navigate]);
 
-  useMapLayers(map, isLoaded, layerId, gantryId);
+  useMapLayers(map, layerId, gantryId);
 
   useEffect(() => {
-    if (!map || !isLoaded || !gantryId) {
+    if (!map || !gantryId) {
       return;
     }
     let center: LngLatLike | undefined;
@@ -145,7 +145,7 @@ export const Map = () => {
         offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
       });
     }
-  }, [gantryId, isLoaded, location.state, map]);
+  }, [gantryId, location.state, map]);
 
   return (
     <Wrapper>
@@ -169,7 +169,7 @@ export const Map = () => {
       <GantryInfoPositioner>
         <Outlet
           context={{
-            map: isLoaded ? map : undefined,
+            map,
             vehicleType,
             dayType,
             time,
