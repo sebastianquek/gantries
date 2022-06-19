@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 
+import { useFilters } from "./contexts/FiltersContext";
+import { useLayerId } from "./useLayerId";
 import { usePrevious } from "./utils/usePrevious";
 
-export const useMapLayers = (
+export const useToggleMapLayers = (
   map: mapboxgl.Map | undefined,
-  layerId: string | undefined,
   selectedGantryId: string | undefined
 ) => {
+  const { vehicleType, dayType, time } = useFilters();
+  const layerId = useLayerId(vehicleType, dayType, time);
   const prevLayerId = usePrevious(layerId);
   const prevSelectedGantryId = usePrevious(selectedGantryId);
 

@@ -9,9 +9,8 @@ import { AlertBanner } from "./AlertBanner";
 import { TopBar } from "./TopBar";
 import { GANTRY_BASE_LAYER_ID } from "./constants";
 import { useFilters } from "./contexts/FiltersContext";
-import { useLayerId } from "./useLayerId";
 import { useMap } from "./useMap";
-import { useMapLayers } from "./useMapLayers";
+import { useToggleMapLayers } from "./useToggleMapLayers";
 import { queryMap } from "./utils/queryMap";
 
 const Wrapper = styled.div`
@@ -73,7 +72,6 @@ export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const { vehicleType, dayType, time } = useFilters();
-  const [layerId] = useLayerId(vehicleType, dayType, time);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -102,8 +100,6 @@ export const Map = () => {
     };
   }, [map, navigate]);
 
-  useMapLayers(map, layerId, gantryId);
-
   useEffect(() => {
     if (!map || !gantryId) {
       return;
@@ -125,6 +121,8 @@ export const Map = () => {
       });
     }
   }, [gantryId, location.state, map]);
+
+  useToggleMapLayers(map, gantryId);
 
   return (
     <Wrapper>
