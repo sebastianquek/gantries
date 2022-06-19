@@ -1,5 +1,10 @@
+import type { Rate, ViewType } from "./types";
+
+import React from "react";
 import FlipMove from "react-flip-move";
 import styled from "styled-components";
+
+import { filterRates } from "./utils/filterRates";
 
 const OverflowWrapper = styled.div`
   overflow: hidden;
@@ -48,58 +53,46 @@ const RateValue = styled.p<{ isCurrent: boolean }>`
   width: 3em;
 `;
 
-export const GantryRatesList = ({
-  maxRateAmount,
-  rates,
-  time,
-  viewType,
-}: {
-  maxRateAmount: number;
-  rates: {
-    startTime: string;
-    endTime: string;
-    amount: number;
-  }[];
-  time: string;
-  viewType: "minimal" | "all";
-}) => {
-  let filteredRates = rates;
-  if (viewType === "minimal" && rates.length > 4) {
-    const idx = filteredRates.findIndex(({ startTime, endTime }) => {
-      return time >= startTime && time < endTime;
-    });
-    // Ensure at least 0 so the slice doesn't take incorrect elements
-    const loopAroundIdx = Math.max(0, 4 - (rates.length - idx));
-    filteredRates = [
-      ...rates.slice(idx, idx + 4),
-      ...rates.slice(0, loopAroundIdx),
-    ];
+export const GantryRatesList = React.memo(
+  ({
+    maxRateAmount,
+    rates,
+    time,
+    viewType,
+  }: {
+    maxRateAmount: number;
+    rates: Rate[];
+    time: string;
+    viewType: ViewType;
+  }) => {
+    const filteredRates = filterRates(rates, viewType, time);
+
+    return (
+      <OverflowWrapper>
+        <Rates enterAnimation="fade" leaveAnimation="none">
+          {filteredRates.map(({ startTime, endTime, amount }) => {
+            const interval = `${startTime} - ${endTime}`;
+            const isCurrent = time >= startTime && time < endTime;
+            return (
+              <RateItem key={`${interval}-${amount}`}>
+                <RateInterval isCurrent={isCurrent}>{interval}</RateInterval>
+                <RateBarWrapper>
+                  <RateBar
+                    isCurrent={isCurrent}
+                    style={{
+                      width:
+                        amount === 0
+                          ? `1px`
+                          : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
+                    }}
+                  />
+                </RateBarWrapper>
+                <RateValue isCurrent={isCurrent}>${amount}</RateValue>
+              </RateItem>
+            );
+          })}
+        </Rates>
+      </OverflowWrapper>
+    );
   }
-  return (
-    <OverflowWrapper>
-      <Rates enterAnimation="fade" leaveAnimation="none">
-        {filteredRates.map(({ startTime, endTime, amount }) => {
-          const interval = `${startTime} - ${endTime}`;
-          const isCurrent = time >= startTime && time < endTime;
-          return (
-            <RateItem key={`${interval}-${amount}`}>
-              <RateInterval isCurrent={isCurrent}>{interval}</RateInterval>
-              <RateBarWrapper>
-                <RateBar
-                  isCurrent={isCurrent}
-                  style={{
-                    width:
-                      amount === 0
-                        ? `1px`
-                        : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
-                  }}
-                />
-              </RateBarWrapper>
-              <RateValue isCurrent={isCurrent}>${amount}</RateValue>
-            </RateItem>
-          );
-        })}
-      </Rates>
-    </OverflowWrapper>
-  );
-};
+);
