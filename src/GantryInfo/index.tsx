@@ -11,6 +11,7 @@ import { useMatchMedia } from "../utils/useMatchMedia";
 
 import { GantryRatesList } from "./GantryRatesList";
 import { GantryTitleBar } from "./GantryTitleBar";
+import { calcTranslateY } from "./utils/calcTranslateY";
 import { extractGantryRates } from "./utils/extractGantryRates";
 
 const bounce = keyframes`
@@ -128,32 +129,6 @@ const GestureHelperIcon = styled.div`
 
 const DRAG_Y_THRESHOLD = 100;
 
-const calcTranslateY = (dragOffsetY: number, viewType: "minimal" | "all") => {
-  if (viewType === "minimal") {
-    if (dragOffsetY > 0) {
-      // dragging downwards
-      return Math.sqrt(dragOffsetY);
-    } else if (dragOffsetY < -DRAG_Y_THRESHOLD) {
-      // dragging upwards and over the threshold
-      const dragOffsetOverThreshold = -dragOffsetY - DRAG_Y_THRESHOLD;
-      return -DRAG_Y_THRESHOLD - 3 * Math.sqrt(dragOffsetOverThreshold);
-    } else {
-      return dragOffsetY;
-    }
-  } else {
-    if (dragOffsetY < 0) {
-      // dragging upwards
-      return -Math.sqrt(-dragOffsetY);
-    } else if (dragOffsetY > DRAG_Y_THRESHOLD) {
-      // dragging downwards and over the threshold
-      const dragOffsetOverThreshold = dragOffsetY - DRAG_Y_THRESHOLD;
-      return DRAG_Y_THRESHOLD + 3 * Math.sqrt(dragOffsetOverThreshold);
-    } else {
-      return dragOffsetY;
-    }
-  }
-};
-
 type GestureState = {
   isTracking: boolean;
   startX: number;
@@ -270,8 +245,9 @@ export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
       viewType={viewType}
       style={{
         transform: `translate3d(0, ${calcTranslateY(
+          viewType,
           dragOffsetY,
-          viewType
+          DRAG_Y_THRESHOLD
         )}px, 0)`,
         transition: dragOffsetY === 0 ? "transform 0.4s" : "none",
       }}
