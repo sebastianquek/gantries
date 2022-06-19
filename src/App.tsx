@@ -43,7 +43,7 @@ const MapboxWrapper = styled.div`
   }
 `;
 
-export const Map = () => {
+export const App = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const { gantryId } = useParams();
 

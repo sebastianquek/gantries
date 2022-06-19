@@ -4,8 +4,8 @@ import "./index.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { App } from "./App";
 import { GantryInfoHelpPanelOutlet, GantryInfoOutlet } from "./GantryInfo";
-import { Map } from "./Map";
 import { FiltersProvider } from "./contexts/FiltersContext";
 import reportWebVitals from "./reportWebVitals";
 
@@ -18,7 +18,7 @@ root.render(
     <FiltersProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Map />}>
+          <Route path="/" element={<App />}>
             <Route path=":gantryId" element={<GantryInfoOutlet />} />
             <Route index={true} element={<GantryInfoHelpPanelOutlet />} />
           </Route>
