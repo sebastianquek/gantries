@@ -1,10 +1,7 @@
-import type { DayType, Gantry, VehicleType } from "../types";
+import type { DayType, Gantry, VehicleType } from "../../types";
+import type { Rate } from "../types";
 
-import { useEffect, useState } from "react";
-
-import { slugify } from "../utils/slugify";
-
-type Rate = { startTime: string; endTime: string; amount: number };
+import { slugify } from "../../utils/slugify";
 
 const DAY_START_TIME = "00:00";
 const DAY_END_TIME = "24:00";
@@ -104,13 +101,7 @@ const extractStartAndEndTime = (str: string, rateKeyPrefix: string) => {
   return { startTime, endTime };
 };
 
-/**
- * Hook that extracts out the rates from a gantry's properties
- * based on the vehicle and day type.
- *
- * TODO: add react hook tests for this
- */
-export const useGantryRates = ({
+export const extractGantryRates = ({
   gantry,
   vehicleType,
   dayType,
@@ -120,39 +111,31 @@ export const useGantryRates = ({
   dayType: DayType;
 }) => {
   const rateKeyPrefix = slugify(`${vehicleType}-${dayType}`);
-  const [maxRateAmount, setMaxRateAmount] = useState(0);
-  const [rates, setRates] = useState<Rate[]>([]);
+  let maxRateAmount = 0;
+  let rates: Rate[] = [];
 
-  useEffect(() => {
-    let maxRateAmount = 0;
-    let rates: Rate[] = [];
+  if (gantry) {
+    rates = Object.entries(gantry)
+      .filter(([key]) => key.startsWith(rateKeyPrefix))
+      .sort()
+      .reduce((ratesArr, [key, value]) => {
+        const { startTime, endTime } = extractStartAndEndTime(
+          key,
+          rateKeyPrefix
+        );
+        const amount = Number(value);
+        maxRateAmount = Math.max(maxRateAmount, amount);
+        ratesArr.push({
+          startTime,
+          endTime,
+          amount,
+        });
+        return ratesArr;
+      }, [] as { startTime: string; endTime: string; amount: number }[]);
 
-    if (gantry) {
-      rates = Object.entries(gantry)
-        .filter(([key]) => key.startsWith(rateKeyPrefix))
-        .sort()
-        .reduce((ratesArr, [key, value]) => {
-          const { startTime, endTime } = extractStartAndEndTime(
-            key,
-            rateKeyPrefix
-          );
-          const amount = Number(value);
-          maxRateAmount = Math.max(maxRateAmount, amount);
-          ratesArr.push({
-            startTime,
-            endTime,
-            amount,
-          });
-          return ratesArr;
-        }, [] as { startTime: string; endTime: string; amount: number }[]);
-
-      rates = collapseRates(rates);
-      rates = padGapsWithZeroRates(rates);
-    }
-
-    setMaxRateAmount(maxRateAmount);
-    setRates(rates);
-  }, [gantry, rateKeyPrefix]);
+    rates = collapseRates(rates);
+    rates = padGapsWithZeroRates(rates);
+  }
 
   return {
     maxRateAmount,
@@ -164,5 +147,5 @@ export const exportedForTesting = {
   padGapsWithZeroRates,
   collapseRates,
   extractStartAndEndTime,
-  useGantryRates,
+  extractGantryRates,
 };

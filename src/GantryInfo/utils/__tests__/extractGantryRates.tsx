@@ -1,4 +1,4 @@
-import { exportedForTesting } from "../useGantryRates";
+import { exportedForTesting } from "../extractGantryRates";
 
 const { padGapsWithZeroRates, collapseRates, extractStartAndEndTime } =
   exportedForTesting;

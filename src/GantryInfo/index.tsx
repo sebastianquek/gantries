@@ -1,6 +1,6 @@
 import type { Gantry, OutletContextType } from "../types";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
@@ -12,7 +12,7 @@ import { useMatchMedia } from "../utils/useMatchMedia";
 
 import { GantryInfoIcon } from "./GantryInfoIcon";
 import { GantryRatesList } from "./GantryRatesList";
-import { useGantryRates } from "./useGantryRates";
+import { extractGantryRates } from "./utils/extractGantryRates";
 
 const bounce = keyframes`
   0% {
@@ -188,11 +188,13 @@ type GestureState = {
 
 export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
-  const { maxRateAmount, rates } = useGantryRates({
-    gantry,
-    vehicleType,
-    dayType,
-  });
+  const { maxRateAmount, rates } = useMemo(() => {
+    return extractGantryRates({
+      gantry,
+      vehicleType,
+      dayType,
+    });
+  }, [dayType, gantry, vehicleType]);
 
   const isMobile = useMatchMedia("(max-width: 768px)");
   const [viewType, setViewType] = useState<"minimal" | "all">("minimal");
