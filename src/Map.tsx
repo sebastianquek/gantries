@@ -1,15 +1,14 @@
 import type { DayType, Gantry, VehicleType } from "./types";
-import type { LngLatLike, MapLayerMouseEvent } from "mapbox-gl";
 
-import { useEffect, useRef } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useRef } from "react";
+import { Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import { AlertBanner } from "./AlertBanner";
 import { TopBar } from "./TopBar";
-import { GANTRY_BASE_LAYER_ID } from "./constants";
 import { useFilters } from "./contexts/FiltersContext";
 import { useMap } from "./useMap";
+import { useMapInteractions } from "./useMapInteractions";
 import { useToggleMapLayers } from "./useToggleMapLayers";
 import { queryMap } from "./utils/queryMap";
 
@@ -72,9 +71,6 @@ export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const { vehicleType, dayType, time } = useFilters();
-
-  const navigate = useNavigate();
-  const location = useLocation();
   const { gantryId } = useParams();
 
   const { map } = useMap({
@@ -85,43 +81,11 @@ export const Map = () => {
     mapStyle: "STREETS",
   });
 
-  useEffect(() => {
-    const onClick = (e: MapLayerMouseEvent) => {
-      if (e.features && e.features.length > 0) {
-        const gantry = e.features[0].properties as Gantry;
-        navigate(gantry.id, { state: { gantry } });
-      }
-    };
-
-    map?.on("click", GANTRY_BASE_LAYER_ID, onClick);
-
-    return () => {
-      map?.off("click", GANTRY_BASE_LAYER_ID, onClick);
-    };
-  }, [map, navigate]);
-
-  useEffect(() => {
-    if (!map || !gantryId) {
-      return;
-    }
-    let center: LngLatLike | undefined;
-    const { gantry } = (location.state ?? {}) as { gantry?: Gantry };
-    if (gantry) {
-      center = [gantry.longitude, gantry.latitude];
-    } else {
-      const gantry = queryMap(map, gantryId);
-      if (gantry?.longitude && gantry.latitude) {
-        center = [gantry.longitude, gantry.latitude];
-      }
-    }
-    if (center) {
-      map.flyTo({
-        center,
-        offset: [0, -100], // selected marker shows up slightly higher than the horizontal midpoint
-      });
-    }
-  }, [gantryId, location.state, map]);
-
+  let gantry: Gantry | null | undefined = undefined;
+  if (map && gantryId) {
+    gantry = queryMap(map, gantryId);
+  }
+  useMapInteractions(map, gantry);
   useToggleMapLayers(map, gantryId);
 
   return (
