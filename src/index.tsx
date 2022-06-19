@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -9,7 +9,11 @@ import { Map } from "./Map";
 import { FiltersProvider } from "./contexts/FiltersContext";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!);
+
+root.render(
   <React.StrictMode>
     <FiltersProvider>
       <BrowserRouter>
@@ -21,8 +25,7 @@ ReactDOM.render(
         </Routes>
       </BrowserRouter>
     </FiltersProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
