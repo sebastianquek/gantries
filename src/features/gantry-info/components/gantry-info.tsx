@@ -6,7 +6,7 @@ import { Navigate, useOutletContext } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
 import { useFilters } from "src/contexts/filters";
-import { useMatchMedia } from "src/hooks/use-match-media";
+import { useIsMobileContext } from "src/contexts/is-mobile";
 
 import { useGesture } from "../hooks/useGesture";
 import { calcTranslateY } from "../utils/calc-translate-y";
@@ -137,7 +137,7 @@ const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
     });
   }, [dayType, gantry, vehicleType]);
 
-  const isMobile = useMatchMedia("(max-width: 768px)");
+  const isMobile = useIsMobileContext();
   const [viewType, setViewType] = useState<ViewType>("minimal");
 
   useEffect(() => {
@@ -276,7 +276,7 @@ const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
           time={time}
           viewType={viewType}
         />
-        {hasMultipleRates && viewType === "minimal" && (
+        {isMobile && hasMultipleRates && viewType === "minimal" && (
           <GestureHelperText
             state={dragY < -dragYThreshold ? "RELEASE" : "CONTINUE"}
           />

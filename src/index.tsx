@@ -5,6 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { FiltersProvider } from "src/contexts/filters";
+import { IsMobileProvider } from "src/contexts/is-mobile";
 import {
   GantryInfoHelpPanelOutlet,
   GantryInfoOutlet,
@@ -20,14 +21,16 @@ const root = createRoot(container!);
 root.render(
   <React.StrictMode>
     <FiltersProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path=":gantryId" element={<GantryInfoOutlet />} />
-            <Route index={true} element={<GantryInfoHelpPanelOutlet />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <IsMobileProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route path=":gantryId" element={<GantryInfoOutlet />} />
+              <Route index={true} element={<GantryInfoHelpPanelOutlet />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </IsMobileProvider>
     </FiltersProvider>
   </React.StrictMode>
 );
