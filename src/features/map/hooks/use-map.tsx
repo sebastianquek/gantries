@@ -47,8 +47,10 @@ export const useMap = ({
       return;
     }
 
+    // eslint-disable-next-line import/no-named-as-default-member
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
+    // eslint-disable-next-line import/no-named-as-default-member
     mapboxRef.current = new mapboxgl.Map({
       container: mapRef.current,
       style,
@@ -58,6 +60,7 @@ export const useMap = ({
     });
 
     mapboxRef.current.addControl(
+      // eslint-disable-next-line import/no-named-as-default-member
       new mapboxgl.GeolocateControl({
         positionOptions: {
           enableHighAccuracy: true,

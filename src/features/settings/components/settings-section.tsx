@@ -1,15 +1,15 @@
-import type { DayType, VehicleType } from "../types";
+import type { DayType, VehicleType } from "src/types";
 
 import styled from "styled-components";
 
-import { Button } from "../common/Button";
-import { DAY_TYPES, VEHICLE_TYPES } from "../constants";
-import { useFilters, useFiltersDispatch } from "../contexts/FiltersContext";
-import { ReactComponent as Bus } from "../svg/bus.svg";
-import { ReactComponent as Car } from "../svg/car.svg";
-import { ReactComponent as Motorcycle } from "../svg/motorcycle.svg";
-import { ReactComponent as Truck } from "../svg/truck.svg";
-import { getDayType, getTime } from "../utils/datetime";
+import { ReactComponent as Bus } from "src/assets/svg/bus.svg";
+import { ReactComponent as Car } from "src/assets/svg/car.svg";
+import { ReactComponent as Motorcycle } from "src/assets/svg/motorcycle.svg";
+import { ReactComponent as Truck } from "src/assets/svg/truck.svg";
+import { Button } from "src/components/button";
+import { DAY_TYPES, VEHICLE_TYPES } from "src/constants";
+import { useFilters, useFiltersDispatch } from "src/contexts/filters";
+import { getDayType, getTime } from "src/utils/datetime";
 
 const Pill = styled.div`
   display: flex;
@@ -82,7 +82,7 @@ const TimeInput = styled.input`
   }
 `;
 
-export const SettingsPanel = () => {
+export const SettingsSection = () => {
   const { vehicleType, dayType, time } = useFilters();
   const dispatch = useFiltersDispatch();
 

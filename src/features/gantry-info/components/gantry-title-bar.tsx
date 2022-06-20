@@ -1,7 +1,7 @@
-import React from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
-import { GantryInfoIcon } from "./GantryInfoIcon";
+import { GantryInfoIcon } from "./gantry-info-icon";
 
 const TitleBar = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ const Amount = styled.p`
   align-self: flex-start;
 `;
 
-export const GantryTitleBar = React.memo(
+export const GantryTitleBar = memo(
   ({
     title,
     zone,

@@ -4,10 +4,14 @@ import "./index.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { FiltersProvider } from "src/contexts/filters";
+import {
+  GantryInfoHelpPanelOutlet,
+  GantryInfoOutlet,
+} from "src/features/gantry-info";
+import { reportWebVitals } from "src/utils/report-web-vitals";
+
 import { App } from "./App";
-import { GantryInfoHelpPanelOutlet, GantryInfoOutlet } from "./GantryInfo";
-import { FiltersProvider } from "./contexts/FiltersContext";
-import reportWebVitals from "./reportWebVitals";
 
 const container = document.getElementById("root");
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

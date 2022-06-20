@@ -1,4 +1,4 @@
-import { pickSplit } from "../pickSplit";
+import { pickSplit } from "../pick-split";
 
 describe("pickSplit", () => {
   it("should return null when no splits are provided", () => {

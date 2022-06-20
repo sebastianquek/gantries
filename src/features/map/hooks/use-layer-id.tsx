@@ -1,8 +1,9 @@
-import type { DayType, VehicleType } from "./types";
+import type { DayType, VehicleType } from "src/types";
 
-import { pickSplit } from "./utils/pickSplit";
-import { slugify } from "./utils/slugify";
-import { useFetchJSON } from "./utils/useFetchJSON";
+import { useFetchJSON } from "src/hooks/use-fetch-json";
+import { slugify } from "src/utils/slugify";
+
+import { pickSplit } from "../utils/pick-split";
 
 export const useLayerId = (
   vehicleType: VehicleType,

@@ -1,4 +1,4 @@
-import type { DayType } from "../types";
+import type { DayType } from "src/types";
 
 import { format, getDay } from "date-fns";
 

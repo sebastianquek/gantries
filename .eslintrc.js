@@ -36,7 +36,7 @@ module.exports = {
     "import/order": [
       "error",
       {
-        groups: ["type", "builtin", "external", "parent", "sibling", "index"],
+        groups: ["type", "builtin", "external", "internal", "parent", "sibling", "index"],
         "newlines-between": "always",
         alphabetize: {
           order: "asc",
@@ -45,9 +45,17 @@ module.exports = {
     ],
     // Standardise the use of named exports regardless if number of exports is 1
     "import/prefer-default-export": "off",
-    // Ensure imports are always relative
-    "no-restricted-imports": ["error", { patterns: ["src/*"] }],
+    // Ensure absolute imports make use of exported features only
+    "no-restricted-imports": ["error", { patterns: ["features/*/*"] }],
     // Let TypeScript handle unused variables
     "no-unused-vars": "off",
+  },
+  settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
+    "import/resolver": {
+      typescript: {},
+    },
   },
 };

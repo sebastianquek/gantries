@@ -1,10 +1,10 @@
-import type { DayType, VehicleType } from "../types";
 import type { PropsWithChildren, Reducer } from "react";
+import type { DayType, VehicleType } from "src/types";
 
 import React, { useEffect, createContext, useContext, useReducer } from "react";
 
-import { VEHICLE_TYPES } from "../constants";
-import { getDayType, getTime } from "../utils/datetime";
+import { VEHICLE_TYPES } from "src/constants";
+import { getDayType, getTime } from "src/utils/datetime";
 
 type Action =
   | { type: "changed_vehicle_type"; vehicleType: VehicleType }

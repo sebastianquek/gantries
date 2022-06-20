@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 
-import { useFilters } from "./contexts/FiltersContext";
-import { useLayerId } from "./useLayerId";
-import { usePrevious } from "./utils/usePrevious";
+import { useFilters } from "src/contexts/filters";
+import { usePrevious } from "src/hooks/use-previous";
+
+import { useLayerId } from "./use-layer-id";
 
 export const useToggleMapLayers = (
   map: mapboxgl.Map | undefined,

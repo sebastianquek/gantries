@@ -1,10 +1,10 @@
-import type { Rate, ViewType } from "./types";
+import type { Rate, ViewType } from "../types";
 
-import React from "react";
+import { memo } from "react";
 import FlipMove from "react-flip-move";
 import styled from "styled-components";
 
-import { filterRates } from "./utils/filterRates";
+import { filterRates } from "../utils/filter-rates";
 
 const OverflowWrapper = styled.div`
   overflow: hidden;
@@ -53,7 +53,7 @@ const RateValue = styled.p<{ isCurrent: boolean }>`
   width: 3em;
 `;
 
-export const GantryRatesList = React.memo(
+export const GantryRatesList = memo(
   ({
     maxRateAmount,
     rates,

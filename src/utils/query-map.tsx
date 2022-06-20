@@ -1,6 +1,6 @@
-import type { Gantry } from "../types";
+import type { Gantry } from "src/types";
 
-import { GANTRY_SOURCE_LAYER } from "../constants";
+import { GANTRY_SOURCE_LAYER } from "src/constants";
 
 export const queryMap = (
   map: mapboxgl.Map,

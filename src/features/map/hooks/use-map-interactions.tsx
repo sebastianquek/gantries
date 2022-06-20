@@ -1,10 +1,10 @@
-import type { Gantry } from "./types";
 import type { MapLayerMouseEvent } from "mapbox-gl";
+import type { Gantry } from "src/types";
 
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { GANTRY_BASE_LAYER_ID } from "./constants";
+import { GANTRY_BASE_LAYER_ID } from "src/constants";
 
 export const useMapInteractions = (
   map: mapboxgl.Map | undefined,

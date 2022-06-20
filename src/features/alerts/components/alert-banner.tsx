@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-import { useFilters } from "./contexts/FiltersContext";
-import { ReactComponent as WarningIcon } from "./svg/warning.svg";
+import { ReactComponent as WarningIcon } from "src/assets/svg/warning.svg";
+import { useFilters } from "src/contexts/filters";
 
 const Positioner = styled.div`
   position: absolute;

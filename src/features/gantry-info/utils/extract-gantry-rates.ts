@@ -1,7 +1,7 @@
-import type { DayType, Gantry, VehicleType } from "../../types";
 import type { Rate } from "../types";
+import type { DayType, Gantry, VehicleType } from "src/types";
 
-import { slugify } from "../../utils/slugify";
+import { slugify } from "src/utils/slugify";
 
 const DAY_START_TIME = "00:00";
 const DAY_END_TIME = "24:00";

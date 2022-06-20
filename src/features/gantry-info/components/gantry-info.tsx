@@ -1,19 +1,20 @@
-import type { Gantry, OutletContextType } from "../types";
-import type { Dimensions, ViewType } from "./types";
+import type { Dimensions, ViewType } from "../types";
+import type { Gantry, OutletContextType } from "src/types";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 
-import { useFilters } from "../contexts/FiltersContext";
-import { useMatchMedia } from "../utils/useMatchMedia";
+import { useFilters } from "src/contexts/filters";
+import { useMatchMedia } from "src/hooks/use-match-media";
 
-import { GantryRatesList } from "./GantryRatesList";
-import { GantryTitleBar } from "./GantryTitleBar";
-import { GestureHelperText } from "./GestureHelperText";
-import { useGesture } from "./useGesture";
-import { calcTranslateY } from "./utils/calcTranslateY";
-import { extractGantryRates } from "./utils/extractGantryRates";
+import { useGesture } from "../hooks/useGesture";
+import { calcTranslateY } from "../utils/calc-translate-y";
+import { extractGantryRates } from "../utils/extract-gantry-rates";
+
+import { GantryRatesList } from "./gantry-rates-list";
+import { GantryTitleBar } from "./gantry-title-bar";
+import { GestureHelperText } from "./gesture-helper-text";
 
 const bounce = keyframes`
   0% {
@@ -126,7 +127,7 @@ const initialDimensions: Dimensions = {
   panelYFromBottom: 0,
 };
 
-export const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
+const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
     return extractGantryRates({

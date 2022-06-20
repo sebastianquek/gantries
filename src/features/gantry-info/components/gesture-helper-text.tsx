@@ -2,8 +2,8 @@ import type { ReactElement } from "react";
 
 import styled from "styled-components";
 
-import { ReactComponent as ArrowUp } from "../svg/arrow-up-sharp.svg";
-import { ReactComponent as Checkmark } from "../svg/checkmark-sharp.svg";
+import { ReactComponent as ArrowUp } from "src/assets/svg/arrow-up-sharp.svg";
+import { ReactComponent as Checkmark } from "src/assets/svg/checkmark-sharp.svg";
 
 const Wrapper = styled.div`
   position: absolute;

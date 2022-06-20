@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { Button } from "../common/Button";
-import { ReactComponent as CrossIcon } from "../svg/close-outline.svg";
-import { ReactComponent as GantryIcon } from "../svg/gantry-on.svg";
+import { ReactComponent as CrossIcon } from "src/assets/svg/close-outline.svg";
+import { ReactComponent as GantryIcon } from "src/assets/svg/gantry-on.svg";
+import { Button } from "src/components/button";
 
 const Modal = styled.div`
   border-radius: 1.5rem;

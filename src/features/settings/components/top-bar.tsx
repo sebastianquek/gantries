@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-import { ProjectInfo } from "./ProjectInfo";
-import { SettingsPanel } from "./SettingsPanel";
+import { ProjectInfo } from "./project-info";
+import { SettingsSection } from "./settings-section";
 
 const Wrapper = styled.div`
   position: relative;
@@ -48,7 +48,7 @@ export const TopBar = () => {
   return (
     <Wrapper>
       <Left>
-        <SettingsPanel />
+        <SettingsSection />
       </Left>
       <Middle>
         <AppTitle>Gantries</AppTitle>

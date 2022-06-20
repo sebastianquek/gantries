@@ -1,15 +1,17 @@
-import type { Gantry } from "./types";
+import type { Gantry } from "src/types";
 
 import { useRef } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import { AlertBanner } from "./AlertBanner";
-import { TopBar } from "./TopBar";
-import { useMap } from "./useMap";
-import { useMapInteractions } from "./useMapInteractions";
-import { useToggleMapLayers } from "./useToggleMapLayers";
-import { queryMap } from "./utils/queryMap";
+import { AlertBanner } from "src/features/alerts";
+import {
+  useMap,
+  useMapInteractions,
+  useToggleMapLayers,
+} from "src/features/map";
+import { TopBar } from "src/features/settings";
+import { queryMap } from "src/utils/query-map";
 
 const Wrapper = styled.div`
   position: absolute;
