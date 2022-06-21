@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { ReactComponent as CrossIcon } from "src/assets/svg/close-outline.svg";
@@ -108,27 +108,41 @@ const ProjectInfoCloseButton = styled.button`
   right: 0;
 `;
 
+const LOCATION_HASH = "#about";
+
 export const ProjectInfo = () => {
   const lastCheckedDate = process.env.REACT_APP_LAST_CHECK_DATE
     ? new Date(Number(process.env.REACT_APP_LAST_CHECK_DATE))
     : undefined;
   const version = process.env.REACT_APP_COMMIT_REF;
 
-  const [isProjectInfoVisible, setIsProjectInfoVisible] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleVisibility = () => {
-    setIsProjectInfoVisible((v) => !v);
+  const isProjectInfoVisible = location.hash === LOCATION_HASH;
+
+  const show = () => {
+    navigate(LOCATION_HASH);
+  };
+
+  const hide = () => {
+    // TODO: add E2E tests: when URL with "#about" is opened in a new tab and close button is clicked, the modal should close
+    if (location.key === "default") {
+      navigate(location.pathname, { replace: true });
+    } else {
+      navigate(-1);
+    }
   };
 
   return isProjectInfoVisible ? (
     <ProjectInfoPositioner>
-      <Backdrop onClick={toggleVisibility} />
+      <Backdrop onClick={hide} />
       <ProjectInfoModal lastCheckDate={lastCheckedDate} version={version} />
-      <ProjectInfoCloseButton onClick={toggleVisibility}>
+      <ProjectInfoCloseButton onClick={hide}>
         <CrossIcon />
       </ProjectInfoCloseButton>
     </ProjectInfoPositioner>
   ) : (
-    <Button onClick={toggleVisibility}>Info</Button>
+    <Button onClick={show}>Info</Button>
   );
 };
