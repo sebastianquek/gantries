@@ -2,7 +2,7 @@ import { calcTranslateY } from "../calc-translate-y";
 
 const dragYThreshold = 50;
 
-describe("calc-translate-y", () => {
+describe("calcTranslateY", () => {
   it("should return correctly when viewType is minimal and dragY is positive (dragging downwards)", () => {
     expect(calcTranslateY("minimal", 1, dragYThreshold)).toStrictEqual(1);
     expect(calcTranslateY("minimal", 4, dragYThreshold)).toStrictEqual(2);
