@@ -90,7 +90,7 @@ export const useGesture = ({
         onStart();
       } else {
         // Resets state
-        // E.g. when there are multiple touches, reset it isn't supported.
+        // E.g. when there are multiple touches, reset since it isn't supported.
         onTouchEnd();
       }
     },
