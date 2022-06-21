@@ -130,11 +130,7 @@ const initialDimensions: Dimensions = {
 const GantryInfo = ({ gantry }: { gantry: Gantry | undefined }) => {
   const { vehicleType, dayType, time } = useFilters();
   const { maxRateAmount, rates } = useMemo(() => {
-    return extractGantryRates({
-      gantry,
-      vehicleType,
-      dayType,
-    });
+    return extractGantryRates(gantry, vehicleType, dayType);
   }, [dayType, gantry, vehicleType]);
 
   const isMobile = useIsMobileContext();

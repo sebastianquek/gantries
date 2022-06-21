@@ -101,15 +101,11 @@ const extractStartAndEndTime = (str: string, rateKeyPrefix: string) => {
   return { startTime, endTime };
 };
 
-export const extractGantryRates = ({
-  gantry,
-  vehicleType,
-  dayType,
-}: {
-  gantry: Gantry | undefined;
-  vehicleType: VehicleType;
-  dayType: DayType;
-}) => {
+export const extractGantryRates = (
+  gantry: Gantry | undefined,
+  vehicleType: VehicleType,
+  dayType: DayType
+) => {
   const rateKeyPrefix = slugify(`${vehicleType}-${dayType}`);
   let maxRateAmount = 0;
   let rates: Rate[] = [];

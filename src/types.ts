@@ -10,8 +10,7 @@ export type Gantry = {
   longitude: number;
   name: string;
   zone: string;
-} & {
-  [rate: string]: number;
+  [rate: string]: string | number;
 };
 
 export type OutletContextType = {

@@ -1,7 +1,11 @@
 import { exportedForTesting } from "../extract-gantry-rates";
 
-const { padGapsWithZeroRates, collapseRates, extractStartAndEndTime } =
-  exportedForTesting;
+const {
+  padGapsWithZeroRates,
+  collapseRates,
+  extractStartAndEndTime,
+  extractGantryRates,
+} = exportedForTesting;
 
 describe("padGapsWithZeroRates", () => {
   it("should throw error when there are rates with overlapping time ranges", () => {
@@ -152,6 +156,73 @@ describe("extractStartAndEndTime", () => {
     ).toStrictEqual({
       startTime: "00:00",
       endTime: "24:00",
+    });
+  });
+});
+
+describe("extractGantryRates", () => {
+  const gantry = {
+    bearing: 121.29359,
+    id: "36",
+    latitude: 1.2874,
+    longitude: 103.79573,
+    name: "AYE to City before Alexandra Road",
+    zone: "AY1",
+    "light-goods-vehicles-weekdays-09-00-09-05": 0.5,
+    "light-goods-vehicles-weekdays-09-05-09-25": 1,
+    "light-goods-vehicles-weekdays-09-25-09-30": 0.5,
+    "motorcycles-weekdays-09-00-09-05": 0.25,
+    "motorcycles-weekdays-09-05-09-25": 0.5,
+    "motorcycles-weekdays-09-25-09-30": 0.25,
+  };
+
+  it("should return 0 maxRateAmount and empty rates array when gantry is undefined", () => {
+    expect(
+      extractGantryRates(undefined, "Motorcycles", "Weekdays")
+    ).toStrictEqual({ maxRateAmount: 0, rates: [] });
+  });
+
+  it("should return the correct maxRateAmount and rates when the gantry has rates for the dayType", () => {
+    expect(extractGantryRates(gantry, "Motorcycles", "Weekdays")).toStrictEqual(
+      {
+        maxRateAmount: 0.5,
+        rates: [
+          { startTime: "00:00", endTime: "09:00", amount: 0 },
+          { startTime: "09:00", endTime: "09:05", amount: 0.25 },
+          { startTime: "09:05", endTime: "09:25", amount: 0.5 },
+          { startTime: "09:25", endTime: "09:30", amount: 0.25 },
+          { startTime: "09:30", endTime: "24:00", amount: 0 },
+        ],
+      }
+    );
+
+    expect(
+      extractGantryRates(gantry, "Light Goods Vehicles", "Weekdays")
+    ).toStrictEqual({
+      maxRateAmount: 1,
+      rates: [
+        { startTime: "00:00", endTime: "09:00", amount: 0 },
+        { startTime: "09:00", endTime: "09:05", amount: 0.5 },
+        { startTime: "09:05", endTime: "09:25", amount: 1 },
+        { startTime: "09:25", endTime: "09:30", amount: 0.5 },
+        { startTime: "09:30", endTime: "24:00", amount: 0 },
+      ],
+    });
+  });
+
+  it("should return 0 maxRateAmount and 1 $0 rate when the gantry has no rates for the dayType", () => {
+    expect(extractGantryRates(gantry, "Motorcycles", "Saturday")).toStrictEqual(
+      {
+        maxRateAmount: 0,
+        rates: [{ startTime: "00:00", endTime: "24:00", amount: 0 }],
+      }
+    );
+
+    expect(
+      extractGantryRates(gantry, "Light Goods Vehicles", "Saturday")
+    ).toStrictEqual({
+      maxRateAmount: 0,
+      rates: [{ startTime: "00:00", endTime: "24:00", amount: 0 }],
     });
   });
 });
