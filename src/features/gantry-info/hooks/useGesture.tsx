@@ -44,21 +44,6 @@ export const useGesture = ({
 
   const [dragY, setDragY] = useState(0);
 
-  const onTouchStart: TouchEventHandler = useCallback(
-    (e) => {
-      if (e.touches.length === 1 && isEnabled) {
-        gestureState.current.isTracking = true;
-        gestureState.current.startX = e.targetTouches[0].clientX;
-        gestureState.current.startY = e.targetTouches[0].clientY;
-        gestureState.current.startTime = performance.now();
-        onStart();
-      } else {
-        gestureState.current.isTracking = false;
-      }
-    },
-    [isEnabled, onStart]
-  );
-
   const onTouchMove: TouchEventHandler = useCallback((e) => {
     if (!gestureState.current.isTracking) {
       return;
@@ -94,6 +79,23 @@ export const useGesture = ({
 
     setDragY(0);
   }, [dragMSThreshold, dragYThreshold, onEnd]);
+
+  const onTouchStart: TouchEventHandler = useCallback(
+    (e) => {
+      if (e.touches.length === 1 && isEnabled) {
+        gestureState.current.isTracking = true;
+        gestureState.current.startX = e.targetTouches[0].clientX;
+        gestureState.current.startY = e.targetTouches[0].clientY;
+        gestureState.current.startTime = performance.now();
+        onStart();
+      } else {
+        // Resets state
+        // E.g. when there are multiple touches, reset since it isn't supported.
+        onTouchEnd();
+      }
+    },
+    [isEnabled, onStart, onTouchEnd]
+  );
 
   const bind = useMemo(
     () => ({
