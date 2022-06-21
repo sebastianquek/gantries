@@ -22,6 +22,7 @@ describe("queryMap", () => {
   it("should return null if no matching gantry is found", () => {
     expect(queryMap(mockMap as any, "2")).toStrictEqual(null);
   });
+
   it("should return the gantry if a matching gantry is found", () => {
     expect(queryMap(mockMap as any, "1")).toStrictEqual({
       bearing: 1,
