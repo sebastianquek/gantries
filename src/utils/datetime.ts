@@ -12,7 +12,6 @@ export const getDayType = (
 ): DayType => {
   switch (getDay(now)) {
     case 0: // ERP not operational on Sunday
-      // TODO: let user know it's sunday
       return defaultDayType;
     case 1:
     case 2:
