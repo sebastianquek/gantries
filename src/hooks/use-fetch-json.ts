@@ -18,7 +18,7 @@ export function useFetchJSON<Result>(
   immediate = true
 ): {
   state: FetchState;
-  run: () => void;
+  run: () => Promise<void>;
   reset: () => void;
   result: Result | undefined;
   error: Error | undefined;
@@ -27,11 +27,19 @@ export function useFetchJSON<Result>(
   const [result, setResult] = useState<Result>();
   const [error, setError] = useState<Error>();
 
-  const run = useCallback(() => {
+  const run = useCallback(async () => {
     setResult(undefined);
     setError(undefined);
     setState("FETCHING");
-  }, []);
+    try {
+      const response = await fetch(request, init);
+      setResult((await response.json()) as Result);
+      setState("SUCCESS");
+    } catch (e) {
+      setError(e as Error);
+      setState("FAILURE");
+    }
+  }, [init, request]);
 
   const reset = useCallback(() => {
     setState("IDLE");
@@ -40,24 +48,8 @@ export function useFetchJSON<Result>(
   }, []);
 
   useEffect(() => {
-    const performFetch = async () => {
-      try {
-        const response = await fetch(request, init);
-        setResult((await response.json()) as Result);
-        setState("SUCCESS");
-      } catch (e) {
-        setError(e as Error);
-        setState("FAILURE");
-      }
-    };
-    if (state === "FETCHING") {
-      void performFetch();
-    }
-  }, [init, request, state]);
-
-  useEffect(() => {
     if (immediate) {
-      run();
+      void run();
     }
   }, [immediate, run]);
 
