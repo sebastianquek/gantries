@@ -26,6 +26,7 @@
     "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
+    "@playwright/test": "^1.22.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
@@ -80,5 +81,10 @@
   },
   "simple-git-hooks": {
     "pre-commit": "npm run tsc"
+  },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.[jt]s?(x)"
+    ]
   }
 }

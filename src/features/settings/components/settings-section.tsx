@@ -126,12 +126,13 @@ export const SettingsSection = () => {
     <>
       <Pill>
         <VehicleSelectWrapper>
-          <VehicleIcon>{vehicleIcon}</VehicleIcon>
+          <VehicleIcon data-test-id="vehicle-icon">{vehicleIcon}</VehicleIcon>
           <VehicleSelect
             value={vehicleType}
             onChange={(event) =>
               setVehicleType(event.target.value as VehicleType)
             }
+            data-test-id="vehicle-type"
           >
             {VEHICLE_TYPES.map((vehicleType) => (
               <option key={vehicleType} value={vehicleType}>
@@ -143,6 +144,7 @@ export const SettingsSection = () => {
         <DayTypeSelect
           value={dayType}
           onChange={(event) => setDayType(event.target.value as DayType)}
+          data-test-id="day-type"
         >
           {DAY_TYPES.map((dayType) => (
             <option key={dayType} value={dayType}>
@@ -155,6 +157,7 @@ export const SettingsSection = () => {
           value={time}
           pattern="[0-9]{2}:[0-9]{2}"
           onChange={(event) => setTime(event.target.value)}
+          data-test-id="time-filter"
         />
       </Pill>
       <Button onClick={setDayTypeAndTimeToNow}>Now</Button>
