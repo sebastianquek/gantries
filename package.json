@@ -81,5 +81,10 @@
   },
   "simple-git-hooks": {
     "pre-commit": "npm run tsc"
+  },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.[jt]s?(x)"
+    ]
   }
 }
