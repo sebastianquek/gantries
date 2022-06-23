@@ -64,7 +64,9 @@ const ProjectInfoModal = ({
           <em>{lastCheckDate.toString()}</em>
         </p>
       )}
-      {version && <Version>{version.slice(0, 7)}</Version>}
+      {version && (
+        <Version data-test-id="version">{version.slice(0, 7)}</Version>
+      )}
       <a href="https://github.com/sebastianquek/gantries">GitHub</a>
     </Modal>
   );
@@ -136,9 +138,9 @@ export const ProjectInfo = () => {
 
   return isProjectInfoVisible ? (
     <ProjectInfoPositioner>
-      <Backdrop onClick={hide} />
+      <Backdrop onClick={hide} data-test-id="backdrop" />
       <ProjectInfoModal lastCheckDate={lastCheckedDate} version={version} />
-      <ProjectInfoCloseButton onClick={hide}>
+      <ProjectInfoCloseButton onClick={hide} data-test-id="close">
         <CrossIcon />
       </ProjectInfoCloseButton>
     </ProjectInfoPositioner>
