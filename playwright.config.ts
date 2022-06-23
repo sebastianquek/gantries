@@ -46,6 +46,7 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Desktop Chrome"],
       },
+      testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
     {
@@ -53,6 +54,7 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Desktop Firefox"],
       },
+      testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
     {
@@ -60,6 +62,7 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Desktop Safari"],
       },
+      testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
     /* Test against mobile viewports. */
@@ -68,12 +71,14 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Pixel 5"],
       },
+      testIgnore: /.*.desktop.e2e.test.ts/,
     },
     {
       name: "Mobile Safari",
       use: {
         ...devices["iPhone 12"],
       },
+      testIgnore: /.*.desktop.e2e.test.ts/,
     },
 
     /* Test against branded browsers. */
