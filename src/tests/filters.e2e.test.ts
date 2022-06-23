@@ -16,7 +16,7 @@ test.describe("when page loads", () => {
   });
 
   test("should see the current day type and time", async ({ page }) => {
-    const now = new Date();
+    const now = await page.evaluate(() => new Date());
     const isWeekdayOrSunday = now.getDay() !== 6;
     await expect(page.locator('select[data-test-id="day-type"]')).toHaveValue(
       isWeekdayOrSunday ? "Weekdays" : "Saturday"
@@ -66,7 +66,7 @@ test.describe("when filter changes", () => {
   test("should set the day type and time to now when now button is clicked", async ({
     page,
   }) => {
-    const now = new Date();
+    const now = await page.evaluate(() => new Date());
     const hour = now.getHours();
     const minute = now.getMinutes();
     const hourString = `${hour}`.padStart(2, "0");
