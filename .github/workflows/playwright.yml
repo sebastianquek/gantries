@@ -33,16 +33,19 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'false' }}
-        name: List the state of node modules
-        continue-on-error: true
-        run: npm list
-
       - name: Install dependencies
         run: npm ci
 
+      # Cache hit, setup playwright
+      - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'true' }}
+        name: Setup Playwright Browsers
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+        run: npx playwright install
+
+      # Cache miss, setup playwright + install system dependencies for browsers
       - if: ${{ steps.cache-node-modules.outputs.cache-hit == 'false' }}
-        name: Install Playwright Browsers
+        name: Setup Playwright Browsers + install system dependencies
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
         run: npx playwright install --with-deps
