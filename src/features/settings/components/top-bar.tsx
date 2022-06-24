@@ -51,7 +51,7 @@ export const TopBar = () => {
         <SettingsSection />
       </Left>
       <Middle>
-        <AppTitle>Gantries</AppTitle>
+        <AppTitle data-test-id="app-title">Gantries</AppTitle>
       </Middle>
       <Right>
         <ProjectInfo />

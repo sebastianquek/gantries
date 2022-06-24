@@ -1,5 +1,6 @@
 import type { PlaywrightTestConfig } from "@playwright/test";
 
+import "dotenv/config";
 import { devices } from "@playwright/test";
 
 /**
@@ -23,7 +24,7 @@ const config: PlaywrightTestConfig = {
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -31,10 +32,10 @@ const config: PlaywrightTestConfig = {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    /* See https://playwright.dev/docs/trace-viewer */
+    trace: "retain-on-failure",
 
     timezoneId: "Asia/Singapore",
   },
@@ -46,20 +47,24 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Desktop Chrome"],
       },
+      testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-      },
-    },
+    // Temporarily disable firefox tests as they are not working properly
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //   },
+    //   testIgnore: /.*.mobile.e2e.test.ts/,
+    // },
 
     {
       name: "webkit",
       use: {
         ...devices["Desktop Safari"],
       },
+      testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
     /* Test against mobile viewports. */
@@ -68,12 +73,14 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices["Pixel 5"],
       },
+      testIgnore: /.*.desktop.e2e.test.ts/,
     },
     {
       name: "Mobile Safari",
       use: {
         ...devices["iPhone 12"],
       },
+      testIgnore: /.*.desktop.e2e.test.ts/,
     },
 
     /* Test against branded browsers. */
@@ -92,14 +99,16 @@ const config: PlaywrightTestConfig = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  outputDir: "test-results/",
 
   /* Run your local dev server before starting the tests */
   // TODO: on CI it should wait for deployment to test on the deployed site
-  webServer: {
-    command: "npm start",
-    port: 3000,
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: "npm start",
+        port: 3000,
+      },
 };
 
 export default config;

@@ -64,7 +64,9 @@ const ProjectInfoModal = ({
           <em>{lastCheckDate.toString()}</em>
         </p>
       )}
-      {version && <Version>{version.slice(0, 7)}</Version>}
+      {version && (
+        <Version data-test-id="version">{version.slice(0, 7)}</Version>
+      )}
       <a href="https://github.com/sebastianquek/gantries">GitHub</a>
     </Modal>
   );
@@ -126,7 +128,6 @@ export const ProjectInfo = () => {
   };
 
   const hide = () => {
-    // TODO: add E2E tests: when URL with "#about" is opened in a new tab and close button is clicked, the modal should close
     if (location.key === "default") {
       navigate(location.pathname, { replace: true });
     } else {
@@ -136,9 +137,9 @@ export const ProjectInfo = () => {
 
   return isProjectInfoVisible ? (
     <ProjectInfoPositioner>
-      <Backdrop onClick={hide} />
+      <Backdrop onClick={hide} data-test-id="backdrop" />
       <ProjectInfoModal lastCheckDate={lastCheckedDate} version={version} />
-      <ProjectInfoCloseButton onClick={hide}>
+      <ProjectInfoCloseButton onClick={hide} data-test-id="close">
         <CrossIcon />
       </ProjectInfoCloseButton>
     </ProjectInfoPositioner>
