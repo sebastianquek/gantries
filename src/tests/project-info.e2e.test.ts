@@ -130,7 +130,7 @@ test.describe("when navigating to the root URL with the info hash", () => {
     await projectInfo.shouldNotSeeInfoPanel();
   });
 
-  test.only("should exit browser session on browser back", async ({ page }) => {
+  test("should exit browser session on browser back", async ({ page }) => {
     await page.goBack();
 
     await expect(page).toHaveURL("about:blank");
