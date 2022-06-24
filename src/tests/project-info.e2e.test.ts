@@ -103,6 +103,7 @@ test.describe("when navigating to the root URL with the info hash", () => {
   let projectInfo: ProjectInfo;
 
   test.beforeEach(async ({ page }) => {
+    await page.goto("about:blank"); // Ensures that subsequent page.goBack calls work
     projectInfo = new ProjectInfo(page);
     await projectInfo.goto({ fragment: true });
   });
@@ -129,9 +130,10 @@ test.describe("when navigating to the root URL with the info hash", () => {
     await projectInfo.shouldNotSeeInfoPanel();
   });
 
-  test("should close the info panel on browser back", async ({ page }) => {
+  test.only("should exit browser session on browser back", async ({ page }) => {
     await page.goBack();
-    await projectInfo.shouldNotSeeInfoPanel();
+
+    await expect(page).toHaveURL("about:blank");
   });
 });
 
@@ -139,6 +141,7 @@ test.describe("when navigating to a gantry URL with the info hash", () => {
   let projectInfo: ProjectInfo;
 
   test.beforeEach(async ({ page }) => {
+    await page.goto("about:blank"); // Ensures that subsequent page.goBack calls work
     projectInfo = new ProjectInfo(page);
     await projectInfo.goto({ gantryId: true, fragment: true });
   });
@@ -175,9 +178,7 @@ test.describe("when navigating to a gantry URL with the info hash", () => {
     await expect(page.locator('text="PIE into CTE"')).toBeVisible();
   });
 
-  test("should exit browser session when the browser back is executed", async ({
-    page,
-  }) => {
+  test("should exit browser session on browser back", async ({ page }) => {
     await page.goBack();
 
     await expect(page).toHaveURL("about:blank");
