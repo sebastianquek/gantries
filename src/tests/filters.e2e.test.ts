@@ -71,6 +71,20 @@ test.describe("when filter changes", () => {
   test("should set the day type and time to now when now button is clicked", async ({
     page,
   }) => {
+    // Set day type to be the opposite of the current value
+    const isWeekdayOrSunday = await page.evaluate(
+      () => new Date().getDay() !== 6
+    );
+    const dayType = isWeekdayOrSunday ? "Weekdays" : "Saturday";
+    const newDayType = isWeekdayOrSunday ? "Saturday" : "Weekdays"; // Toggle day type
+    await page
+      .locator('select[data-test-id="day-type"]')
+      .selectOption(newDayType);
+    await expect(page.locator('select[data-test-id="day-type"]')).toHaveValue(
+      newDayType
+    );
+
+    // Set time to be 1 hour, 20 minutes ahead;
     const hour = await page.evaluate(() => new Date().getHours());
     const minute = await page.evaluate(() => new Date().getMinutes());
     const hourString = `${hour}`.padStart(2, "0");
@@ -86,7 +100,11 @@ test.describe("when filter changes", () => {
       newTime
     );
 
+    // Click on now
     await page.locator("text=Now").click();
+    await expect(page.locator('select[data-test-id="day-type"]')).toHaveValue(
+      dayType
+    );
     await expect(page.locator('input[data-test-id="time-filter"]')).toHaveValue(
       time
     );
