@@ -14,7 +14,6 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   extends: [
     "react-app",
-    "react-app/jest",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -58,4 +57,13 @@ module.exports = {
       typescript: {},
     },
   },
+  overrides: [
+    {
+      // Ensure only non-e2e tests rely on jest rules
+      files: ["**/__tests__/*.test.ts"],
+      extends: [
+        "react-app/jest"
+      ]
+    }
+  ]
 };
