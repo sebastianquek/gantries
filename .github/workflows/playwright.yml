@@ -29,7 +29,9 @@ jobs:
           path: "~/.cache/ms-playwright"
           key: "${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}"
       - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        # if: steps.playwright-cache.outputs.cache-hit != 'true'
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
         run: npx playwright install --with-deps
       - name: Wait for Netlify Deployment
         uses: probablyup/wait-for-netlify-action@3.2.0
