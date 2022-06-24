@@ -34,15 +34,15 @@ describe("getDayType", () => {
       expect(getDayType(input)).toStrictEqual(output);
     }
   );
-});
 
-it("should return the correct day type when no date is provided", () => {
-  jest.useFakeTimers().setSystemTime(new Date("2022-01-01T09:10:11"));
-  expect(getDayType()).toStrictEqual("Saturday");
-});
+  it("should return the correct day type when no date is provided", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2022-01-01T09:10:11"));
+    expect(getDayType()).toStrictEqual("Saturday");
+  });
 
-it("should return the correct day type when default day type is provided", () => {
-  expect(getDayType(new Date("2022-01-02T00:00:00"), "Saturday")).toStrictEqual(
-    "Saturday"
-  );
+  it("should return the correct day type when default day type is provided", () => {
+    expect(
+      getDayType(new Date("2022-01-02T00:00:00"), "Saturday")
+    ).toStrictEqual("Saturday");
+  });
 });
