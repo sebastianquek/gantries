@@ -34,8 +34,8 @@ const config: PlaywrightTestConfig = {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    /* See https://playwright.dev/docs/trace-viewer */
+    trace: "retain-on-failure",
 
     timezoneId: "Asia/Singapore",
   },
@@ -98,7 +98,7 @@ const config: PlaywrightTestConfig = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  outputDir: "test-results/",
 
   /* Run your local dev server before starting the tests */
   // TODO: on CI it should wait for deployment to test on the deployed site
