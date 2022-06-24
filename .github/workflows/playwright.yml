@@ -66,6 +66,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: npx playwright test
 
