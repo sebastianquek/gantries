@@ -128,7 +128,6 @@ export const ProjectInfo = () => {
   };
 
   const hide = () => {
-    // TODO: add E2E tests: when URL with "#about" is opened in a new tab and close button is clicked, the modal should close
     if (location.key === "default") {
       navigate(location.pathname, { replace: true });
     } else {
