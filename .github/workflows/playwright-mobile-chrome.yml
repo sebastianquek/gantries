@@ -7,7 +7,8 @@ on:
     branches: [master]
 
 jobs:
-  test:
+  mobile-chrome:
     uses: "./.github/workflows/playwright.yml"
     with:
       project: "mobile-chrome"
+    secrets: inherit
