@@ -1,0 +1,13 @@
+name: Playwright Tests (chromium)
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    uses: "./.github/workflows/playwright.yml"
+    with:
+      project: "chromium"
