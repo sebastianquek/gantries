@@ -8,25 +8,25 @@ on:
 
 jobs:
   chromium:
-    uses: "./.github/workflows/playwright.yml"
+    uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "chromium"
     secrets: inherit
 
   webkit:
-    uses: "./.github/workflows/playwright.yml"
+    uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "webkit"
     secrets: inherit
 
   mobile-chrome:
-    uses: "./.github/workflows/playwright.yml"
+    uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "mobile-chrome"
     secrets: inherit
 
   mobile-safari:
-    uses: "./.github/workflows/playwright.yml"
+    uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "mobile-safari"
     secrets: inherit
