@@ -1,13 +1,15 @@
-name: Playwright Tests
+name: Playwright Tests (reusable)
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
 
 env:
   NODE_VERSION: "16"
+  PLAYWRIGHT_PROJECT: ${{ inputs.project }}
 
 jobs:
   test:
@@ -15,13 +17,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: "npm" # https://github.com/actions/setup-node#caching-global-packages-data
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
       - name: Wait for Netlify Deployment
         uses: probablyup/wait-for-netlify-action@3.2.0
         id: waitForDeployment
@@ -29,13 +50,15 @@ jobs:
           site_id: ${{ secrets.NETLIFY_SITE_ID }}
         env:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
       - name: Run Playwright tests
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
-        run: npx playwright test
+        run: npx playwright test --project ${{ env.PLAYWRIGHT_PROJECT }}
+
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ env.PLAYWRIGHT_PROJECT }}
           path: playwright-report/
           retention-days: 1
