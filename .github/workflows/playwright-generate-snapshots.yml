@@ -6,7 +6,6 @@ on:
 
 env:
   NODE_VERSION: "16"
-  LABEL_NAME: "generate-snapshots"
 
 jobs:
   generate:
@@ -53,7 +52,7 @@ jobs:
       - name: Generate Playwright snapshots
         # Only runs tests with "[snapshot]" in test name. This avoid needing
         # to run the entire test suite.
-        run: npx playwright test -g "[snapshot]" --update-snapshots
+        run: npx playwright test -g "snapshot" --update-snapshots
 
       - name: Commit snapshots
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -62,6 +61,7 @@ jobs:
           file_pattern: src/tests/**/*.png
 
       - name: Remove label
+        if: always()
         uses: actions-ecosystem/action-remove-labels@v1
         with:
           labels: "generate-snapshots"
