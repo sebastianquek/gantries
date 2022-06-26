@@ -54,7 +54,6 @@ const config: PlaywrightTestConfig = {
       name: "firefox",
       use: {
         ...devices["Desktop Firefox"],
-        headless: false,
       },
       testIgnore: /.*.mobile.e2e.test.ts/,
     },

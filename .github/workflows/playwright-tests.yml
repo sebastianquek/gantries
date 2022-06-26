@@ -17,6 +17,7 @@ jobs:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "firefox"
+      headless: false
     secrets: inherit
 
   webkit:
