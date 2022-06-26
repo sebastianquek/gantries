@@ -6,11 +6,12 @@ on:
 
 env:
   NODE_VERSION: "16"
+  LABEL_NAME: "generate-snapshots"
 
 jobs:
   generate:
     name: "Generate snapshots"
-    if: ${{ github.event.label.name == 'generate-snapshots' }}
+    if: ${{ github.event.label.name == env.LABEL_NAME }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -59,3 +60,8 @@ jobs:
         with:
           commit_message: "test: update playwright snapshots"
           file_pattern: src/tests/**/*.png
+
+      - name: Remove label
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: ${{ env.LABEL_NAME }}
