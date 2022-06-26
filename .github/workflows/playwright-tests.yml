@@ -24,6 +24,7 @@ jobs:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "webkit"
+      headless: false
     secrets: inherit
 
   mobile-chrome:
@@ -36,4 +37,5 @@ jobs:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "mobile-safari"
+      headless: false
     secrets: inherit
