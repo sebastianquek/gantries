@@ -50,7 +50,9 @@ jobs:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Generate Playwright snapshots
-        run: npx playwright test --update-snapshots
+        # Only runs tests with "[snapshot]" in test name. This avoid needing
+        # to run the entire test suite.
+        run: npx playwright test -g "[snapshot]" --update-snapshots
 
       - name: Commit snapshots
         uses: stefanzweifel/git-auto-commit-action@v4

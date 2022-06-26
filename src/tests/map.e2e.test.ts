@@ -12,7 +12,7 @@ test.describe("when filters are set to a timing without operational gantries", (
     await page.locator('[data-test-id="time-filter"]').fill("00:00");
   });
 
-  test("should see no gantries highlighted", async ({ page }) => {
+  test("[snapshot] should see no gantries highlighted", async ({ page }) => {
     await expect(page.locator('[aria-label="Map"]')).toHaveScreenshot();
   });
 });
