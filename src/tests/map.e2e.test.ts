@@ -13,6 +13,14 @@ test.describe("when filters are set to a timing without operational gantries", (
   });
 
   test("[snapshot] should see no gantries highlighted", async ({ page }) => {
+    await expect(page.locator('[aria-label="Map"]')).toBeVisible();
+    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
+    // TODO: figure out how to abstract this
+    await page.evaluate(() => {
+      const map: HTMLDivElement | null =
+        document.querySelector("[aria-label='Map']");
+      if (map) map.style.zIndex = "999";
+    });
     await expect(page.locator('[aria-label="Map"]')).toHaveScreenshot();
   });
 });
