@@ -52,9 +52,10 @@ jobs:
       - name: Generate Playwright snapshots
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
-        # Only runs tests with "[snapshot]" in test name. This avoid needing
-        # to run the entire test suite.
-        run: npx playwright test -g "snapshot" --update-snapshots
+        # - Only runs tests with "[snapshot]" in test name. This avoid needing
+        #   to run the entire test suite.
+        # - Runs in headed mode to ensure Firefox tests work
+        run: xvfb-run npx playwright test -g "snapshot" --update-snapshots --headed
 
       - name: Commit snapshots
         uses: stefanzweifel/git-auto-commit-action@v4
