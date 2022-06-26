@@ -60,6 +60,13 @@ jobs:
           commit_message: "test: update playwright snapshots"
           file_pattern: src/tests/**/*.png
 
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 1
+
       - name: Remove label
         if: always()
         uses: actions-ecosystem/action-remove-labels@v1
