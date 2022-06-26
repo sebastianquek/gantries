@@ -1,4 +1,4 @@
-name: Playwright generate snapshots
+name: Playwright
 
 on:
   pull_request:
@@ -8,7 +8,8 @@ env:
   NODE_VERSION: "16"
 
 jobs:
-  generate-snapshots:
+  generate:
+    name: "Generate snapshots"
     if: ${{ github.event.label.name == 'generate-snapshots' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
