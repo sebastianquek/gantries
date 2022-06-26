@@ -11,7 +11,7 @@ env:
 jobs:
   generate:
     name: "Generate snapshots"
-    if: ${{ github.event.label.name == env.LABEL_NAME }}
+    if: ${{ github.event.label.name == 'generate-snapshots' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -64,4 +64,4 @@ jobs:
       - name: Remove label
         uses: actions-ecosystem/action-remove-labels@v1
         with:
-          labels: ${{ env.LABEL_NAME }}
+          labels: "generate-snapshots"
