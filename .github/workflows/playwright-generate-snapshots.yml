@@ -1,0 +1,58 @@
+name: Playwright generate snapshots
+
+on:
+  pull_request:
+    types: [labeled]
+
+env:
+  NODE_VERSION: "16"
+
+jobs:
+  generate-snapshots:
+    if: ${{ github.event.label.name == 'generate-snapshots' }}
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm" # https://github.com/actions/setup-node#caching-global-packages-data
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        env:
+          cache-name: node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Wait for Netlify Deployment
+        uses: probablyup/wait-for-netlify-action@3.2.0
+        id: waitForDeployment
+        with:
+          site_id: ${{ secrets.NETLIFY_SITE_ID }}
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+      - name: Generate Playwright snapshots
+        run: npx playwright test --update-snapshots
+
+      - name: Commit snapshots
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "test: update playwright snapshots"
+          file_pattern: src/tests/**/*.png
