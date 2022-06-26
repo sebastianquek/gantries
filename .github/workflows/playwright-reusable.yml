@@ -6,10 +6,15 @@ on:
       project:
         required: true
         type: string
+      headless:
+        required: false
+        type: boolean
+        default: true
 
 env:
   NODE_VERSION: "16"
   PLAYWRIGHT_PROJECT: ${{ inputs.project }}
+  HEADLESS: ${{ inputs.headless }}
 
 jobs:
   test:
@@ -51,10 +56,17 @@ jobs:
         env:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
-      - name: Run Playwright tests
+      - name: Run Playwright tests (headless)
+        if: env.HEADLESS == 'true'
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: npx playwright test --project ${{ env.PLAYWRIGHT_PROJECT }}
+
+      - name: Run Playwright tests (headed)
+        if: env.HEADLESS == 'false'
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
+        run: xvfb-run npx playwright test --project ${{ env.PLAYWRIGHT_PROJECT }} --headed
 
       - uses: actions/upload-artifact@v2
         if: always()

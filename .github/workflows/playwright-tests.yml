@@ -13,6 +13,13 @@ jobs:
       project: "chromium"
     secrets: inherit
 
+  firefox:
+    uses: "./.github/workflows/playwright-reusable.yml"
+    with:
+      project: "firefox"
+      headless: false
+    secrets: inherit
+
   webkit:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
