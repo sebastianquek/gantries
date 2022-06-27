@@ -27,6 +27,8 @@ test.describe("when filters are set to a timing without operational gantries", (
     const elementHandle = await locator.elementHandle();
     await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
 
+    await page.waitForTimeout(1000);
+
     await expect(locator).toHaveScreenshot();
   });
 });
