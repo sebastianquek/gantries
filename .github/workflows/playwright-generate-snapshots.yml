@@ -55,7 +55,7 @@ jobs:
         # - Only runs tests with "[snapshot]" in test name. This avoid needing
         #   to run the entire test suite.
         # - Runs in headed mode to ensure Firefox tests work
-        run: xvfb-run npx playwright test -g "snapshot" --project webkit --update-snapshots --headed
+        run: xvfb-run npx playwright test -g "snapshot" --project webkit --headed
 
       - name: Commit snapshots
         uses: stefanzweifel/git-auto-commit-action@v4
