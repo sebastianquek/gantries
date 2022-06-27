@@ -19,17 +19,16 @@ test.describe("when filters are set to a timing without operational gantries", (
   });
 
   test("[snapshot] should see no gantries highlighted", async ({ page }) => {
-    // const locator = page.locator('[aria-label="Map"]');
+    const locator = page.locator('[aria-label="Map"]');
 
     // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
     // TODO: move this out to a custom matcher once Playwright is able to
     // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
-    // const elementHandle = await locator.elementHandle();
-    // await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+    const elementHandle = await locator.elementHandle();
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
 
-    // await expect(locator).toHaveScreenshot({
-    //   scale: "device",
-    // });
-    await expect(page).toHaveScreenshot();
+    await expect(locator).toHaveScreenshot({
+      scale: "device",
+    });
   });
 });
