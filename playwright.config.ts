@@ -37,6 +37,8 @@ const config: PlaywrightTestConfig = {
     /* See https://playwright.dev/docs/trace-viewer */
     // trace: "retain-on-failure",
     trace: "on",
+    screenshot: "on",
+    video: "on",
 
     timezoneId: "Asia/Singapore",
   },
