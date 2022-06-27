@@ -2,9 +2,9 @@ name: Update ERP gantry rates
 
 on:
   schedule:
-    # https://crontab.guru/#0_0,12_*_*_*
-    # Runs every day at midnight and noon
-    - cron: "0 0,12 * * *"
+    # https://crontab.guru/#30_16_*_*_*
+    # Runs every day at 12.30am (SGT)
+    - cron: "30 16 * * *"
 
   workflow_dispatch:
 
