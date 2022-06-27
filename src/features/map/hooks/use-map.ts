@@ -57,6 +57,7 @@ export const useMap = ({
       center: [initialLng, initialLat],
       zoom: initialZoom,
       maxBounds: initialBounds,
+      preserveDrawingBuffer: true,
     });
 
     mapboxRef.current.addControl(
