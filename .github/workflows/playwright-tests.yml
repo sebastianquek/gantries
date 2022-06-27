@@ -13,18 +13,18 @@ jobs:
       project: "chromium"
     secrets: inherit
 
-  firefox:
-    uses: "./.github/workflows/playwright-reusable.yml"
-    with:
-      project: "firefox"
-      headless: false
-    secrets: inherit
+  # firefox:
+  #   uses: "./.github/workflows/playwright-reusable.yml"
+  #   with:
+  #     project: "firefox"
+  #     headless: false
+  #   secrets: inherit
 
   webkit:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "webkit"
-      headless: false
+      # headless: false
     secrets: inherit
 
   mobile-chrome:
@@ -37,5 +37,5 @@ jobs:
     uses: "./.github/workflows/playwright-reusable.yml"
     with:
       project: "mobile-safari"
-      headless: false
+      # headless: false
     secrets: inherit
