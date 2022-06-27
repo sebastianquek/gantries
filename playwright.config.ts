@@ -35,7 +35,8 @@ const config: PlaywrightTestConfig = {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
 
     /* See https://playwright.dev/docs/trace-viewer */
-    trace: "retain-on-failure",
+    // trace: "retain-on-failure",
+    trace: "on",
 
     timezoneId: "Asia/Singapore",
   },
