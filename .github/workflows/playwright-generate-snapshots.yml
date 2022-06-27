@@ -12,7 +12,7 @@ jobs:
     name: "Generate snapshots"
     if: ${{ github.event.label.name == 'generate-snapshots' }}
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
 
