@@ -79,9 +79,7 @@ export const useMap = ({
     mapboxRef.current.once("idle", () => {
       // Propagates the idle event to the document
       // Useful for e2e tests to wait for the map to be ready to be asserted
-      requestAnimationFrame(() => {
-        document.dispatchEvent(new Event("idle", { bubbles: true }));
-      });
+      document.dispatchEvent(new Event("idle", { bubbles: true }));
     });
   }, [initialBounds, initialLat, initialLng, initialZoom, mapRef, style]);
 
