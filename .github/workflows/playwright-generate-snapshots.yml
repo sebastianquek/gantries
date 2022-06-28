@@ -5,7 +5,7 @@ on:
     # Run when the "generate-snapshot" label was added
     # Run when the latest commit includes "[snapshot]"
     # These conditions are defined in the reusable yml job
-    types: [labeled, synchronize]
+    types: [labeled, synchronize, opened, reopened]
 
 jobs:
   chromium:
