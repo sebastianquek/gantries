@@ -8,14 +8,14 @@ on:
 
 jobs:
   chromium:
-    uses: "./.github/workflows/reusable/playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "chromium"
       runs-on: "ubuntu-latest"
     secrets: inherit
 
   firefox:
-    uses: "./.github/workflows/reusable/playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "firefox"
       runs-on: "ubuntu-latest"
@@ -23,21 +23,21 @@ jobs:
     secrets: inherit
 
   mobile-chrome:
-    uses: "./.github/workflows/reusable/playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "mobile-chrome"
       runs-on: "ubuntu-latest"
     secrets: inherit
 
   webkit:
-    uses: "./.github/workflows/reusable/playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "webkit"
       runs-on: "macos-latest"
     secrets: inherit
 
   mobile-safari:
-    uses: "./.github/workflows/reusable/playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "mobile-safari"
       runs-on: "macos-latest"
