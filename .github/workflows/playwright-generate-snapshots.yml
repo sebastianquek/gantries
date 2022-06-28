@@ -1,15 +1,13 @@
 name: Playwright
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
+    types: [labeled]
 
 jobs:
   chromium:
     name: "Chromium"
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "chromium"
       runs-on: "ubuntu-latest"
@@ -17,7 +15,7 @@ jobs:
 
   firefox:
     name: "Firefox"
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "firefox"
       runs-on: "ubuntu-latest"
@@ -26,7 +24,7 @@ jobs:
 
   mobile-chrome:
     name: "Mobile Chrome"
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "mobile-chrome"
       runs-on: "ubuntu-latest"
@@ -34,7 +32,7 @@ jobs:
 
   webkit:
     name: "WebKit"
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "webkit"
       runs-on: "macos-latest"
@@ -42,8 +40,18 @@ jobs:
 
   mobile-safari:
     name: "Mobile Safari"
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "mobile-safari"
       runs-on: "macos-latest"
     secrets: inherit
+
+  remove-label:
+    name: Remove label
+    if: ${{ always() }}
+    needs: [chromium, firefox, mobile-chrome, webkit, mobile-safari]
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: "generate-snapshots"

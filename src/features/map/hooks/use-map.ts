@@ -57,6 +57,7 @@ export const useMap = ({
       center: [initialLng, initialLat],
       zoom: initialZoom,
       maxBounds: initialBounds,
+      preserveDrawingBuffer: true,
     });
 
     mapboxRef.current.addControl(
@@ -73,6 +74,12 @@ export const useMap = ({
 
     mapboxRef.current.once("load", () => {
       setIsLoaded(true);
+    });
+
+    mapboxRef.current.once("idle", () => {
+      // Propagates the idle event to the document
+      // Useful for e2e tests to wait for the map to be ready to be asserted
+      document.dispatchEvent(new Event("idle", { bubbles: true }));
     });
   }, [initialBounds, initialLat, initialLng, initialZoom, mapRef, style]);
 
