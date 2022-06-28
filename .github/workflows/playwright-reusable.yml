@@ -10,16 +10,21 @@ on:
         required: false
         type: boolean
         default: true
+      runs-on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
 
 env:
   NODE_VERSION: "16"
   PLAYWRIGHT_PROJECT: ${{ inputs.project }}
   HEADLESS: ${{ inputs.headless }}
+  RUNS_ON: ${{ inputs.runs-on }}
 
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: macos-latest
+    runs-on: ${{ env.RUNS_ON }}
     steps:
       - uses: actions/checkout@v2
 

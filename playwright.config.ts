@@ -53,13 +53,13 @@ const config: PlaywrightTestConfig = {
       testIgnore: /.*.mobile.e2e.test.ts/,
     },
 
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //   },
-    //   testIgnore: /.*.mobile.e2e.test.ts/,
-    // },
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+      },
+      testIgnore: /.*.mobile.e2e.test.ts/,
+    },
 
     {
       name: "webkit",
