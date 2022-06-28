@@ -8,6 +8,7 @@ on:
 
 jobs:
   chromium:
+    name: "Chromium"
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "chromium"
@@ -15,6 +16,7 @@ jobs:
     secrets: inherit
 
   firefox:
+    name: "Firefox"
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "firefox"
@@ -23,6 +25,7 @@ jobs:
     secrets: inherit
 
   mobile-chrome:
+    name: "Mobile Chrome"
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "mobile-chrome"
@@ -30,6 +33,7 @@ jobs:
     secrets: inherit
 
   webkit:
+    name: "WebKit"
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "webkit"
@@ -37,6 +41,7 @@ jobs:
     secrets: inherit
 
   mobile-safari:
+    name: "Mobile Safari"
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "mobile-safari"
