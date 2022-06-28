@@ -7,19 +7,19 @@ on:
     branches: [master]
 
 jobs:
-  # chromium:
-  #   uses: "./.github/workflows/playwright-reusable.yml"
-  #   with:
-  #     project: "chromium"
-  #     headless: false
-  #   secrets: inherit
+  chromium:
+    uses: "./.github/workflows/playwright-reusable.yml"
+    with:
+      project: "chromium"
+      headless: false
+    secrets: inherit
 
-  # firefox:
-  #   uses: "./.github/workflows/playwright-reusable.yml"
-  #   with:
-  #     project: "firefox"
-  #     headless: false
-  #   secrets: inherit
+  firefox:
+    uses: "./.github/workflows/playwright-reusable.yml"
+    with:
+      project: "firefox"
+      headless: false
+    secrets: inherit
 
   webkit:
     uses: "./.github/workflows/playwright-reusable.yml"
@@ -28,16 +28,16 @@ jobs:
       headless: false
     secrets: inherit
 
-  # mobile-chrome:
-  #   uses: "./.github/workflows/playwright-reusable.yml"
-  #   with:
-  #     project: "mobile-chrome"
-  #     headless: false
-  #   secrets: inherit
+  mobile-chrome:
+    uses: "./.github/workflows/playwright-reusable.yml"
+    with:
+      project: "mobile-chrome"
+      headless: false
+    secrets: inherit
 
-  # mobile-safari:
-  #   uses: "./.github/workflows/playwright-reusable.yml"
-  #   with:
-  #     project: "mobile-safari"
-  #     headless: false
-  #   secrets: inherit
+  mobile-safari:
+    uses: "./.github/workflows/playwright-reusable.yml"
+    with:
+      project: "mobile-safari"
+      headless: false
+    secrets: inherit
