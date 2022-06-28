@@ -2,7 +2,10 @@ name: Playwright
 
 on:
   pull_request:
-    types: [labeled]
+    # Run when the "generate-snapshot" label was added
+    # Run when the latest commit includes "[snapshot]"
+    # These conditions are defined in the reusable yml job
+    types: [labeled, synchronize]
 
 jobs:
   chromium:

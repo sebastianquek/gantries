@@ -21,7 +21,7 @@ env:
 jobs:
   generate:
     name: "Generate snapshots"
-    if: ${{ github.event.label.name == 'generate-snapshots' }}
+    if: ${{ github.event.label.name == 'generate-snapshots' || contains(github.event.head_commit.message, '[snapshot]') }}
     timeout-minutes: 60
     runs-on: ${{ inputs.runs-on }}
     steps:
