@@ -20,6 +20,7 @@ env:
 
 jobs:
   test:
+    name: "Test"
     timeout-minutes: 60
     runs-on: ${{ inputs.runs-on }}
     steps:
