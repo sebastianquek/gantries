@@ -27,6 +27,8 @@ jobs:
       commit-msg: ${{ steps.commit-msg.outputs.value }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
       - name: GITHUB CONTEXT
         env:
