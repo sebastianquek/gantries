@@ -17,14 +17,11 @@ on:
 
 env:
   NODE_VERSION: "16"
-  PLAYWRIGHT_PROJECT: ${{ inputs.project }}
-  HEADLESS: ${{ inputs.headless }}
-  RUNS_ON: ${{ inputs.runs-on }}
 
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: actions/checkout@v2
 
@@ -62,20 +59,20 @@ jobs:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Run Playwright tests (headless)
-        if: env.HEADLESS == 'true'
+        if: inputs.headless == 'true'
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
-        run: npx playwright test --project ${{ env.PLAYWRIGHT_PROJECT }}
+        run: npx playwright test --project ${{ inputs.project }}
 
       - name: Run Playwright tests (headed)
-        if: env.HEADLESS == 'false'
+        if: inputs.headless == 'false'
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
-        run: xvfb-run npx playwright test --project ${{ env.PLAYWRIGHT_PROJECT }} --headed
+        run: xvfb-run npx playwright test --project ${{ inputs.project }} --headed
 
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: playwright-report-${{ env.PLAYWRIGHT_PROJECT }}
+          name: playwright-report-${{ inputs.project }}
           path: playwright-report/
           retention-days: 1
