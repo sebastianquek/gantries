@@ -28,6 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - run: git log --format=%B -n 1 HEAD
+
       - id: commit-msg
         run: echo "::set-output name=value::$(git log --format=%B -n 1 HEAD)"
 
