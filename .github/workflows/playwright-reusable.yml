@@ -59,13 +59,13 @@ jobs:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Run Playwright tests (headless)
-        if: inputs.headless == 'true'
+        if: ${{ inputs.headless == 'true' }}
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: npx playwright test --project ${{ inputs.project }}
 
       - name: Run Playwright tests (headed)
-        if: inputs.headless == 'false'
+        if: ${{ inputs.headless != 'true' }}
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: xvfb-run npx playwright test --project ${{ inputs.project }} --headed
