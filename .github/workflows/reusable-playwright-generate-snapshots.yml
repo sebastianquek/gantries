@@ -27,11 +27,11 @@ jobs:
       commit-msg: ${{ steps.commit-msg.outputs.value }}
     steps:
       - uses: actions/checkout@v2
-
-      - run: git log --format=%B -n 1 HEAD
+        with:
+          fetch-depth: 2
 
       - id: commit-msg
-        run: echo "::set-output name=value::$(git log --format=%B -n 1 HEAD)"
+        run: echo "::set-output name=value::$(git log --format=%B -n 1 ${{ github.event.after }})"
 
   generate:
     name: "Generate snapshots"
