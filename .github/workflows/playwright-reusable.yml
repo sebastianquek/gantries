@@ -65,13 +65,13 @@ jobs:
         run: npx playwright test --project ${{ inputs.project }}
 
       - name: "Run Playwright tests (headed, linux)"
-        if: ${{ inputs.headless != true && runner.os == "Linux" }}
+        if: ${{ (inputs.headless != true) && (runner.os == "Linux") }}
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: xvfb-run npx playwright test --project ${{ inputs.project }} --headed
 
       - name: "Run Playwright tests (headed, non-linux)"
-        if: ${{ inputs.headless != true && runner.os != "Linux" }}
+        if: ${{ (inputs.headless != true) && (runner.os != "Linux") }}
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.waitForDeployment.outputs.url }}
         run: npx playwright test --project ${{ inputs.project }} --headed
