@@ -22,27 +22,33 @@ jobs:
         with:
           fetch-depth: 2
 
-      - id: commit-msg
-        name: "Get latest commit msg"
-        run: |
-          message=$(git log --format=%B -n 1 ${{ github.event.after }})
-          echo $message
-          echo "::set-output name=value::$message"
+      # - id: commit-msg
+      #   name: "Get latest commit msg"
+      #   run: |
+      #     message=$(git log --format=%B -n 1 ${{ github.event.after }})
+      #     echo $message
+      #     echo "::set-output name=value::$message"
 
       - id: outcome
         name: "Set outcome"
         env:
           HAS_TARGET_LABEL: ${{ github.event.label.name == 'generate-snapshots' }}
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
-          HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
+          AFTER_SHA: ${{ github.event.after }}
+          # HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
         run: |
-          if [[ "$HAS_TARGET_LABEL" == true || ("$IS_PULL_REQUEST_EVENT" == true && "$HAS_TARGET_STRING_IN_COMMIT_MSG" == true) ]]; then
-            outcome=true;
+          MESSAGE=$(git log --format=%B -n 1 $AFTER_SHA)
+
+          if [[
+            "$HAS_TARGET_LABEL" == true ||
+            ("$IS_PULL_REQUEST_EVENT" == true && "$MESSAGE" == *\[snapshot\]*)
+          ]]; then
+            OUTCOME=true;
           else
-            outcome=false;
+            OUTCOME=false;
           fi
-          echo $outcome
-          echo "::set-output name=value::$outcome"
+          echo $OUTCOME
+          echo "::set-output name=value::$OUTCOME"
 
   chromium-snapshots:
     name: "Chromium"
