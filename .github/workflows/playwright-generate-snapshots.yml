@@ -1,60 +1,60 @@
-name: Playwright
+# name: Playwright
 
-on:
-  pull_request:
-    # Run when the "generate-snapshot" label was added
-    # Run when the latest commit includes "[snapshot]"
-    # These conditions are defined in the reusable yml job
-    types: [labeled, synchronize, opened, reopened]
+# on:
+#   pull_request:
+#     # Run when the "generate-snapshot" label was added
+#     # Run when the latest commit includes "[snapshot]"
+#     # These conditions are defined in the reusable yml job
+#     types: [labeled, synchronize, opened, reopened]
 
-jobs:
-  chromium:
-    name: "Chromium"
-    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
-    with:
-      project: "chromium"
-      runs-on: "ubuntu-latest"
-    secrets: inherit
+# jobs:
+#   chromium:
+#     name: "Chromium"
+#     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+#     with:
+#       project: "chromium"
+#       runs-on: "ubuntu-latest"
+#     secrets: inherit
 
-  firefox:
-    name: "Firefox"
-    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
-    with:
-      project: "firefox"
-      runs-on: "ubuntu-latest"
-      headless: false
-    secrets: inherit
+#   firefox:
+#     name: "Firefox"
+#     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+#     with:
+#       project: "firefox"
+#       runs-on: "ubuntu-latest"
+#       headless: false
+#     secrets: inherit
 
-  mobile-chrome:
-    name: "Mobile Chrome"
-    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
-    with:
-      project: "mobile-chrome"
-      runs-on: "ubuntu-latest"
-    secrets: inherit
+#   mobile-chrome:
+#     name: "Mobile Chrome"
+#     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+#     with:
+#       project: "mobile-chrome"
+#       runs-on: "ubuntu-latest"
+#     secrets: inherit
 
-  webkit:
-    name: "WebKit"
-    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
-    with:
-      project: "webkit"
-      runs-on: "macos-latest"
-    secrets: inherit
+#   webkit:
+#     name: "WebKit"
+#     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+#     with:
+#       project: "webkit"
+#       runs-on: "macos-latest"
+#     secrets: inherit
 
-  mobile-safari:
-    name: "Mobile Safari"
-    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
-    with:
-      project: "mobile-safari"
-      runs-on: "macos-latest"
-    secrets: inherit
+#   mobile-safari:
+#     name: "Mobile Safari"
+#     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+#     with:
+#       project: "mobile-safari"
+#       runs-on: "macos-latest"
+#     secrets: inherit
 
-  remove-label:
-    name: Remove label
-    if: ${{ always() }}
-    needs: [chromium, firefox, mobile-chrome, webkit, mobile-safari]
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          labels: "generate-snapshots"
+#   remove-label:
+#     name: Remove label
+#     if: ${{ always() }}
+#     needs: [chromium, firefox, mobile-chrome, webkit, mobile-safari]
+#     runs-on: "ubuntu-latest"
+#     steps:
+#       - uses: actions-ecosystem/action-remove-labels@v1
+#         with:
+#           labels: "generate-snapshots"
