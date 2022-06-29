@@ -25,7 +25,8 @@ jobs:
       - id: commit-msg
         run: echo "::set-output name=value::$(git log --format=%B -n 1 ${{ github.event.after }})"
 
-      - name: "Set outcome"
+      - id: outcome
+        name: "Set outcome"
         env:
           HAS_TARGET_LABEL: ${{ github.event.label.name == 'generate-snapshots' }}
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
