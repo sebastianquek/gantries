@@ -27,7 +27,7 @@ jobs:
 
       - name: "Set outcome"
         run: |
-          outcome=$(${{ github.event.label.name }} == 'generate-snapshots' || (${{ github.event.event_name }} == 'pull_request' && contains(${{ steps.commit-msg.outputs.value }}, '[snapshot]')))
+          outcome=$(${{ github.event.label.name }} == 'generate-snapshots' || (${{ github.event_name }} == 'pull_request' && contains('${{ steps.commit-msg.outputs.value }}', '[snapshot]')))
           echo "$outcome"
           echo "::set-output name=value::$outcome"
 
@@ -105,53 +105,53 @@ jobs:
   # of the result of chromium-snapshots. The additional condition ensures that
   # if the generation of snapshots failed, then don't run the tests. i.e. if the
   # generation of snapshots was "success", "cancelled" or "skipped", run the tests.
-  chromium:
-    name: "Chromium"
-    needs: [chromium-snapshots]
-    if: ${{ always() && needs.chromium-snapshots.result != 'failure'}}
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
-    with:
-      project: "chromium"
-      runs-on: "ubuntu-latest"
-    secrets: inherit
+  # chromium:
+  #   name: "Chromium"
+  #   needs: [chromium-snapshots]
+  #   if: ${{ always() && needs.chromium-snapshots.result != 'failure'}}
+  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
+  #   with:
+  #     project: "chromium"
+  #     runs-on: "ubuntu-latest"
+  #   secrets: inherit
 
-  firefox:
-    name: "Firefox"
-    needs: [firefox-snapshots]
-    if: ${{ always() && needs.firefox-snapshots.result != 'failure'}}
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
-    with:
-      project: "firefox"
-      runs-on: "ubuntu-latest"
-      headless: false
-    secrets: inherit
+  # firefox:
+  #   name: "Firefox"
+  #   needs: [firefox-snapshots]
+  #   if: ${{ always() && needs.firefox-snapshots.result != 'failure'}}
+  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
+  #   with:
+  #     project: "firefox"
+  #     runs-on: "ubuntu-latest"
+  #     headless: false
+  #   secrets: inherit
 
-  mobile-chrome:
-    name: "Mobile Chrome"
-    needs: [mobile-chrome-snapshots]
-    if: ${{ always() && needs.mobile-chrome-snapshots.result != 'failure'}}
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
-    with:
-      project: "mobile-chrome"
-      runs-on: "ubuntu-latest"
-    secrets: inherit
+  # mobile-chrome:
+  #   name: "Mobile Chrome"
+  #   needs: [mobile-chrome-snapshots]
+  #   if: ${{ always() && needs.mobile-chrome-snapshots.result != 'failure'}}
+  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
+  #   with:
+  #     project: "mobile-chrome"
+  #     runs-on: "ubuntu-latest"
+  #   secrets: inherit
 
-  webkit:
-    name: "WebKit"
-    needs: [webkit-snapshots]
-    if: ${{ always() && needs.webkit-snapshots.result != 'failure'}}
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
-    with:
-      project: "webkit"
-      runs-on: "macos-latest"
-    secrets: inherit
+  # webkit:
+  #   name: "WebKit"
+  #   needs: [webkit-snapshots]
+  #   if: ${{ always() && needs.webkit-snapshots.result != 'failure'}}
+  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
+  #   with:
+  #     project: "webkit"
+  #     runs-on: "macos-latest"
+  #   secrets: inherit
 
-  mobile-safari:
-    name: "Mobile Safari"
-    needs: [mobile-safari-snapshots]
-    if: ${{ always() && needs.mobile-safari-snapshots.result != 'failure'}}
-    uses: "./.github/workflows/reusable-playwright-tests.yml"
-    with:
-      project: "mobile-safari"
-      runs-on: "macos-latest"
-    secrets: inherit
+  # mobile-safari:
+  #   name: "Mobile Safari"
+  #   needs: [mobile-safari-snapshots]
+  #   if: ${{ always() && needs.mobile-safari-snapshots.result != 'failure'}}
+  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
+  #   with:
+  #     project: "mobile-safari"
+  #     runs-on: "macos-latest"
+  #   secrets: inherit
