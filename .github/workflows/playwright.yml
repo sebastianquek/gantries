@@ -31,7 +31,7 @@ jobs:
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
           HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
         run: |
-          outcome=($HAS_TARGET_LABEL || ($IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG))
+          outcome=$($HAS_TARGET_LABEL || ($IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG))
           echo "$outcome"
           echo "::set-output name=value::$outcome"
 
