@@ -18,7 +18,9 @@ test.describe("when filters are set to a timing without operational gantries", (
     await page.locator('[data-test-id="time-filter"]').fill("00:00");
   });
 
-  test("[snapshot] should see no gantries highlighted", async ({ page }) => {
+  test("[snapshot] should see no gantries with amount labels", async ({
+    page,
+  }) => {
     const locator = page.locator('[aria-label="Map"]');
 
     // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
