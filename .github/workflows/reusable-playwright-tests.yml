@@ -25,6 +25,9 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Checks out the latest HEAD which may include the latest snapshots
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/setup-node@v2
         with:
