@@ -33,9 +33,7 @@ jobs:
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
           HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
         run: |
-          if [[ $HAS_TARGET_LABEL || ($IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG) ]]; then
-            echo "$IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG"
-            echo "$HAS_TARGET_LABEL"
+          if [[ "$HAS_TARGET_LABEL" == true || ("$IS_PULL_REQUEST_EVENT" == true && "$HAS_TARGET_STRING_IN_COMMIT_MSG" == true) ]]; then
             outcome=true;
           else
             outcome=false;
