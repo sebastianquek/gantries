@@ -21,7 +21,6 @@ env:
 jobs:
   generate:
     name: "Generate snapshots"
-    if: ${{ github.event.label.name == 'generate-snapshots' }}
     timeout-minutes: 60
     runs-on: ${{ inputs.runs-on }}
     steps:
@@ -83,6 +82,7 @@ jobs:
         with:
           commit_message: "test: update playwright snapshots (${{ inputs.runs-on }}, ${{ inputs.project }})"
           file_pattern: src/tests/**/*.png
+          skip_fetch: false # Always fetch in case HEAD has changed
 
       - uses: actions/upload-artifact@v2
         if: always()

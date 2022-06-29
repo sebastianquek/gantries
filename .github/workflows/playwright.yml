@@ -1,0 +1,169 @@
+name: Playwright
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+    types: [labeled, synchronize, opened, reopened]
+
+jobs:
+  # Checks whether snapshots need to be generated
+  # - when a label "generate-snapshots" is added
+  # - when event is a PR (as opposed to a push) and the commit msg includes "[snapshot]"
+  # Otherwise, snapshots are not generated
+  should-generate-snapshots:
+    name: "Should generate snapshots?"
+    runs-on: "ubuntu-latest"
+    outputs:
+      outcome: ${{ steps.outcome.outputs.value }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - id: outcome
+        name: "Set outcome"
+        env:
+          HAS_TARGET_LABEL: ${{ github.event.label.name == 'generate-snapshots' }}
+          IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
+          AFTER_SHA: ${{ github.event.after }}
+        run: |
+          MESSAGE=$(git log --format=%B -n 1 $AFTER_SHA)
+
+          if [[
+            "$HAS_TARGET_LABEL" == true ||
+            ("$IS_PULL_REQUEST_EVENT" == true && "$MESSAGE" == *\[snapshot\]*)
+          ]]; then
+            OUTCOME=true;
+          else
+            OUTCOME=false;
+          fi
+
+          echo $OUTCOME
+          echo "::set-output name=value::$OUTCOME"
+
+  chromium-snapshots:
+    name: "Chromium"
+    needs: [should-generate-snapshots]
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+    with:
+      project: "chromium"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
+
+  firefox-snapshots:
+    name: "Firefox"
+    needs: [should-generate-snapshots]
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+    with:
+      project: "firefox"
+      runs-on: "ubuntu-latest"
+      headless: false
+    secrets: inherit
+
+  mobile-chrome-snapshots:
+    name: "Mobile Chrome"
+    needs: [should-generate-snapshots]
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+    with:
+      project: "mobile-chrome"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
+
+  webkit-snapshots:
+    name: "WebKit"
+    needs: [should-generate-snapshots]
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+    with:
+      project: "webkit"
+      runs-on: "macos-latest"
+    secrets: inherit
+
+  mobile-safari-snapshots:
+    name: "Mobile Safari"
+    needs: [should-generate-snapshots]
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
+    uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
+    with:
+      project: "mobile-safari"
+      runs-on: "macos-latest"
+    secrets: inherit
+
+  # Remove the label after the snapshot jobs have completed (regardless of result)
+  # Doesn't matter if the label could not be found
+  remove-label:
+    name: Remove label
+    needs:
+      [
+        chromium-snapshots,
+        firefox-snapshots,
+        mobile-chrome-snapshots,
+        webkit-snapshots,
+        mobile-safari-snapshots,
+      ]
+    if: ${{ always() }}
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: "generate-snapshots"
+
+  # Runs after chromium-snapshots. If the generation of chromium snapshots
+  # failed or got cancelled, then the tests are skipped. i.e. run if chromium
+  # snapshots were successful or skipped. Note that there's no skipped expression,
+  # so the negation was used.
+  chromium:
+    name: "Chromium"
+    needs: [chromium-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "chromium"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
+
+  firefox:
+    name: "Firefox"
+    needs: [firefox-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "firefox"
+      runs-on: "ubuntu-latest"
+      headless: false
+    secrets: inherit
+
+  mobile-chrome:
+    name: "Mobile Chrome"
+    needs: [mobile-chrome-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "mobile-chrome"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
+
+  webkit:
+    name: "WebKit"
+    needs: [webkit-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "webkit"
+      runs-on: "macos-latest"
+    secrets: inherit
+
+  mobile-safari:
+    name: "Mobile Safari"
+    needs: [mobile-safari-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "mobile-safari"
+      runs-on: "macos-latest"
+    secrets: inherit
