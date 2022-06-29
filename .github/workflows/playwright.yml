@@ -38,6 +38,7 @@ jobs:
           else
             outcome=false;
           fi
+          echo $outcome
           echo "::set-output name=value::$outcome"
 
   chromium-snapshots:
