@@ -24,7 +24,10 @@ jobs:
 
       - id: commit-msg
         name: "Get latest commit msg"
-        run: echo "::set-output name=value::$(git log --format=%B -n 1 ${{ github.event.after }})"
+        run: |
+          message=$(git log --format=%B -n 1 ${{ github.event.after }})
+          echo $message
+          echo "::set-output name=value::$message"
 
       - id: outcome
         name: "Set outcome"
