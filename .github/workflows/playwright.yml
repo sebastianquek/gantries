@@ -27,7 +27,7 @@ jobs:
 
       - name: "Set outcome"
         run: |
-          has_target_label=$(${{ github.event.label.name }} == 'generate-snapshots')
+          has_target_label=$(${{ github.event.label.name || ''}} == 'generate-snapshots')
           echo "$has_target_label"
           outcome=$(has_target_label || (${{ github.event_name }} == 'pull_request' && contains('${{ steps.commit-msg.outputs.value }}', '[snapshot]')))
           echo "$outcome"
