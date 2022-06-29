@@ -19,24 +19,8 @@ env:
   NODE_VERSION: "16"
 
 jobs:
-  # check:
-  #   # Outputs commit-msg for the generate step to perform the check if generation of snapshots should proceed
-  #   name: "Check conditions"
-  #   runs-on: "ubuntu-latest"
-  #   outputs:
-  #     commit-msg: ${{ steps.commit-msg.outputs.value }}
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 2
-
-  #     - id: commit-msg
-  #       run: echo "::set-output name=value::$(git log --format=%B -n 1 ${{ github.event.after }})"
-
   generate:
     name: "Generate snapshots"
-    # needs: check
-    # if: ${{ github.event.label.name == 'generate-snapshots' || contains(needs.check.outputs.commit-msg, '[snapshot]') }}
     timeout-minutes: 60
     runs-on: ${{ inputs.runs-on }}
     steps:

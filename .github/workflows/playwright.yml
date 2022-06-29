@@ -22,20 +22,12 @@ jobs:
         with:
           fetch-depth: 2
 
-      # - id: commit-msg
-      #   name: "Get latest commit msg"
-      #   run: |
-      #     message=$(git log --format=%B -n 1 ${{ github.event.after }})
-      #     echo $message
-      #     echo "::set-output name=value::$message"
-
       - id: outcome
         name: "Set outcome"
         env:
           HAS_TARGET_LABEL: ${{ github.event.label.name == 'generate-snapshots' }}
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
           AFTER_SHA: ${{ github.event.after }}
-          # HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
         run: |
           MESSAGE=$(git log --format=%B -n 1 $AFTER_SHA)
 
@@ -47,6 +39,7 @@ jobs:
           else
             OUTCOME=false;
           fi
+
           echo $OUTCOME
           echo "::set-output name=value::$OUTCOME"
 
@@ -120,10 +113,10 @@ jobs:
         with:
           labels: "generate-snapshots"
 
-  # Runs after chromium-snapshots. `always()` ensures this job runs regardless
-  # of the result of chromium-snapshots. The additional condition ensures that
-  # if the generation of snapshots failed, then don't run the tests. i.e. if the
-  # generation of snapshots was "success", "cancelled" or "skipped", run the tests.
+  # Runs after chromium-snapshots. If the generation of chromium snapshots
+  # failed or got cancelled, then the tests are skipped. i.e. run if chromium
+  # snapshots were successful or skipped. Note that there's no skipped expression,
+  # so the negation was used.
   chromium:
     name: "Chromium"
     needs: [chromium-snapshots]
@@ -134,43 +127,43 @@ jobs:
       runs-on: "ubuntu-latest"
     secrets: inherit
 
-  # firefox:
-  #   name: "Firefox"
-  #   needs: [firefox-snapshots]
-  #   if: ${{ always() && needs.firefox-snapshots.result != 'failure'}}
-  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
-  #   with:
-  #     project: "firefox"
-  #     runs-on: "ubuntu-latest"
-  #     headless: false
-  #   secrets: inherit
+  firefox:
+    name: "Firefox"
+    needs: [firefox-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "firefox"
+      runs-on: "ubuntu-latest"
+      headless: false
+    secrets: inherit
 
-  # mobile-chrome:
-  #   name: "Mobile Chrome"
-  #   needs: [mobile-chrome-snapshots]
-  #   if: ${{ always() && needs.mobile-chrome-snapshots.result != 'failure'}}
-  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
-  #   with:
-  #     project: "mobile-chrome"
-  #     runs-on: "ubuntu-latest"
-  #   secrets: inherit
+  mobile-chrome:
+    name: "Mobile Chrome"
+    needs: [mobile-chrome-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "mobile-chrome"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
 
-  # webkit:
-  #   name: "WebKit"
-  #   needs: [webkit-snapshots]
-  #   if: ${{ always() && needs.webkit-snapshots.result != 'failure'}}
-  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
-  #   with:
-  #     project: "webkit"
-  #     runs-on: "macos-latest"
-  #   secrets: inherit
+  webkit:
+    name: "WebKit"
+    needs: [webkit-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "webkit"
+      runs-on: "macos-latest"
+    secrets: inherit
 
-  # mobile-safari:
-  #   name: "Mobile Safari"
-  #   needs: [mobile-safari-snapshots]
-  #   if: ${{ always() && needs.mobile-safari-snapshots.result != 'failure'}}
-  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
-  #   with:
-  #     project: "mobile-safari"
-  #     runs-on: "macos-latest"
-  #   secrets: inherit
+  mobile-safari:
+    name: "Mobile Safari"
+    needs: [mobile-safari-snapshots]
+    if: ${{ !failure() && !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "mobile-safari"
+      runs-on: "macos-latest"
+    secrets: inherit
