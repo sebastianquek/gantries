@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           # Checks out the latest HEAD which may include the latest snapshots
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: "HEAD"
 
       - uses: actions/setup-node@v2
         with:
