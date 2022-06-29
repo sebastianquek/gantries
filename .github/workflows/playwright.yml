@@ -31,14 +31,17 @@ jobs:
           IS_PULL_REQUEST_EVENT: ${{ github.event_name == 'pull_request' }}
           HAS_TARGET_STRING_IN_COMMIT_MSG: ${{ contains(steps.commit-msg.outputs.value, '[snapshot]') }}
         run: |
-          outcome=$($HAS_TARGET_LABEL || ($IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG))
-          echo "$outcome"
+          if [[ $HAS_TARGET_LABEL || ($IS_PULL_REQUEST_EVENT && $HAS_TARGET_STRING_IN_COMMIT_MSG) ]]; then
+            outcome=true;
+          else
+            outcome=false;
+          fi
           echo "::set-output name=value::$outcome"
 
   chromium-snapshots:
     name: "Chromium"
     needs: [should-generate-snapshots]
-    if: ${{ needs.should-generate-snapshots.outputs.outcome == true }}
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "chromium"
@@ -48,7 +51,7 @@ jobs:
   firefox-snapshots:
     name: "Firefox"
     needs: [should-generate-snapshots]
-    if: ${{ needs.should-generate-snapshots.outputs.outcome == true }}
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "firefox"
@@ -59,7 +62,7 @@ jobs:
   mobile-chrome-snapshots:
     name: "Mobile Chrome"
     needs: [should-generate-snapshots]
-    if: ${{ needs.should-generate-snapshots.outputs.outcome == true }}
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "mobile-chrome"
@@ -69,7 +72,7 @@ jobs:
   webkit-snapshots:
     name: "WebKit"
     needs: [should-generate-snapshots]
-    if: ${{ needs.should-generate-snapshots.outputs.outcome == true }}
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "webkit"
@@ -79,7 +82,7 @@ jobs:
   mobile-safari-snapshots:
     name: "Mobile Safari"
     needs: [should-generate-snapshots]
-    if: ${{ needs.should-generate-snapshots.outputs.outcome == true }}
+    if: ${{ needs.should-generate-snapshots.outputs.outcome == 'true' }}
     uses: "./.github/workflows/reusable-playwright-generate-snapshots.yml"
     with:
       project: "mobile-safari"
