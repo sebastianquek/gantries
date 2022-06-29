@@ -118,7 +118,7 @@ jobs:
   chromium:
     name: "Chromium"
     needs: [chromium-snapshots]
-    if: ${{ !failure() || !cancelled() }}
+    if: ${{ !failure() && !cancelled() }}
     uses: "./.github/workflows/reusable-playwright-tests.yml"
     with:
       project: "chromium"
