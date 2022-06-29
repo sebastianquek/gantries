@@ -29,22 +29,4 @@ test.describe("when filters are set to a timing without operational gantries", (
 
     await expect(locator).toHaveScreenshot();
   });
-
-  test("should highlight and center the gantry when clicked", async ({
-    page,
-  }) => {
-    await expect(
-      page.locator('text="Click on a gantry to see more"')
-    ).toBeVisible();
-    // TODO: figure out way to avoid waiting
-    await page.waitForTimeout(2000);
-    await page.locator('[aria-label="Map"]').click({
-      position: {
-        x: 734,
-        y: 281,
-      },
-    });
-    await expect(page.locator("text=CTE from Balestier Road")).toBeVisible();
-    await expect(page.locator('[aria-label="Map"]')).toHaveScreenshot();
-  });
 });
