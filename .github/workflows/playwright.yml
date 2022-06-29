@@ -23,6 +23,7 @@ jobs:
           fetch-depth: 2
 
       - id: commit-msg
+        name: "Get latest commit msg"
         run: echo "::set-output name=value::$(git log --format=%B -n 1 ${{ github.event.after }})"
 
       - id: outcome
@@ -113,15 +114,15 @@ jobs:
   # of the result of chromium-snapshots. The additional condition ensures that
   # if the generation of snapshots failed, then don't run the tests. i.e. if the
   # generation of snapshots was "success", "cancelled" or "skipped", run the tests.
-  # chromium:
-  #   name: "Chromium"
-  #   needs: [chromium-snapshots]
-  #   if: ${{ always() && needs.chromium-snapshots.result != 'failure'}}
-  #   uses: "./.github/workflows/reusable-playwright-tests.yml"
-  #   with:
-  #     project: "chromium"
-  #     runs-on: "ubuntu-latest"
-  #   secrets: inherit
+  chromium:
+    name: "Chromium"
+    needs: [chromium-snapshots]
+    if: ${{ !failure() || !cancelled() }}
+    uses: "./.github/workflows/reusable-playwright-tests.yml"
+    with:
+      project: "chromium"
+      runs-on: "ubuntu-latest"
+    secrets: inherit
 
   # firefox:
   #   name: "Firefox"
