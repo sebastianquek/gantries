@@ -49,8 +49,8 @@ for (const noGantriesOn of [false, true]) {
       // click on gantry 34
       await map.mapCanvas.click({
         position: {
-          x: 734,
-          y: 281,
+          x: 683,
+          y: 305,
         },
       });
       await map.shouldMatchMapSnapshot();
