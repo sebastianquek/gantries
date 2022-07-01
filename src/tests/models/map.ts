@@ -52,6 +52,11 @@ export class Map {
       await this.page.mouse.down();
       await this.page.mouse.move(470, 500);
       await this.page.mouse.up();
+    } else if (this.screenType === "MOBILE") {
+      await this.page.mouse.move(200, 360);
+      await this.page.mouse.down();
+      await this.page.mouse.move(100, 260);
+      await this.page.mouse.up();
     }
   }
 
@@ -59,20 +64,28 @@ export class Map {
     if (this.screenType === "DESKTOP") {
       await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, -5000);
-      // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
-      // https://playwright.dev/docs/api/class-mouse#mouse-wheel
-      await this.page.waitForTimeout(2000);
+    } else if (this.screenType === "MOBILE") {
+      await this.page.mouse.move(280, 280);
+      await this.page.mouse.wheel(0, -5000);
     }
+
+    // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await this.page.waitForTimeout(2000);
   }
 
   async zoomOutMap() {
     if (this.screenType === "DESKTOP") {
       await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, 5000);
-      // Wait for map to zoom out as the wheel method does not wait for the scrolling to finish before returning
-      // https://playwright.dev/docs/api/class-mouse#mouse-wheel
-      await this.page.waitForTimeout(2000);
+    } else if (this.screenType === "MOBILE") {
+      await this.page.mouse.move(200, 360);
+      await this.page.mouse.wheel(0, 5000);
     }
+
+    // Wait for map to zoom out as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await this.page.waitForTimeout(2000);
   }
 
   // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
