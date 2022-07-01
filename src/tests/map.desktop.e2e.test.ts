@@ -56,6 +56,25 @@ test.describe("when filters are set to a timing without operational gantries", (
 
     await expect(locator).toHaveScreenshot();
   });
+
+  test("[snapshot] should zoom the map on scroll", async ({ page }) => {
+    await page.mouse.move(720, 170);
+    await page.mouse.wheel(0, -5000);
+
+    // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await page.waitForTimeout(2000);
+
+    const locator = page.locator('[aria-label="Map"]');
+
+    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
+    // TODO: move this out to a custom matcher once Playwright is able to
+    // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
+    const elementHandle = await locator.elementHandle();
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    await expect(locator).toHaveScreenshot();
+  });
 });
 
 test.describe("when filters are set to a timing with operational gantries", () => {
@@ -93,6 +112,25 @@ test.describe("when filters are set to a timing with operational gantries", () =
     await page.mouse.down();
     await page.mouse.move(470, 500);
     await page.mouse.up();
+
+    const locator = page.locator('[aria-label="Map"]');
+
+    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
+    // TODO: move this out to a custom matcher once Playwright is able to
+    // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
+    const elementHandle = await locator.elementHandle();
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    await expect(locator).toHaveScreenshot();
+  });
+
+  test("[snapshot] should zoom the map on scroll", async ({ page }) => {
+    await page.mouse.move(720, 170);
+    await page.mouse.wheel(0, -5000);
+
+    // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await page.waitForTimeout(2000);
 
     const locator = page.locator('[aria-label="Map"]');
 
