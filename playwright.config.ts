@@ -9,13 +9,13 @@ import { devices } from "@playwright/test";
 const config: PlaywrightTestConfig = {
   testDir: "./src/tests",
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 50 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000,
+    timeout: 10000,
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -101,13 +101,12 @@ const config: PlaywrightTestConfig = {
   outputDir: "test-results/",
 
   /* Run your local dev server before starting the tests */
-  // TODO: on CI it should wait for deployment to test on the deployed site
-  webServer: process.env.PLAYWRIGHT_BASE_URL
-    ? undefined
-    : {
-        command: "npm start",
-        port: 3000,
-      },
+  // webServer: process.env.PLAYWRIGHT_BASE_URL
+  //   ? undefined
+  //   : {
+  //       command: "npm start",
+  //       port: 3000,
+  //     },
 };
 
 export default config;

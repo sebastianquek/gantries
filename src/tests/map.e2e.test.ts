@@ -1,32 +1,57 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
-test.beforeEach(async ({ page }) => {
-  await page.goto("/");
-  await page.waitForFunction(async () => {
-    const isIdle = await new Promise<boolean>((res) => {
-      document.addEventListener("idle", () => res(true), { once: true });
+import { Map } from "./models/map";
+
+for (const noGantriesOn of [false, true]) {
+  let map: Map;
+
+  test.beforeEach(async ({ page }, workerInfo) => {
+    map = new Map(page, workerInfo.project.name);
+    await map.goto();
+  });
+
+  test.describe(`when filters are set to a timing ${
+    noGantriesOn ? "without" : "with"
+  } operational gantries`, () => {
+    test.beforeEach(async () => {
+      if (noGantriesOn) {
+        await map.initNoGantriesOn();
+      } else {
+        await map.initSomeGantriesOn();
+      }
     });
-    return isIdle;
+
+    test(`[snapshot] should see ${
+      noGantriesOn ? "no" : "some"
+    } gantries with amount labels`, async () => {
+      await map.shouldMatchMapSnapshot();
+    });
   });
-});
+}
 
-test.describe("when filters are set to a timing without operational gantries", () => {
-  test.beforeEach(async ({ page }) => {
-    await page
-      .locator('select[data-test-id="day-type"]')
-      .selectOption("Weekdays");
-    await page.locator('[data-test-id="time-filter"]').fill("00:00");
-  });
+test.describe("when navigating to a gantry URL", () => {
+  for (const noGantriesOn of [false, true]) {
+    let map: Map;
 
-  test("[snapshot] should see no gantries highlighted", async ({ page }) => {
-    const locator = page.locator('[aria-label="Map"]');
+    test.beforeEach(async ({ page }, workerInfo) => {
+      map = new Map(page, workerInfo.project.name);
+      await map.goto({ gantryId: true });
+    });
 
-    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
-    // TODO: move this out to a custom matcher once Playwright is able to
-    // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
-    const elementHandle = await locator.elementHandle();
-    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+    test.describe(`when filters are set to a timing ${
+      noGantriesOn ? "without" : "with"
+    } operational gantries`, () => {
+      test.beforeEach(async () => {
+        if (noGantriesOn) {
+          await map.initNoGantriesOn();
+        } else {
+          await map.initSomeGantriesOn();
+        }
+      });
 
-    await expect(locator).toHaveScreenshot();
-  });
+      test(`[snapshot] should center the map to the gantry`, async () => {
+        await map.shouldMatchMapSnapshot();
+      });
+    });
+  }
 });
