@@ -1,13 +1,15 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/");
-  await page.waitForFunction(async () => {
-    const isIdle = await new Promise<boolean>((res) => {
-      document.addEventListener("idle", () => res(true), { once: true });
-    });
-    return isIdle;
-  });
+  await Promise.all([
+    page.waitForFunction(async () => {
+      const isIdle = await new Promise<boolean>((res) => {
+        document.addEventListener("idle", () => res(true), { once: true });
+      });
+      return isIdle;
+    }),
+    page.goto("/"),
+  ]);
 });
 
 test.describe("when filters are set to a timing without operational gantries", () => {
