@@ -17,7 +17,6 @@ on:
 
 env:
   NODE_VERSION: "16"
-  PLAYWRIGHT_BASE_URL: ${{ secrets.PLAYWRIGHT_BASE_URL }}
 
 jobs:
   generate:
@@ -52,30 +51,30 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # - name: Wait for Netlify Deployment
-      #   uses: probablyup/wait-for-netlify-action@3.2.0
-      #   id: wait-for-deployment
-      #   with:
-      #     site_id: ${{ secrets.NETLIFY_SITE_ID }}
-      #   env:
-      #     NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Wait for Netlify Deployment
+        uses: probablyup/wait-for-netlify-action@3.2.0
+        id: wait-for-deployment
+        with:
+          site_id: ${{ secrets.NETLIFY_SITE_ID }}
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Generate Playwright snapshots (headless)
         if: ${{ inputs.headless == true }}
-        # env:
-        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: npx playwright test -g "snapshot" --project ${{ inputs.project }} --update-snapshots
 
       - name: "Generate Playwright snapshots (headed, linux)"
         if: ${{ (inputs.headless != true) && (runner.os == 'Linux') }}
-        # env:
-        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: xvfb-run npx playwright test -g "snapshot" --project ${{ inputs.project }} --update-snapshots --headed
 
       - name: "Generate Playwright snapshots (headed, non-linux)"
         if: ${{ (inputs.headless != true) && (runner.os != 'Linux') }}
-        # env:
-        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: npx playwright test -g "snapshot" --project ${{ inputs.project }} --update-snapshots --headed
 
       - name: Commit snapshots
