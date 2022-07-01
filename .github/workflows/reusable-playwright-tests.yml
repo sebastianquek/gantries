@@ -17,6 +17,7 @@ on:
 
 env:
   NODE_VERSION: "16"
+  PLAYWRIGHT_BASE_URL: ${{ secrets.PLAYWRIGHT_BASE_URL }}
 
 jobs:
   test:
@@ -54,30 +55,30 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Wait for Netlify Deployment
-        uses: probablyup/wait-for-netlify-action@3.2.0
-        id: wait-for-deployment
-        with:
-          site_id: ${{ secrets.NETLIFY_SITE_ID }}
-        env:
-          NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      # - name: Wait for Netlify Deployment
+      #   uses: probablyup/wait-for-netlify-action@3.2.0
+      #   id: wait-for-deployment
+      #   with:
+      #     site_id: ${{ secrets.NETLIFY_SITE_ID }}
+      #   env:
+      #     NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Run Playwright tests (headless)
         if: ${{ inputs.headless == true }}
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        # env:
+        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: npx playwright test --project ${{ inputs.project }}
 
       - name: "Run Playwright tests (headed, linux)"
         if: ${{ (inputs.headless != true) && (runner.os == 'Linux') }}
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        # env:
+        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: xvfb-run npx playwright test --project ${{ inputs.project }} --headed
 
       - name: "Run Playwright tests (headed, non-linux)"
         if: ${{ (inputs.headless != true) && (runner.os != 'Linux') }}
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
+        # env:
+        #   PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: npx playwright test --project ${{ inputs.project }} --headed
 
       - uses: actions/upload-artifact@v2
