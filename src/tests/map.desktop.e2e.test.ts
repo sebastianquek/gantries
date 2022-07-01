@@ -111,6 +111,45 @@ test.describe("when filters are set to a timing without operational gantries", (
     // Should be zoomed back in
     await expect(locator).toHaveScreenshot();
   });
+
+  test("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async ({
+    page,
+  }) => {
+    const locator = page.locator('[aria-label="Map"]');
+
+    await page.mouse.move(720, 170);
+    await page.mouse.wheel(0, -5000);
+
+    // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await page.waitForTimeout(2000);
+
+    await page.mouse.wheel(0, -5000);
+    await page.waitForTimeout(2000);
+
+    const elementHandle = await locator.elementHandle();
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    // Should be zoomed in
+    await expect(locator).toHaveScreenshot();
+
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "unset"));
+
+    await locator.click({
+      position: {
+        x: 1002,
+        y: 545,
+      },
+    });
+
+    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
+    // TODO: move this out to a custom matcher once Playwright is able to
+    // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    // Should maintain zoom
+    await expect(locator).toHaveScreenshot();
+  });
 });
 
 test.describe("when filters are set to a timing with operational gantries", () => {
@@ -212,6 +251,45 @@ test.describe("when filters are set to a timing with operational gantries", () =
     await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
 
     // Should be zoomed back in
+    await expect(locator).toHaveScreenshot();
+  });
+
+  test("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async ({
+    page,
+  }) => {
+    const locator = page.locator('[aria-label="Map"]');
+
+    await page.mouse.move(720, 170);
+    await page.mouse.wheel(0, -5000);
+
+    // Wait for map to zoom in as the wheel method does not wait for the scrolling to finish before returning
+    // https://playwright.dev/docs/api/class-mouse#mouse-wheel
+    await page.waitForTimeout(2000);
+
+    await page.mouse.wheel(0, -5000);
+    await page.waitForTimeout(2000);
+
+    const elementHandle = await locator.elementHandle();
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    // Should be zoomed in
+    await expect(locator).toHaveScreenshot();
+
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "unset"));
+
+    await locator.click({
+      position: {
+        x: 1002,
+        y: 545,
+      },
+    });
+
+    // Move the map to the front so the screenshot only takes the map without other elements (e.g. alert banner)
+    // TODO: move this out to a custom matcher once Playwright is able to
+    // have custom matchers that can reference other in-built matchers (i.e. toHaveScreenshot)
+    await elementHandle?.evaluate((node) => (node.style.zIndex = "9999"));
+
+    // Should maintain zoom
     await expect(locator).toHaveScreenshot();
   });
 });
