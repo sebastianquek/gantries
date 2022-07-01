@@ -21,7 +21,8 @@ for (const noGantriesOn of [false, true]) {
       }
     });
 
-    test("[snapshot] should highlight and center the gantry when clicked", async (_, workerInfo) => {
+    // eslint-disable-next-line no-empty-pattern
+    test("[snapshot] should highlight and center the gantry when clicked", async ({}, workerInfo) => {
       await map.mapCanvas.click({
         // click on gantry 34
         position:
