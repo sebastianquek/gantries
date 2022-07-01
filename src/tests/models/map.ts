@@ -53,6 +53,7 @@ export class Map {
       await this.page.mouse.move(470, 500);
       await this.page.mouse.up();
     } else if (this.screenType === "MOBILE") {
+      // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(200, 360);
       await this.page.mouse.down();
       await this.page.mouse.move(100, 260);
@@ -65,6 +66,7 @@ export class Map {
       await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, -5000);
     } else if (this.screenType === "MOBILE") {
+      // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(280, 280);
       await this.page.mouse.wheel(0, -5000);
     }
@@ -79,6 +81,7 @@ export class Map {
       await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, 5000);
     } else if (this.screenType === "MOBILE") {
+      // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(200, 360);
       await this.page.mouse.wheel(0, 5000);
     }

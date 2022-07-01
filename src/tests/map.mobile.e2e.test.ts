@@ -37,12 +37,24 @@ for (const noGantriesOn of [false, true]) {
       await map.shouldMatchMapSnapshot();
     });
 
-    test("[snapshot] should zoom the map on scroll", async () => {
+    test("[snapshot] should zoom the map on scroll", async ({
+      browserName,
+    }) => {
+      test.skip(
+        browserName === "webkit",
+        "Mouse wheel is not supported in mobile WebKit"
+      );
       await map.zoomInMap();
       await map.shouldMatchMapSnapshot();
     });
 
-    test("[snapshot] should zoom in the map after clicking on a gantry if the map is zoomed out too far", async () => {
+    test("[snapshot] should zoom in the map after clicking on a gantry if the map is zoomed out too far", async ({
+      browserName,
+    }) => {
+      test.skip(
+        browserName === "webkit",
+        "Mouse wheel is not supported in mobile WebKit"
+      );
       await map.zoomOutMap();
       await map.shouldMatchMapSnapshot();
 
@@ -56,7 +68,13 @@ for (const noGantriesOn of [false, true]) {
       await map.shouldMatchMapSnapshot();
     });
 
-    test("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async () => {
+    test("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async ({
+      browserName,
+    }) => {
+      test.skip(
+        browserName === "webkit",
+        "Mouse wheel is not supported in mobile WebKit"
+      );
       await map.zoomInMap();
       await map.zoomInMap();
       await map.shouldMatchMapSnapshot();
