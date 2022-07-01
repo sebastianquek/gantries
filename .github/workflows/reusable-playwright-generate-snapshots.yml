@@ -84,6 +84,7 @@ jobs:
           commit_message: "test: update playwright snapshots (${{ inputs.runs-on }}, ${{ inputs.project }}) [skip ci]"
           file_pattern: src/tests/**/*.png
           skip_fetch: false # Always fetch in case HEAD has changed
+          skip_dirty_check: false
 
       - uses: actions/upload-artifact@v2
         if: always()
