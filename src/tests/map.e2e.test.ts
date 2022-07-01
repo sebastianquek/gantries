@@ -96,7 +96,7 @@ test.describe("when navigating to a gantry URL", () => {
     await expect(locator).toHaveScreenshot();
   });
 
-  test.only("[snapshot] should center the map to the gantry when filters are set to a timing with operational gantries", async ({
+  test("[snapshot] should center the map to the gantry when filters are set to a timing with operational gantries", async ({
     page,
   }) => {
     await page
