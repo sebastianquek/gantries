@@ -56,7 +56,7 @@ for (const noGantriesOn of [false, true]) {
       await map.shouldMatchMapSnapshot();
     });
 
-    test.only("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async () => {
+    test("[snapshot] should maintain zoom after clicking on a gantry if the map is already zoomed in sufficiently", async () => {
       await map.zoomInMap();
       await map.zoomInMap();
       await map.shouldMatchMapSnapshot();
