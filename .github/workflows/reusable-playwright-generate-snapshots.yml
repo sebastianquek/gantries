@@ -87,6 +87,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-snapshots-${{ inputs.project }}
           path: playwright-report/
           retention-days: 1

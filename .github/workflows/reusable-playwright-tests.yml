@@ -83,6 +83,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: playwright-report-${{ inputs.project }}
+          name: playwright-report-test-${{ inputs.project }}
           path: playwright-report/
           retention-days: 1
