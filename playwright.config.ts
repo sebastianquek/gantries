@@ -101,13 +101,12 @@ const config: PlaywrightTestConfig = {
   outputDir: "test-results/",
 
   /* Run your local dev server before starting the tests */
-  // TODO: on CI it should wait for deployment to test on the deployed site
-  webServer: process.env.PLAYWRIGHT_BASE_URL
-    ? undefined
-    : {
-        command: "npm start",
-        port: 3000,
-      },
+  // webServer: process.env.PLAYWRIGHT_BASE_URL
+  //   ? undefined
+  //   : {
+  //       command: "npm start",
+  //       port: 3000,
+  //     },
 };
 
 export default config;
