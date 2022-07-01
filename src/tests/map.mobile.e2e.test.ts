@@ -5,8 +5,8 @@ import { Map } from "./models/map";
 for (const noGantriesOn of [false, true]) {
   let map: Map;
 
-  test.beforeEach(async ({ page }) => {
-    map = new Map(page, "MOBILE");
+  test.beforeEach(async ({ page }, workerInfo) => {
+    map = new Map(page, workerInfo.project.name);
     await map.goto();
   });
 
@@ -21,13 +21,19 @@ for (const noGantriesOn of [false, true]) {
       }
     });
 
-    test("[snapshot] should highlight and center the gantry when clicked", async () => {
+    test("[snapshot] should highlight and center the gantry when clicked", async (_, workerInfo) => {
       await map.mapCanvas.click({
         // click on gantry 34
-        position: {
-          x: 287,
-          y: 283,
-        },
+        position:
+          workerInfo.project.name === "mobile-safari"
+            ? {
+                x: 284,
+                y: 247,
+              }
+            : {
+                x: 287,
+                y: 283,
+              },
       });
       await map.shouldMatchMapSnapshot();
     });

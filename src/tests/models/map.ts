@@ -2,19 +2,17 @@ import type { Locator, Page } from "@playwright/test";
 
 import { expect } from "@playwright/test";
 
-type ScreenType = "DESKTOP" | "MOBILE";
-
 export class Map {
   readonly page: Page;
-  readonly screenType: ScreenType;
+  readonly projectName: string;
 
   readonly dayTypeSelect: Locator;
   readonly timeInput: Locator;
   readonly mapCanvas: Locator;
 
-  constructor(page: Page, screenType: ScreenType) {
+  constructor(page: Page, projectName: string) {
     this.page = page;
-    this.screenType = screenType;
+    this.projectName = projectName;
 
     this.dayTypeSelect = page.locator('select[data-test-id="day-type"]');
     this.timeInput = page.locator('[data-test-id="time-filter"]');
@@ -47,27 +45,33 @@ export class Map {
   }
 
   async dragMap() {
-    if (this.screenType === "DESKTOP") {
-      await this.page.mouse.move(720, 170);
-      await this.page.mouse.down();
-      await this.page.mouse.move(470, 500);
-      await this.page.mouse.up();
-    } else if (this.screenType === "MOBILE") {
+    if (
+      this.projectName === "mobile-chrome" ||
+      this.projectName === "mobile-safari"
+    ) {
       // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(200, 360);
       await this.page.mouse.down();
       await this.page.mouse.move(100, 260);
       await this.page.mouse.up();
+    } else {
+      await this.page.mouse.move(720, 170);
+      await this.page.mouse.down();
+      await this.page.mouse.move(470, 500);
+      await this.page.mouse.up();
     }
   }
 
   async zoomInMap() {
-    if (this.screenType === "DESKTOP") {
-      await this.page.mouse.move(640, 320); // middle of viewport
-      await this.page.mouse.wheel(0, -5000);
-    } else if (this.screenType === "MOBILE") {
+    if (
+      this.projectName === "mobile-chrome" ||
+      this.projectName === "mobile-safari"
+    ) {
       // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(280, 280);
+      await this.page.mouse.wheel(0, -5000);
+    } else {
+      await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, -5000);
     }
 
@@ -77,12 +81,15 @@ export class Map {
   }
 
   async zoomOutMap() {
-    if (this.screenType === "DESKTOP") {
-      await this.page.mouse.move(640, 320); // middle of viewport
-      await this.page.mouse.wheel(0, 5000);
-    } else if (this.screenType === "MOBILE") {
+    if (
+      this.projectName === "mobile-chrome" ||
+      this.projectName === "mobile-safari"
+    ) {
       // TODO: This can be improved once Playwright exposes better touchscreen support
       await this.page.mouse.move(200, 360);
+      await this.page.mouse.wheel(0, 5000);
+    } else {
+      await this.page.mouse.move(640, 320); // middle of viewport
       await this.page.mouse.wheel(0, 5000);
     }
 

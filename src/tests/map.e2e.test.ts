@@ -5,8 +5,8 @@ import { Map } from "./models/map";
 for (const noGantriesOn of [false, true]) {
   let map: Map;
 
-  test.beforeEach(async ({ page }) => {
-    map = new Map(page, "DESKTOP"); // Screen-type doesn't matter
+  test.beforeEach(async ({ page }, workerInfo) => {
+    map = new Map(page, workerInfo.project.name);
     await map.goto();
   });
 
@@ -33,8 +33,8 @@ test.describe("when navigating to a gantry URL", () => {
   for (const noGantriesOn of [false, true]) {
     let map: Map;
 
-    test.beforeEach(async ({ page }) => {
-      map = new Map(page, "DESKTOP"); // Screen-type doesn't matter
+    test.beforeEach(async ({ page }, workerInfo) => {
+      map = new Map(page, workerInfo.project.name);
       await map.goto({ gantryId: true });
     });
 

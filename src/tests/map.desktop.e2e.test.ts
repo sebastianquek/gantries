@@ -5,8 +5,8 @@ import { Map } from "./models/map";
 for (const noGantriesOn of [false, true]) {
   let map: Map;
 
-  test.beforeEach(async ({ page }) => {
-    map = new Map(page, "DESKTOP");
+  test.beforeEach(async ({ page }, workerInfo) => {
+    map = new Map(page, workerInfo.project.name);
     await map.goto();
   });
 
