@@ -5,7 +5,7 @@ import { join } from "path";
 import axios from "axios";
 
 const MAPBOX_ADD_FONT_BASE_URL = "https://api.mapbox.com/fonts/v1";
-const RED_HAT_TEXT_BOLD_PATH = join(__dirname, "./fonts/RedHatText-Bold.ttf");
+const IBM_PLEX_SANS_BOLD_PATH = join(__dirname, "./fonts/IBMPlexSans-Bold.otf");
 
 const addFont = async (
   baseUrl: string,
@@ -35,7 +35,7 @@ const run = async () => {
     MAPBOX_ADD_FONT_BASE_URL,
     process.env.MAPBOX_USERNAME ?? "",
     process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
-    RED_HAT_TEXT_BOLD_PATH
+    IBM_PLEX_SANS_BOLD_PATH
   );
 };
 

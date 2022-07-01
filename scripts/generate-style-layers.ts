@@ -43,7 +43,7 @@ const generateRateLayers = (
       "icon-text-fit-padding": [3, 7, 2, 7],
       "text-allow-overlap": ["step", ["zoom"], false, 14, true],
       "text-field": ["case", ["has", key], ["concat", "$", ["get", key]], ""],
-      "text-font": ["Red Hat Text Bold", "Arial Unicode MS Bold"],
+      "text-font": ["IBM Plex Sans Bold", "Arial Unicode MS Bold"],
       "text-pitch-alignment": "viewport",
       "text-radial-offset": 1.3,
       "text-size": 18,
