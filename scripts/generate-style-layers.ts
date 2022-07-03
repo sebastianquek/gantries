@@ -355,7 +355,7 @@ const run = async () => {
     await updateStyle(
       MAPBOX_UPDATE_STYLE_BASE_URL,
       process.env.MAPBOX_USERNAME ?? "",
-      process.env.styleId ?? "",
+      styleId ?? "",
       process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
       newStyle
     );
