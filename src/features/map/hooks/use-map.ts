@@ -3,7 +3,7 @@ import type React from "react";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 
-export type MapStyle = "SATELLITE_STREETS" | "STREETS";
+export type MapStyle = "LIGHT" | "DARK";
 export const useMap = ({
   mapRef,
   initialLng,
@@ -29,12 +29,12 @@ export const useMap = ({
 
   let style = "";
   switch (mapStyle) {
-    case "STREETS":
-      style = `${process.env.REACT_APP_MAPBOX_STYLE ?? ""}`;
+    case "LIGHT":
+      style = `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT ?? ""}`;
       break;
     default:
-    case "SATELLITE_STREETS":
-      style = "mapbox://styles/mapbox/satellite-streets-v11?optimize=true";
+    case "DARK":
+      style = `${process.env.REACT_APP_MAPBOX_STYLE_DARK ?? ""}`;
       break;
   }
 

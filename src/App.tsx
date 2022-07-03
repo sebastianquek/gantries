@@ -46,6 +46,11 @@ const MapboxWrapper = styled.div`
 `;
 
 export const App = () => {
+  // Does not react to changes to media
+  const prefersDarkScheme = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
   const mapRef = useRef<HTMLDivElement>(null);
   const { gantryId } = useParams();
 
@@ -58,7 +63,7 @@ export const App = () => {
     // viewport (mapbox optimisation) which causes queryMap to return null incorrectly.
     // Setting to 11 ensures the gantries at the boundary can still be queried.
     initialZoom: gantryId ? 11 : 12.15,
-    mapStyle: "STREETS",
+    mapStyle: prefersDarkScheme ? "DARK" : "LIGHT",
   });
 
   let gantry: Gantry | null | undefined = undefined;
