@@ -1,6 +1,10 @@
 @import-normalize;
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&family=Overpass:wght@400;600;800&display=swap");
 
+:root {
+  color-scheme: light dark;
+}
+
 body {
   margin: 0;
   font-family: "Overpass", -apple-system, BlinkMacSystemFont, "Segoe UI",
