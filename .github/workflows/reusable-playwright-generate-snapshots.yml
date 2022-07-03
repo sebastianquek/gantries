@@ -25,6 +25,14 @@ jobs:
     runs-on: ${{ inputs.runs-on }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Checks out the latest HEAD to facilitate re-runs of this workflow
+          # E.g. 1st run generated snapshots and created a commit, however,
+          # some snapshots are incorrect. On the 2nd run, the workflow needs to
+          # checkout the latest commit with the generated snapshots from the 1st
+          # run. This ensures the changes from the 2nd run can overwrite the 1st
+          # run and commit successfully.
+          ref: ${{ github.head_ref }}
 
       - uses: actions/setup-node@v2
         with:
