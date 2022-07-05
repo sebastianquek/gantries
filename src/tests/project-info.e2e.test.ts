@@ -9,6 +9,9 @@ class ProjectInfo {
   readonly closeButton: Locator;
   readonly backdrop: Locator;
 
+  readonly mapboxLink: Locator;
+  readonly openStreetMapLink: Locator;
+  readonly improveMapLink: Locator;
   readonly gitHubLink: Locator;
   readonly lastUpdatedText: Locator;
   readonly versionText: Locator;
@@ -19,6 +22,9 @@ class ProjectInfo {
     this.closeButton = page.locator('[data-test-id="close"]');
     this.backdrop = page.locator('[data-test-id="backdrop"]');
 
+    this.mapboxLink = page.locator('a:has-text("© Mapbox")');
+    this.openStreetMapLink = page.locator('a:has-text("© OpenStreetMap")');
+    this.improveMapLink = page.locator('a:has-text("Improve this map")');
     this.gitHubLink = page.locator('a:has-text("GitHub")');
     this.lastUpdatedText = page.locator("text=Last check for updates");
     this.versionText = page.locator('[data-test-id="version"]');
@@ -41,18 +47,29 @@ class ProjectInfo {
         await this.closeButton.click();
         break;
       case "BACKDROP":
-        await this.backdrop.click();
+        await this.backdrop.click({
+          position: {
+            x: 20,
+            y: 400,
+          },
+        });
         break;
     }
   }
 
   async shouldSeeInfoPanel() {
     await expect(this.page).toHaveURL(/.*#about/);
+    await expect(this.mapboxLink).toBeVisible();
+    await expect(this.openStreetMapLink).toBeVisible();
+    await expect(this.improveMapLink).toBeVisible();
     await expect(this.gitHubLink).toBeVisible();
   }
 
   async shouldNotSeeInfoPanel() {
     await expect(this.page).not.toHaveURL(/.*#about/);
+    await expect(this.mapboxLink).not.toBeVisible();
+    await expect(this.openStreetMapLink).not.toBeVisible();
+    await expect(this.improveMapLink).not.toBeVisible();
     await expect(this.gitHubLink).not.toBeVisible();
   }
 

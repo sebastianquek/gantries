@@ -31,6 +31,12 @@ const GantryLogo = styled(GantryIcon)`
   transform: rotate(40deg);
 `;
 
+const AttributionList = styled.p`
+  a {
+    display: inline-block;
+  }
+`;
+
 const Version = styled.p`
   display: block;
   position: absolute;
@@ -53,9 +59,50 @@ const ProjectInfoModal = ({
       <GantryLogo />
       <Title>Gantries: ERP rates at a glance</Title>
       <p>
-        Rates and gantry location data are obtained from LTA&#39;s DataMall
+        Rates and gantry location data are obtained from{" "}
+        <a
+          href="https://datamall.lta.gov.sg/"
+          target="_blank"
+          title="LTA DataMall"
+          aria-label="LTA DataMall"
+          rel="noreferrer"
+        >
+          LTA&#39;s DataMall
+        </a>{" "}
         while OpenStreetMap is used to calculate the bearing of the gantries.
       </p>
+
+      <AttributionList role="list">
+        <a
+          href="https://www.mapbox.com/about/maps/"
+          target="_blank"
+          title="Mapbox"
+          aria-label="Mapbox"
+          role="listitem"
+          rel="noreferrer"
+        >
+          © Mapbox
+        </a>{" "}
+        <a
+          href="https://www.openstreetmap.org/about/"
+          target="_blank"
+          title="OpenStreetMap"
+          aria-label="OpenStreetMap"
+          role="listitem"
+          rel="noreferrer"
+        >
+          © OpenStreetMap
+        </a>{" "}
+        <a
+          href="https://www.mapbox.com/map-feedback/"
+          target="_blank"
+          aria-label="Map feedback"
+          role="listitem"
+          rel="noopener nofollow noreferrer"
+        >
+          Improve this map
+        </a>
+      </AttributionList>
       {lastCheckDate && (
         <p>
           Last check for updates:
