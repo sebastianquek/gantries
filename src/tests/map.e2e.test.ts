@@ -20,7 +20,7 @@ for (const colorScheme of ["light", "dark"] as const) {
         }
       });
 
-      test.only(`[snapshot] should see ${
+      test(`[snapshot] should see ${
         noGantriesOn ? "no" : "some"
       } gantries with amount labels (${colorScheme} mode)`, async () => {
         await map.shouldMatchMapSnapshot();
