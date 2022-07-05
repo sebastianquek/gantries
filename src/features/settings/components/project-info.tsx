@@ -103,7 +103,6 @@ const ProjectInfoModal = ({
           Improve this map
         </a>
       </AttributionList>
-      <a href="https://github.com/sebastianquek/gantries">GitHub</a>
       {lastCheckDate && (
         <p>
           Last check for updates:
@@ -114,6 +113,7 @@ const ProjectInfoModal = ({
       {version && (
         <Version data-test-id="version">{version.slice(0, 7)}</Version>
       )}
+      <a href="https://github.com/sebastianquek/gantries">GitHub</a>
     </Modal>
   );
 };

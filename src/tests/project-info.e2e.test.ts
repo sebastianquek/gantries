@@ -47,7 +47,12 @@ class ProjectInfo {
         await this.closeButton.click();
         break;
       case "BACKDROP":
-        await this.backdrop.click();
+        await this.backdrop.click({
+          position: {
+            x: 20,
+            y: 400,
+          },
+        });
         break;
     }
   }
