@@ -65,9 +65,9 @@ const RateBar = styled.div<{ isCurrent: boolean }>`
 const RateValue = styled.p<{ isCurrent: boolean }>`
   margin: 0;
   text-align: right;
-  font-weight: ${({ isCurrent }) => (isCurrent ? "800" : "400")};
   color: ${({ isCurrent }) =>
     isCurrent ? "var(--rate-bar-current-color)" : "inherit"};
+  font-weight: ${({ isCurrent }) => (isCurrent ? "700" : "400")};
   width: 3em;
 `;
 
