@@ -55,11 +55,11 @@ const RateBarWrapper = styled.div`
 
 const RateBar = styled.div<{ isCurrent: boolean }>`
   height: 1em;
-  min-width: 1px;
   background-color: ${({ isCurrent }) =>
     isCurrent
       ? "var(--rate-bar-current-color)"
       : "var(--rate-bar-default-color)"};
+  min-width: 2px;
 `;
 
 const RateValue = styled.p<{ isCurrent: boolean }>`
@@ -100,7 +100,7 @@ export const GantryRatesList = memo(
                     style={{
                       width:
                         amount === 0
-                          ? `1px`
+                          ? `0`
                           : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
                     }}
                   />
