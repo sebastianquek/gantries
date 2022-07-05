@@ -77,7 +77,7 @@ const Wrapper = styled.div<{
   showBounceAnimation?: boolean;
 }>`
   border-radius: 1.5rem;
-  background: white;
+  background: var(--background-color-alt);
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -106,7 +106,7 @@ const Wrapper = styled.div<{
         left: 50%;
         height: 2px;
         width: 3rem;
-        background-color: hsla(0, 0%, 65%, 1);
+        background-color: var(--color-neutral-50);
         border-radius: 500px;
         transform: translateX(-50%);
       }

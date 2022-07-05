@@ -36,11 +36,18 @@ const MapboxWrapper = styled.div`
   .mapboxgl-ctrl-group {
     border-radius: 500px;
     box-shadow: none;
-    border: 1px solid hsl(0deg 0% 40%);
+    background: var(--background-color-alt);
+    border: 1px solid var(--border-color);
 
     button:focus-visible {
       outline: -webkit-focus-ring-color auto 1px;
       box-shadow: none;
+    }
+
+    .mapboxgl-ctrl-icon {
+      @media (prefers-color-scheme: dark) {
+        filter: invert(100%);
+      }
     }
   }
 `;

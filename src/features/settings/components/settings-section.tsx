@@ -20,11 +20,11 @@ const VehicleSelectWrapper = styled.div`
   display: flex;
   width: 4ch;
   overflow: hidden;
-  border: 1px solid hsl(0deg 0% 40%);
-  background: white;
+  border: 1px solid var(--border-color);
   border-right: none;
   border-top-left-radius: 500px;
   border-bottom-left-radius: 500px;
+  background: var(--background-color-alt);
 
   &:focus-within {
     outline: -webkit-focus-ring-color auto 1px;
@@ -47,8 +47,8 @@ const VehicleIcon = styled.div`
 
 const Select = styled.select`
   appearance: none;
-  border: 1px solid hsl(0deg 0% 40%);
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--background-color-alt);
   padding: 8px 12px 6px;
   border-right: none;
   line-height: 1;
@@ -67,8 +67,8 @@ const DayTypeSelect = styled(Select)``;
 
 const TimeInput = styled.input`
   appearance: none;
-  border: 1px solid hsl(0deg 0% 40%);
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--background-color-alt);
   padding: 8px 12px 6px;
   line-height: 1;
   max-width: 13ch;

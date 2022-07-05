@@ -17,12 +17,13 @@ const Positioner = styled.div`
   }
 `;
 
+// TODO: add elevation (shadow)
 const Wrapper = styled.div`
-  background: white;
+  background: var(--background-color-alt);
   border-radius: 1.5rem;
   padding: 1rem 1rem 1rem 2.5rem;
   font-size: 0.8rem;
-  color: #de6235;
+  color: var(--color-primary-50);
   font-weight: 600;
 `;
 
