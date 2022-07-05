@@ -59,6 +59,7 @@ export const useMap = ({
       maxBounds: initialBounds,
       attributionControl: false,
       logoPosition: "top-right",
+      touchPitch: false,
     });
 
     mapboxRef.current.addControl(
