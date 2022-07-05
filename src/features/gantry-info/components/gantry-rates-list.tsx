@@ -44,7 +44,8 @@ const RateInterval = styled.p<{ isCurrent: boolean }>`
   color: ${({ isCurrent }) =>
     isCurrent ? "var(--rate-bar-current-color)" : "inherit"};
   font-weight: ${({ isCurrent }) => (isCurrent ? "700" : "400")};
-  width: 11ch;
+  letter-spacing: 0.025em;
+  width: 12ch;
 `;
 
 const RateBarWrapper = styled.div`
