@@ -50,6 +50,10 @@ const MapboxWrapper = styled.div`
       }
     }
   }
+
+  .mapboxgl-ctrl-logo {
+    opacity: 0.7;
+  }
 `;
 
 export const App = () => {
