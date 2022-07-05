@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   gap: 0.5rem;
   font-weight: 600;
   font-size: 0.8rem;
+  height: 30px;
 `;
 
 const Left = styled.div`
