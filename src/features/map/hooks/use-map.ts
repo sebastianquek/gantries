@@ -57,7 +57,6 @@ export const useMap = ({
       center: [initialLng, initialLat],
       zoom: initialZoom,
       maxBounds: initialBounds,
-      preserveDrawingBuffer: true,
       attributionControl: false,
       logoPosition: "top-right",
     });
