@@ -15,6 +15,16 @@ const Rates = styled(FlipMove)`
   flex-direction: column;
   font-size: 13px;
   gap: 0.5em;
+
+  --rate-bar-background-color: var(--color-primary-30);
+  --rate-bar-default-color: var(--color-primary-40);
+  --rate-bar-current-color: var(--color-primary-50);
+
+  @media (prefers-color-scheme: dark) {
+    --rate-bar-background-color: var(--color-primary-70);
+    --rate-bar-default-color: var(--color-primary-60);
+    --rate-bar-current-color: var(--color-primary-50);
+  }
 `;
 
 const RateItem = styled.div`
@@ -31,25 +41,33 @@ const RateItem = styled.div`
 
 const RateInterval = styled.p<{ isCurrent: boolean }>`
   margin: 0;
+  color: ${({ isCurrent }) =>
+    isCurrent ? "var(--rate-bar-current-color)" : "inherit"};
   font-weight: ${({ isCurrent }) => (isCurrent ? "700" : "400")};
-  width: 11ch;
+  letter-spacing: 0.025em;
+  width: 12ch;
 `;
 
 const RateBarWrapper = styled.div`
-  background-color: #efefef;
+  background-color: var(--rate-bar-background-color);
   flex-grow: 1;
 `;
 
 const RateBar = styled.div<{ isCurrent: boolean }>`
   height: 1em;
-  background-color: ${({ isCurrent }) => (isCurrent ? "#EB7449" : "#F7C589")};
-  min-width: 1px;
+  background-color: ${({ isCurrent }) =>
+    isCurrent
+      ? "var(--rate-bar-current-color)"
+      : "var(--rate-bar-default-color)"};
+  min-width: 2px;
 `;
 
 const RateValue = styled.p<{ isCurrent: boolean }>`
   margin: 0;
   text-align: right;
-  font-weight: ${({ isCurrent }) => (isCurrent ? "800" : "400")};
+  color: ${({ isCurrent }) =>
+    isCurrent ? "var(--rate-bar-current-color)" : "inherit"};
+  font-weight: ${({ isCurrent }) => (isCurrent ? "700" : "400")};
   width: 3em;
 `;
 
@@ -82,7 +100,7 @@ export const GantryRatesList = memo(
                     style={{
                       width:
                         amount === 0
-                          ? `1px`
+                          ? `0`
                           : `${((amount / maxRateAmount) * 100).toFixed(2)}%`,
                     }}
                   />

@@ -2,17 +2,25 @@ import type { Locator, Page } from "@playwright/test";
 
 import { expect } from "@playwright/test";
 
+type ColorScheme = "light" | "dark";
+
 export class Map {
   readonly page: Page;
   readonly projectName: string;
+  readonly colorScheme: ColorScheme;
 
   readonly dayTypeSelect: Locator;
   readonly timeInput: Locator;
   readonly mapCanvas: Locator;
 
-  constructor(page: Page, projectName: string) {
+  constructor(
+    page: Page,
+    projectName: string,
+    colorScheme: ColorScheme = "light"
+  ) {
     this.page = page;
     this.projectName = projectName;
+    this.colorScheme = colorScheme;
 
     this.dayTypeSelect = page.locator('select[data-test-id="day-type"]');
     this.timeInput = page.locator('[data-test-id="time-filter"]');
@@ -21,6 +29,10 @@ export class Map {
   }
 
   async goto(options?: { gantryId?: boolean }) {
+    await this.page.emulateMedia({
+      colorScheme: this.colorScheme,
+    });
+
     let url = "/";
     if (options?.gantryId) url += "42";
     await Promise.all([

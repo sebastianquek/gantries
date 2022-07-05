@@ -315,40 +315,51 @@ const run = async () => {
     process.env.MAPBOX_SPRITE_GANTRY_HIGHLIGHT_OUTLINE ?? ""
   );
 
-  // Retrieve and update style object
-  const currentStyle = await retrieveStyle(
-    MAPBOX_RETRIEVE_STYLE_BASE_URL,
-    process.env.MAPBOX_USERNAME ?? "",
-    process.env.MAPBOX_STYLE_ID ?? "",
-    process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? ""
-  );
-  const updatedStyleWithCompositeUrl = updateCompositeUrl(
-    currentStyle,
-    process.env.MAPBOX_USERNAME ?? "",
-    process.env.MAPBOX_TILESET_ID ?? ""
-  );
-  const updatedStyleWithGlyphs = updateGlyphs(
-    updatedStyleWithCompositeUrl,
-    process.env.MAPBOX_USERNAME ?? ""
-  );
-  const { created, modified, ...newStyle } = mergeStyleLayers(
-    updatedStyleWithGlyphs,
-    [
-      RATE_LAYER_ID_PREFIX,
-      OPERATIONAL_LAYER_ID_PREFIX,
-      HIGHLIGHT_LAYER_ID_PREFIX,
-    ],
-    [operationalBaseLayer, ...operationalLayers, highlightLayer, ...rateLayers]
-  );
+  // Update light and dark styles
+  for (const styleId of [
+    process.env.MAPBOX_STYLE_ID_LIGHT,
+    process.env.MAPBOX_STYLE_ID_DARK,
+  ]) {
+    // Retrieve and update style object
+    const currentStyle = await retrieveStyle(
+      MAPBOX_RETRIEVE_STYLE_BASE_URL,
+      process.env.MAPBOX_USERNAME ?? "",
+      styleId ?? "",
+      process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? ""
+    );
+    const updatedStyleWithCompositeUrl = updateCompositeUrl(
+      currentStyle,
+      process.env.MAPBOX_USERNAME ?? "",
+      process.env.MAPBOX_TILESET_ID ?? ""
+    );
+    const updatedStyleWithGlyphs = updateGlyphs(
+      updatedStyleWithCompositeUrl,
+      process.env.MAPBOX_USERNAME ?? ""
+    );
+    const { created, modified, ...newStyle } = mergeStyleLayers(
+      updatedStyleWithGlyphs,
+      [
+        RATE_LAYER_ID_PREFIX,
+        OPERATIONAL_LAYER_ID_PREFIX,
+        HIGHLIGHT_LAYER_ID_PREFIX,
+      ],
+      [
+        operationalBaseLayer,
+        ...operationalLayers,
+        highlightLayer,
+        ...rateLayers,
+      ]
+    );
 
-  // Push changes to Mapbox
-  await updateStyle(
-    MAPBOX_UPDATE_STYLE_BASE_URL,
-    process.env.MAPBOX_USERNAME ?? "",
-    process.env.MAPBOX_STYLE_ID ?? "",
-    process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
-    newStyle
-  );
+    // Push changes to Mapbox
+    await updateStyle(
+      MAPBOX_UPDATE_STYLE_BASE_URL,
+      process.env.MAPBOX_USERNAME ?? "",
+      styleId ?? "",
+      process.env.MAPBOX_PRIVATE_ACCESS_TOKEN ?? "",
+      newStyle
+    );
+  }
 };
 
 // Ensures that the fetching does not run when tests are ran on this module.

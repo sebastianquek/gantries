@@ -85,6 +85,9 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ steps.wait-for-deployment.outputs.url }}
         run: npx playwright test -g "snapshot" --project ${{ inputs.project }} --update-snapshots --headed
 
+      - name: "Pull to get latest commits if any"
+        run: git pull
+
       - name: Commit snapshots
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

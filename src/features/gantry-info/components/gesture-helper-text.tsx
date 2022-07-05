@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   height: 100vh;
-  background-color: white;
+  background: var(--background-color-alt);
   padding: 1rem;
   display: flex;
   flex-direction: column;

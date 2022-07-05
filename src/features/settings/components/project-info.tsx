@@ -7,9 +7,9 @@ import { Button } from "src/components/button";
 
 const Modal = styled.div`
   border-radius: 1.5rem;
-  background: white;
+  background: var(--background-color-alt);
   padding: 1.5rem;
-  border: 1px solid hsl(0deg 0% 80%);
+  border: 1px solid var(--border-color);
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.3;
@@ -39,7 +39,6 @@ const Version = styled.p`
   margin: 0;
   font-size: 0.75em;
   font-style: italic;
-  color: hsl(0deg 0% 40%);
 `;
 
 const ProjectInfoModal = ({
@@ -86,13 +85,18 @@ const ProjectInfoPositioner = styled.div`
 `;
 
 const Backdrop = styled.div`
+  --base-background-color: var(--color-neutral-10-hsl);
+  @media (prefers-color-scheme: dark) {
+    --base-background-color: var(--color-neutral-90-hsl);
+  }
+
   position: fixed;
   z-index: -1;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.3);
+  background: hsla(var(--base-background-color), 0.3);
   backdrop-filter: blur(4px);
   cursor: pointer;
 `;

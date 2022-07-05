@@ -36,16 +36,28 @@ const MapboxWrapper = styled.div`
   .mapboxgl-ctrl-group {
     border-radius: 500px;
     box-shadow: none;
-    border: 1px solid hsl(0deg 0% 40%);
+    background: var(--background-color-alt);
+    border: 1px solid var(--border-color);
 
     button:focus-visible {
       outline: -webkit-focus-ring-color auto 1px;
       box-shadow: none;
     }
+
+    .mapboxgl-ctrl-icon {
+      @media (prefers-color-scheme: dark) {
+        filter: invert(100%);
+      }
+    }
   }
 `;
 
 export const App = () => {
+  // Does not react to changes to media
+  const prefersDarkScheme = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
   const mapRef = useRef<HTMLDivElement>(null);
   const { gantryId } = useParams();
 
@@ -58,7 +70,7 @@ export const App = () => {
     // viewport (mapbox optimisation) which causes queryMap to return null incorrectly.
     // Setting to 11 ensures the gantries at the boundary can still be queried.
     initialZoom: gantryId ? 11 : 12.15,
-    mapStyle: "STREETS",
+    mapStyle: prefersDarkScheme ? "DARK" : "LIGHT",
   });
 
   let gantry: Gantry | null | undefined = undefined;
