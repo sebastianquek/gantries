@@ -59,6 +59,7 @@ export const useMap = ({
       maxBounds: initialBounds,
       preserveDrawingBuffer: true,
       attributionControl: false,
+      logoPosition: "top-right",
     });
 
     mapboxRef.current.addControl(
