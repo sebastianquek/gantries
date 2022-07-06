@@ -1,6 +1,14 @@
-# Gantries
+![banner](public/banner.png)
 
-See Singapore's ERP rates easily
+# Gantries: ERP rates at a glance
+
+Get the prices of [Singapore's Electronic Road Pricing (ERP)](https://en.wikipedia.org/wiki/Electronic_Road_Pricing) gantries, based on the time and your vehicle type.
+
+## Tech overview
+
+- React app written entirely in TypeScript that runs without a backend.
+- Data is periodically fetched, processed and added to a custom Mapbox style using GitHub Actions.
+- Playwright is used for E2E tests and cross-platform snapshots are generated using GitHub Actions.
 
 ## Usage
 
