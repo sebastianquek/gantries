@@ -1,7 +1,5 @@
+import { lazy, Suspense } from "react";
 import styled from "styled-components";
-
-import { ProjectInfo } from "./project-info";
-import { SettingsSection } from "./settings-section";
 
 const Wrapper = styled.div`
   position: relative;
@@ -9,6 +7,7 @@ const Wrapper = styled.div`
   gap: 0.5rem;
   font-weight: 600;
   font-size: 0.8rem;
+  height: 30px;
 `;
 
 const Left = styled.div`
@@ -44,17 +43,34 @@ const AppTitle = styled.h1`
   letter-spacing: 0.1em;
 `;
 
+const LoadingIndicator = styled.div`
+  display: flex;
+  align-items: flex-end;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8em;
+  font-weight: 800;
+  font-family: monospace;
+`;
+
+const ProjectInfo = lazy(() => import("./project-info"));
+const SettingsSection = lazy(() => import("./settings-section"));
+
 export const TopBar = () => {
   return (
     <Wrapper>
       <Left>
-        <SettingsSection />
+        <Suspense fallback={<LoadingIndicator>Loading...</LoadingIndicator>}>
+          <SettingsSection />
+        </Suspense>
       </Left>
       <Middle>
         <AppTitle data-test-id="app-title">Gantries</AppTitle>
       </Middle>
       <Right>
-        <ProjectInfo />
+        <Suspense fallback={<div></div>}>
+          <ProjectInfo />
+        </Suspense>
       </Right>
     </Wrapper>
   );

@@ -1,4 +1,2 @@
-export {
-  GantryInfoHelpPanelOutlet,
-  GantryInfoOutlet,
-} from "./components/gantry-info";
+export { GantryInfoOutlet } from "./components/gantry-info-outlet";
+export { GantryInfoHelpPanelOutlet } from "./components/gantry-info-help-outlet";

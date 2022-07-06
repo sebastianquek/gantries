@@ -164,3 +164,5 @@ export const SettingsSection = () => {
     </>
   );
 };
+
+export default SettingsSection;
