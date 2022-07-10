@@ -5,6 +5,7 @@ import { useFilters } from "src/contexts/filters";
 
 const Positioner = styled.div`
   position: absolute;
+  z-index: 10;
   right: 3.5rem;
   top: 3.5rem;
 
