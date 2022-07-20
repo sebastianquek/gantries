@@ -3,8 +3,6 @@ import type { Locator, Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
 
 class ProjectInfo {
-  readonly page: Page;
-
   readonly infoButton: Locator;
   readonly closeButton: Locator;
   readonly backdrop: Locator;
@@ -16,8 +14,9 @@ class ProjectInfo {
   readonly lastUpdatedText: Locator;
   readonly versionText: Locator;
 
-  constructor(page: Page) {
+  constructor(readonly page: Page) {
     this.page = page;
+
     this.infoButton = page.locator('button:has-text("Info")');
     this.closeButton = page.locator('[data-test-id="close"]');
     this.backdrop = page.locator('[data-test-id="backdrop"]');
