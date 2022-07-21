@@ -5,18 +5,14 @@ import { expect } from "@playwright/test";
 type ColorScheme = "light" | "dark";
 
 export class Map {
-  readonly page: Page;
-  readonly projectName: string;
-  readonly colorScheme: ColorScheme;
-
   readonly dayTypeSelect: Locator;
   readonly timeInput: Locator;
   readonly mapCanvas: Locator;
 
   constructor(
-    page: Page,
-    projectName: string,
-    colorScheme: ColorScheme = "light"
+    readonly page: Page,
+    readonly projectName: string,
+    readonly colorScheme: ColorScheme = "light"
   ) {
     this.page = page;
     this.projectName = projectName;
