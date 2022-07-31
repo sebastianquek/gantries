@@ -48,6 +48,8 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - run: git status
+
       # https://stackoverflow.com/a/3879077
       # https://stackoverflow.com/q/26568952
       - name: Toggle style type in netlify.toml if there are new rates
