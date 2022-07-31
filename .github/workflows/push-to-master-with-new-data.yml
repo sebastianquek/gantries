@@ -15,13 +15,39 @@ env:
   MAPBOX_SPRITE_GANTRY_OFF: ${{ secrets.MAPBOX_SPRITE_GANTRY_OFF }}
   MAPBOX_SPRITE_GANTRY_ON: ${{ secrets.MAPBOX_SPRITE_GANTRY_ON }}
   MAPBOX_SPRITE_RATE_BG: ${{ secrets.MAPBOX_SPRITE_RATE_BG }}
-  MAPBOX_STYLE_ID_LIGHT: ${{ secrets.MAPBOX_STYLE_ID_LIGHT }}
-  MAPBOX_STYLE_ID_DARK: ${{ secrets.MAPBOX_STYLE_ID_DARK }}
   MAPBOX_TILESET_ID: ${{ secrets.MAPBOX_TILESET_ID }}
   MAPBOX_TILESET_SOURCE_ID: ${{ secrets.MAPBOX_TILESET_SOURCE_ID }}
   MAPBOX_USERNAME: ${{ secrets.MAPBOX_USERNAME }}
 
+  MAPBOX_STYLE_ID_DARK_A: ${{ secrets.MAPBOX_STYLE_ID_DARK_A }}
+  MAPBOX_STYLE_ID_DARK_B: ${{ secrets.MAPBOX_STYLE_ID_DARK_B }}
+  MAPBOX_STYLE_ID_LIGHT_A: ${{ secrets.MAPBOX_STYLE_ID_LIGHT_A }}
+  MAPBOX_STYLE_ID_LIGHT_B: ${{ secrets.MAPBOX_STYLE_ID_LIGHT_B }}
+
 jobs:
+  init-style-ids:
+    name: "Initialise style ID as outputs"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      dark: ${{ steps.set.outputs.dark }}
+      light: ${{ steps.set.outputs.light }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - id: "set"
+        name: "Set outputs"
+        run: |
+          STYLE_TYPE=$(sed -n 's/REACT_APP_MAPBOX_STYLE_TYPE = "\(.*\)"/\1/p' netlify.toml)
+          if [[ "$STYLE_TYPE" == 'A' ]]; then
+            echo "::set-output name=dark::${{ env.MAPBOX_STYLE_ID_DARK_A }}";
+            echo "::set-output name=light::${{ env.MAPBOX_STYLE_ID_LIGHT_A }}";
+          else
+            echo "::set-output name=dark::${{ env.MAPBOX_STYLE_ID_DARK_B }}";
+            echo "::set-output name=light::${{ env.MAPBOX_STYLE_ID_LIGHT_B }}";
+          fi
+
   generate-fonts:
     name: "Add fonts"
     runs-on: ubuntu-latest
@@ -65,8 +91,12 @@ jobs:
   generate-style-layers:
     name: "Update style layers"
     runs-on: ubuntu-latest
-    needs: generate-tileset
+    needs: [generate-tileset, init-style-ids]
     timeout-minutes: 5
+
+    env:
+      MAPBOX_STYLE_ID_DARK: ${{ needs.init-style-ids.outputs.dark }}
+      MAPBOX_STYLE_ID_LIGHT: ${{ needs.init-style-ids.outputs.light }}
 
     steps:
       - uses: actions/checkout@v2
@@ -79,8 +109,12 @@ jobs:
   generate-sprites:
     name: "Update sprites"
     runs-on: ubuntu-latest
-    needs: generate-tileset
+    needs: [generate-tileset, init-style-ids]
     timeout-minutes: 5
+
+    env:
+      MAPBOX_STYLE_ID_DARK: ${{ needs.init-style-ids.outputs.dark }}
+      MAPBOX_STYLE_ID_LIGHT: ${{ needs.init-style-ids.outputs.light }}
 
     steps:
       - uses: actions/checkout@v2

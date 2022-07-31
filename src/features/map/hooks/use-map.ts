@@ -27,14 +27,23 @@ export const useMap = ({
   const mapboxRef = useRef<mapboxgl.Map>();
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Style type is used as a means to toggle between style IDs
+  // to ensure the latest layers are always shown correctly.
+  const styleType = process.env.REACT_APP_MAPBOX_STYLE_TYPE ?? "A";
   let style = "";
   switch (mapStyle) {
     case "LIGHT":
-      style = `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT ?? ""}`;
+      style =
+        styleType === "A"
+          ? `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_A ?? ""}`
+          : `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_B ?? ""}`;
       break;
     default:
     case "DARK":
-      style = `${process.env.REACT_APP_MAPBOX_STYLE_DARK ?? ""}`;
+      style =
+        styleType === "A"
+          ? `${process.env.REACT_APP_MAPBOX_STYLE_DARK_A ?? ""}`
+          : `${process.env.REACT_APP_MAPBOX_STYLE_DARK_B ?? ""}`;
       break;
   }
 

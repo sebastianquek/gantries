@@ -48,11 +48,19 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      # https://stackoverflow.com/a/3879077
+      # https://stackoverflow.com/q/26568952
+      - name: Toggle style type in netlify.toml if there are new rates
+        run: |
+          git diff-index --quiet HEAD -- || sed -i 's/REACT_APP_MAPBOX_STYLE_TYPE = "A"/REACT_APP_MAPBOX_STYLE_TYPE = "Z"/;s/REACT_APP_MAPBOX_STYLE_TYPE = "B"/REACT_APP_MAPBOX_STYLE_TYPE = "A"/;s/REACT_APP_MAPBOX_STYLE_TYPE = "Z"/REACT_APP_MAPBOX_STYLE_TYPE = "B"/;' netlify.toml
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          add-paths: "public/data"
+          add-paths: |
+            public/data
+            netlify.toml
           commit-message: "chore: update rates"
           branch: "chore/update-rates"
           delete-branch: true
