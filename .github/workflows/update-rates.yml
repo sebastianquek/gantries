@@ -48,11 +48,12 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - run: git status
+
       # https://stackoverflow.com/a/3879077
       # https://stackoverflow.com/q/26568952
       - name: Toggle style type in netlify.toml if there are new rates
         run: |
-          git update-index --refresh
           git diff-index --quiet HEAD -- || sed -i 's/REACT_APP_MAPBOX_STYLE_TYPE = "A"/REACT_APP_MAPBOX_STYLE_TYPE = "Z"/;s/REACT_APP_MAPBOX_STYLE_TYPE = "B"/REACT_APP_MAPBOX_STYLE_TYPE = "A"/;s/REACT_APP_MAPBOX_STYLE_TYPE = "Z"/REACT_APP_MAPBOX_STYLE_TYPE = "B"/;' netlify.toml
 
       - name: Create Pull Request
