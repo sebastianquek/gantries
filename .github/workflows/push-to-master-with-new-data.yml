@@ -99,14 +99,14 @@ jobs:
       - name: "Generate style layers for A"
         if: ${{ env.STYLE_TYPE == 'A' }}
         run: |
-          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \\
-          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \\
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \
           npm run gen:styles
       - name: "Generate style layers for B"
         if: ${{ env.STYLE_TYPE == 'B' }}
         run: |
-          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \\
-          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \\
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \
           npm run gen:styles
 
   generate-sprites:
@@ -127,12 +127,12 @@ jobs:
       - name: "Generate sprites for A"
         if: ${{ env.STYLE_TYPE == 'A' }}
         run: |
-          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \\
-          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \\
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \
           npm run gen:sprites
       - name: "Generate sprites for B"
         if: ${{ env.STYLE_TYPE == 'B' }}
         run: |
-          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \\
-          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \\
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \
           npm run gen:sprites
