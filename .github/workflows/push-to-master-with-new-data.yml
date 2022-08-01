@@ -25,28 +25,21 @@ env:
   MAPBOX_STYLE_ID_LIGHT_B: ${{ secrets.MAPBOX_STYLE_ID_LIGHT_B }}
 
 jobs:
-  init-style-ids:
-    name: "Initialise style ID as outputs"
+  extract-style-type:
+    name: "Extract style type from netlify.toml"
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     outputs:
-      dark: ${{ steps.set.outputs.dark }}
-      light: ${{ steps.set.outputs.light }}
+      type: ${{ steps.set.outputs.type }}
 
     steps:
       - uses: actions/checkout@v2
       - id: "set"
         name: "Set outputs"
         run: |
-          STYLE_TYPE=$(sed -n 's/REACT_APP_MAPBOX_STYLE_TYPE = "\(.*\)"/\1/p' netlify.toml)
-          if [[ "$STYLE_TYPE" == 'A' ]]; then
-            echo "::set-output name=dark::${{ env.MAPBOX_STYLE_ID_DARK_A }}";
-            echo "::set-output name=light::${{ env.MAPBOX_STYLE_ID_LIGHT_A }}";
-          else
-            echo "::set-output name=dark::${{ env.MAPBOX_STYLE_ID_DARK_B }}";
-            echo "::set-output name=light::${{ env.MAPBOX_STYLE_ID_LIGHT_B }}";
-          fi
+          STYLE_TYPE=$(sed -n 's/^.*REACT_APP_MAPBOX_STYLE_TYPE = "\(.\)"/\1/p' netlify.toml);
+          echo "::set-output name=type::$STYLE_TYPE";
 
   generate-fonts:
     name: "Add fonts"
@@ -91,12 +84,11 @@ jobs:
   generate-style-layers:
     name: "Update style layers"
     runs-on: ubuntu-latest
-    needs: [generate-tileset, init-style-ids]
+    needs: [extract-style-type, generate-tileset]
     timeout-minutes: 5
 
     env:
-      MAPBOX_STYLE_ID_DARK: ${{ needs.init-style-ids.outputs.dark }}
-      MAPBOX_STYLE_ID_LIGHT: ${{ needs.init-style-ids.outputs.light }}
+      STYLE_TYPE: ${{ needs.init-style-type.outputs.type }}
 
     steps:
       - uses: actions/checkout@v2
@@ -104,17 +96,27 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
-      - run: npm run gen:styles
+      - name: "Generate style layers for A"
+        if: ${{ env.STYLE_TYPE == 'A' }}
+        run: |
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \\
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \\
+          npm run gen:styles
+      - name: "Generate style layers for B"
+        if: ${{ env.STYLE_TYPE == 'B' }}
+        run: |
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \\
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \\
+          npm run gen:styles
 
   generate-sprites:
     name: "Update sprites"
     runs-on: ubuntu-latest
-    needs: [generate-tileset, init-style-ids]
+    needs: [extract-style-type, generate-tileset]
     timeout-minutes: 5
 
     env:
-      MAPBOX_STYLE_ID_DARK: ${{ needs.init-style-ids.outputs.dark }}
-      MAPBOX_STYLE_ID_LIGHT: ${{ needs.init-style-ids.outputs.light }}
+      STYLE_TYPE: ${{ needs.init-style-type.outputs.type }}
 
     steps:
       - uses: actions/checkout@v2
@@ -122,4 +124,15 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
-      - run: npm run gen:sprites
+      - name: "Generate sprites for A"
+        if: ${{ env.STYLE_TYPE == 'A' }}
+        run: |
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_A }} \\
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_A }} \\
+          npm run gen:sprites
+      - name: "Generate sprites for B"
+        if: ${{ env.STYLE_TYPE == 'B' }}
+        run: |
+          MAPBOX_STYLE_ID_DARK=${{ env.MAPBOX_STYLE_ID_DARK_B }} \\
+          MAPBOX_STYLE_ID_LIGHT=${{ env.MAPBOX_STYLE_ID_LIGHT_B }} \\
+          npm run gen:sprites
