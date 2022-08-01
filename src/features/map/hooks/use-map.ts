@@ -3,6 +3,10 @@ import type React from "react";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 
+import { RATES_EFFECTIVE_DATE } from "src/constants";
+
+import { getSGDate } from "../utils/get-sg-date";
+
 export type MapStyle = "LIGHT" | "DARK";
 export const useMap = ({
   mapRef,
@@ -30,20 +34,28 @@ export const useMap = ({
   // Style type is used as a means to toggle between style IDs
   // to ensure the latest layers are always shown correctly.
   const styleType = process.env.REACT_APP_MAPBOX_STYLE_TYPE ?? "A";
+
+  // The fresh param is removed only on the day after the
+  // rates are in effect
+  const freshParam =
+    !RATES_EFFECTIVE_DATE || getSGDate() <= RATES_EFFECTIVE_DATE
+      ? "?fresh=true"
+      : "";
+
   let style = "";
   switch (mapStyle) {
     case "LIGHT":
       style =
         styleType === "A"
-          ? `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_A ?? ""}`
-          : `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_B ?? ""}`;
+          ? `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_A ?? ""}${freshParam}`
+          : `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_B ?? ""}${freshParam}`;
       break;
     default:
     case "DARK":
       style =
         styleType === "A"
-          ? `${process.env.REACT_APP_MAPBOX_STYLE_DARK_A ?? ""}`
-          : `${process.env.REACT_APP_MAPBOX_STYLE_DARK_B ?? ""}`;
+          ? `${process.env.REACT_APP_MAPBOX_STYLE_DARK_A ?? ""}${freshParam}`
+          : `${process.env.REACT_APP_MAPBOX_STYLE_DARK_B ?? ""}${freshParam}`;
       break;
   }
 
