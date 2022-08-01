@@ -98,13 +98,12 @@ jobs:
   # Doesn't matter if the label could not be found
   remove-label:
     name: Remove label
-    needs:
-      [
-        chromium-snapshots,
+    needs: [
+        # chromium-snapshots,
         firefox-snapshots,
-        mobile-chrome-snapshots,
-        webkit-snapshots,
-        mobile-safari-snapshots,
+        # mobile-chrome-snapshots,
+        # webkit-snapshots,
+        # mobile-safari-snapshots,
       ]
     if: ${{ always() }}
     runs-on: "ubuntu-latest"
