@@ -31,7 +31,7 @@ const createTileset = async (
   const url = `${baseCreateUrl}/${username}.${tilesetId}`;
   const body = {
     recipe: {
-      version: 1, // TODO: update this when a new version is created
+      version: 1, // Fixed at 1: https://docs.mapbox.com/mapbox-tiling-service/reference/#recipe-version
       layers: {
         [tilesetId]: {
           maxzoom: 16,
