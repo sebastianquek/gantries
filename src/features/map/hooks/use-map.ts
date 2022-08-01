@@ -3,7 +3,15 @@ import type React from "react";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 
-import { RATES_EFFECTIVE_DATE } from "src/constants";
+import {
+  MAPBOX_ACCESS_TOKEN,
+  MAPBOX_STYLE_DARK_A,
+  MAPBOX_STYLE_DARK_B,
+  MAPBOX_STYLE_LIGHT_A,
+  MAPBOX_STYLE_LIGHT_B,
+  MAPBOX_STYLE_TYPE,
+  RATES_EFFECTIVE_DATE,
+} from "src/constants";
 
 import { getSGDate } from "../utils/get-sg-date";
 
@@ -31,10 +39,6 @@ export const useMap = ({
   const mapboxRef = useRef<mapboxgl.Map>();
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Style type is used as a means to toggle between style IDs
-  // to ensure the latest layers are always shown correctly.
-  const styleType = process.env.REACT_APP_MAPBOX_STYLE_TYPE ?? "A";
-
   // The fresh param is removed only on the day after the
   // rates are in effect
   const freshParam =
@@ -46,30 +50,26 @@ export const useMap = ({
   switch (mapStyle) {
     case "LIGHT":
       style =
-        styleType === "A"
-          ? `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_A ?? ""}${freshParam}`
-          : `${process.env.REACT_APP_MAPBOX_STYLE_LIGHT_B ?? ""}${freshParam}`;
+        MAPBOX_STYLE_TYPE === "A"
+          ? `${MAPBOX_STYLE_LIGHT_A ?? ""}${freshParam}`
+          : `${MAPBOX_STYLE_LIGHT_B ?? ""}${freshParam}`;
       break;
     default:
     case "DARK":
       style =
-        styleType === "A"
-          ? `${process.env.REACT_APP_MAPBOX_STYLE_DARK_A ?? ""}${freshParam}`
-          : `${process.env.REACT_APP_MAPBOX_STYLE_DARK_B ?? ""}${freshParam}`;
+        MAPBOX_STYLE_TYPE === "A"
+          ? `${MAPBOX_STYLE_DARK_A ?? ""}${freshParam}`
+          : `${MAPBOX_STYLE_DARK_B ?? ""}${freshParam}`;
       break;
   }
 
   useEffect(() => {
-    if (
-      mapboxRef.current ||
-      !mapRef.current ||
-      !process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
-    ) {
+    if (mapboxRef.current || !mapRef.current || !MAPBOX_ACCESS_TOKEN) {
       return;
     }
 
     // eslint-disable-next-line import/no-named-as-default-member
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+    mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
     // eslint-disable-next-line import/no-named-as-default-member
     mapboxRef.current = new mapboxgl.Map({

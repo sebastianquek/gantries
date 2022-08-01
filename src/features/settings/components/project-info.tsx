@@ -4,7 +4,11 @@ import styled from "styled-components";
 import { ReactComponent as CrossIcon } from "src/assets/svg/close-outline.svg";
 import { ReactComponent as GantryIcon } from "src/assets/svg/gantry-on.svg";
 import { Button } from "src/components/button";
-import { RATES_EFFECTIVE_DATE } from "src/constants";
+import {
+  COMMIT_REF,
+  LAST_CHECK_DATE,
+  RATES_EFFECTIVE_DATE,
+} from "src/constants";
 
 const Modal = styled.div`
   border-radius: 1.5rem;
@@ -174,12 +178,6 @@ const ProjectInfoCloseButton = styled.button`
 const LOCATION_HASH = "#about";
 
 export const ProjectInfo = () => {
-  const lastCheckedDate = process.env.REACT_APP_LAST_CHECK_DATE
-    ? new Date(Number(process.env.REACT_APP_LAST_CHECK_DATE))
-    : undefined;
-  const ratesEffectiveDate = RATES_EFFECTIVE_DATE;
-  const version = process.env.REACT_APP_COMMIT_REF;
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -201,9 +199,9 @@ export const ProjectInfo = () => {
     <ProjectInfoPositioner>
       <Backdrop onClick={hide} data-test-id="backdrop" />
       <ProjectInfoModal
-        lastCheckDate={lastCheckedDate}
-        ratesEffectiveDate={ratesEffectiveDate}
-        version={version}
+        lastCheckDate={LAST_CHECK_DATE}
+        ratesEffectiveDate={RATES_EFFECTIVE_DATE}
+        version={COMMIT_REF}
       />
       <ProjectInfoCloseButton onClick={hide} data-test-id="close">
         <CrossIcon />
