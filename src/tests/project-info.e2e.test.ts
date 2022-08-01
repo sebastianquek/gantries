@@ -12,6 +12,7 @@ class ProjectInfo {
   readonly improveMapLink: Locator;
   readonly gitHubLink: Locator;
   readonly lastUpdatedText: Locator;
+  readonly effectiveDateText: Locator;
   readonly versionText: Locator;
 
   constructor(readonly page: Page) {
@@ -26,6 +27,7 @@ class ProjectInfo {
     this.improveMapLink = page.locator('a:has-text("Improve this map")');
     this.gitHubLink = page.locator('a:has-text("GitHub")');
     this.lastUpdatedText = page.locator("text=Last check for updates");
+    this.effectiveDateText = page.locator("text=Rates effective from");
     this.versionText = page.locator('[data-test-id="version"]');
   }
 
@@ -72,8 +74,11 @@ class ProjectInfo {
     await expect(this.gitHubLink).not.toBeVisible();
   }
 
-  async shouldSeeLastUpdatedAndVersion() {
+  async shouldSeeMetaInfo() {
     await expect(this.lastUpdatedText).toContainText("GMT+0800");
+    await expect(this.effectiveDateText).toHaveText(
+      /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+    );
     await expect(this.versionText).toHaveText(/[a-z0-9]{7}/);
   }
 }
@@ -91,12 +96,12 @@ test.describe("when info button is clicked", () => {
     await projectInfo.shouldSeeInfoPanel();
   });
 
-  test("should see last check for updates and version", async () => {
-    test.skip(
-      process.env.PLAYWRIGHT_BASE_URL === undefined,
-      "Last check for updates and version are not shown when running locally"
-    );
-    await projectInfo.shouldSeeLastUpdatedAndVersion();
+  test("should see last check for updates, effective date and version", async () => {
+    // test.skip(
+    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
+    //   "Last check for updates and version are not shown when running locally"
+    // );
+    await projectInfo.shouldSeeMetaInfo();
   });
 
   test("should close the info panel when the close button is clicked", async () => {
@@ -128,12 +133,12 @@ test.describe("when navigating to the root URL with the info hash", () => {
     await projectInfo.shouldSeeInfoPanel();
   });
 
-  test("should see last check for updates and version", async () => {
-    test.skip(
-      process.env.PLAYWRIGHT_BASE_URL === undefined,
-      "Last check for updates and version are not shown when running locally"
-    );
-    await projectInfo.shouldSeeLastUpdatedAndVersion();
+  test("should see last check for updates, effective date and version", async () => {
+    // test.skip(
+    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
+    //   "Last check for updates and version are not shown when running locally"
+    // );
+    await projectInfo.shouldSeeMetaInfo();
   });
 
   test("should close the info panel when the close button is clicked", async () => {
@@ -166,12 +171,12 @@ test.describe("when navigating to a gantry URL with the info hash", () => {
     await projectInfo.shouldSeeInfoPanel();
   });
 
-  test("should see last check for updates and version", async () => {
-    test.skip(
-      process.env.PLAYWRIGHT_BASE_URL === undefined,
-      "Last check for updates and version are not shown when running locally"
-    );
-    await projectInfo.shouldSeeLastUpdatedAndVersion();
+  test("should see last check for updates, effective date and version", async () => {
+    // test.skip(
+    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
+    //   "Last check for updates and version are not shown when running locally"
+    // );
+    await projectInfo.shouldSeeMetaInfo();
   });
 
   // Gantry-info takes a while to load, causing timeouts

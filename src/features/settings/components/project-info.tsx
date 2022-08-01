@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ReactComponent as CrossIcon } from "src/assets/svg/close-outline.svg";
 import { ReactComponent as GantryIcon } from "src/assets/svg/gantry-on.svg";
 import { Button } from "src/components/button";
+import { RATES_EFFECTIVE_DATE } from "src/constants";
 
 const Modal = styled.div`
   border-radius: 1.5rem;
@@ -49,9 +50,11 @@ const Version = styled.p`
 
 const ProjectInfoModal = ({
   lastCheckDate,
+  ratesEffectiveDate,
   version,
 }: {
   lastCheckDate?: Date;
+  ratesEffectiveDate?: string;
   version?: string;
 }) => {
   return (
@@ -103,6 +106,13 @@ const ProjectInfoModal = ({
           Improve this map
         </a>
       </AttributionList>
+      {ratesEffectiveDate && (
+        <p>
+          Rates effective from:
+          <br />
+          <em>{ratesEffectiveDate}</em>
+        </p>
+      )}
       {lastCheckDate && (
         <p>
           Last check for updates:
@@ -167,6 +177,7 @@ export const ProjectInfo = () => {
   const lastCheckedDate = process.env.REACT_APP_LAST_CHECK_DATE
     ? new Date(Number(process.env.REACT_APP_LAST_CHECK_DATE))
     : undefined;
+  const ratesEffectiveDate = RATES_EFFECTIVE_DATE;
   const version = process.env.REACT_APP_COMMIT_REF;
 
   const navigate = useNavigate();
@@ -189,7 +200,11 @@ export const ProjectInfo = () => {
   return isProjectInfoVisible ? (
     <ProjectInfoPositioner>
       <Backdrop onClick={hide} data-test-id="backdrop" />
-      <ProjectInfoModal lastCheckDate={lastCheckedDate} version={version} />
+      <ProjectInfoModal
+        lastCheckDate={lastCheckedDate}
+        ratesEffectiveDate={ratesEffectiveDate}
+        version={version}
+      />
       <ProjectInfoCloseButton onClick={hide} data-test-id="close">
         <CrossIcon />
       </ProjectInfoCloseButton>
