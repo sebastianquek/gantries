@@ -26,10 +26,14 @@ jobs:
 
       - run: npm ci
 
-      - name: Fetch rates
+      - name: Fetch rates and update effective date env var
         env:
           DATAMALL_ACCOUNT_KEY: ${{ secrets.DATAMALL_ACCOUNT_KEY }}
-        run: npm run fetch:rates
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          EFFECTIVE_DATE=$(npm run fetch:rates --silent)
+          npx netlify-cli env:set REACT_APP_RATES_EFFECTIVE_DATE $EFFECTIVE_DATE
 
       # Update the last check date env var and trigger a new deploy
       - name: Update last check and trigger deploy
