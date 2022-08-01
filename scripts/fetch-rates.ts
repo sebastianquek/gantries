@@ -85,6 +85,21 @@ const parseVehicleTypes = (rates: Rate[]) => {
 };
 
 /**
+ * Extracts the effective dates from the ERP rates and returns the latest
+ *
+ * @param rates Rate objects
+ * @returns Latest effective date from the given Rate objects
+ */
+const parseLatestEffectiveDate = (rates: Rate[]) => {
+  return chain(rates)
+    .map(({ EffectiveDate }) => EffectiveDate)
+    .uniqBy("EffectiveDate")
+    .sortBy("EffectiveDate")
+    .last()
+    .value();
+};
+
+/**
  * Get splits by vehicle and day type.
  *
  * TODO: add tests for this. I'm deferring the creation of tests
@@ -152,6 +167,9 @@ const run = async () => {
 
   const parsedVehicleTypes = parseVehicleTypes(rawRates);
   saveDataToCSV(slugify("vehicle types"), parsedVehicleTypes, OUTPUT_DATA_DIR);
+
+  const latestEffectiveDate = parseLatestEffectiveDate(rawRates);
+  console.log(latestEffectiveDate);
 };
 
 // Ensures that the fetching does not run when tests are ran on this module.
@@ -162,5 +180,6 @@ if (process.env.NODE_ENV !== "test") {
 export const exportedForTesting = {
   parseRates,
   parseVehicleTypes,
+  parseLatestEffectiveDate,
   stringifyWithSortedKeys,
 };

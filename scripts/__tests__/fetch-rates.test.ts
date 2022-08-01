@@ -6,8 +6,12 @@ import {
   unsorted,
 } from "./fixtures/rates";
 
-const { parseRates, parseVehicleTypes, stringifyWithSortedKeys } =
-  exportedForTesting;
+const {
+  parseRates,
+  parseVehicleTypes,
+  parseLatestEffectiveDate,
+  stringifyWithSortedKeys,
+} = exportedForTesting;
 
 describe("fetch-rates", () => {
   describe("parseRates", () => {
@@ -163,6 +167,13 @@ describe("fetch-rates", () => {
         { VehicleType: "Light Goods Vehicles" },
         { VehicleType: "Passenger Cars/Light Goods Vehicles/Taxis" },
       ]);
+    });
+  });
+
+  describe("parseLatestEffectiveDate", () => {
+    it("should extract out the latest effective date", () => {
+      // Note that the raw data has always had the same effective date for all rates
+      expect(parseLatestEffectiveDate(ungrouped)).toStrictEqual("2022-02-14");
     });
   });
 
