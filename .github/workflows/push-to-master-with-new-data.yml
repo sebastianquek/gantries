@@ -88,7 +88,7 @@ jobs:
     timeout-minutes: 5
 
     env:
-      STYLE_TYPE: ${{ needs.init-style-type.outputs.type }}
+      STYLE_TYPE: ${{ needs.extract-style-type.outputs.type }}
 
     steps:
       - uses: actions/checkout@v2
@@ -116,7 +116,7 @@ jobs:
     timeout-minutes: 5
 
     env:
-      STYLE_TYPE: ${{ needs.init-style-type.outputs.type }}
+      STYLE_TYPE: ${{ needs.extract-style-type.outputs.type }}
 
     steps:
       - uses: actions/checkout@v2
