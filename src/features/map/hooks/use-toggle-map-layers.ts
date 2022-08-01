@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { GANTRY_SOURCE_LAYER } from "src/constants";
 import { useFilters } from "src/contexts/filters";
 import { usePrevious } from "src/hooks/use-previous";
 
@@ -24,7 +25,7 @@ export const useToggleMapLayers = (
         {
           source: "composite",
           id: prevSelectedGantryId,
-          sourceLayer: "gantries",
+          sourceLayer: GANTRY_SOURCE_LAYER,
         },
         { highlight: false }
       );
@@ -35,7 +36,7 @@ export const useToggleMapLayers = (
         {
           source: "composite",
           id: selectedGantryId,
-          sourceLayer: "gantries",
+          sourceLayer: GANTRY_SOURCE_LAYER,
         },
         { highlight: true }
       );

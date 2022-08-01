@@ -18,11 +18,11 @@ const config: PlaywrightTestConfig = {
     timeout: 10000,
 
     /**
-     * https://playwright.dev/docs/test-assertions#locator-assertions-to-have-screenshot-1-option-max-diff-pixel-ratio
-     * Set to 0.02 to be more lax.
+     * https://playwright.dev/docs/test-assertions#locator-assertions-to-have-screenshot-1-option-threshold
+     * Increased it to be more lax.
      */
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.02,
+      threshold: 0.3,
     },
   },
   /* Run tests in files in parallel */
