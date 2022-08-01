@@ -10,4 +10,4 @@ export const VEHICLE_TYPES = [
 export const DAY_TYPES = ["Weekdays", "Saturday"] as const;
 
 export const GANTRY_BASE_LAYER_ID = "operational-base";
-export const GANTRY_SOURCE_LAYER = "gantries";
+export const GANTRY_SOURCE_LAYER = process.env.REACT_APP_MAPBOX_TILESET_ID;
