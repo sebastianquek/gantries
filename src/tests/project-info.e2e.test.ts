@@ -97,10 +97,6 @@ test.describe("when info button is clicked", () => {
   });
 
   test("should see last check for updates, effective date and version", async () => {
-    // test.skip(
-    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
-    //   "Last check for updates and version are not shown when running locally"
-    // );
     await projectInfo.shouldSeeMetaInfo();
   });
 
@@ -134,10 +130,6 @@ test.describe("when navigating to the root URL with the info hash", () => {
   });
 
   test("should see last check for updates, effective date and version", async () => {
-    // test.skip(
-    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
-    //   "Last check for updates and version are not shown when running locally"
-    // );
     await projectInfo.shouldSeeMetaInfo();
   });
 
@@ -172,10 +164,6 @@ test.describe("when navigating to a gantry URL with the info hash", () => {
   });
 
   test("should see last check for updates, effective date and version", async () => {
-    // test.skip(
-    //   process.env.PLAYWRIGHT_BASE_URL === undefined,
-    //   "Last check for updates and version are not shown when running locally"
-    // );
     await projectInfo.shouldSeeMetaInfo();
   });
 
