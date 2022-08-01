@@ -175,7 +175,7 @@ const retrieveStyle = async (
 };
 
 /**
- * Ensures the composite URL contains a reference to the tilset id
+ * Ensures the composite URL contains a reference to the tileset id
  *
  * @param currentStyle
  * @param username
