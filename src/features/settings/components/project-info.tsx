@@ -211,3 +211,5 @@ export const ProjectInfo = () => {
     <Button onClick={show}>Info</Button>
   );
 };
+
+export default ProjectInfo;
